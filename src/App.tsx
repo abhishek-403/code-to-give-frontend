@@ -1,10 +1,14 @@
-import { ModeToggle } from "./components/moon-toggle";
+import AppRoutes from "./routes";
+
 
 function App() {
   return (
-    <h1 className="text-3xl min-h-screen dark:text-white dark: text-red-500 font-bold underline">
-      <ModeToggle /> Hello world!
-    </h1>
+   
+      <div className="fixed inset-0 overflow-auto bg-gradient-to-tr min-h-screen from-dark-70 via-neutral-100 to-dark-60 ">
+      <div className="relative  overflow-y-scroll">
+        <AppRoutes />
+      </div>
+    </div>
   );
 }
 
