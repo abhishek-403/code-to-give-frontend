@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -293,13 +294,19 @@ const HomePage = () => {
             <span className="text-gray-700 dark:text-gray-300" aria-hidden="true">📅 </span>
             <span className="text-gray-800 dark:text-gray-200">{event.dateRange}</span>
           </p>
-          <Button 
-            className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400" 
-            aria-label={`Apply to volunteer with ${event.organization}`}
-            tabIndex={0}
+          <Link 
+            to={`/volunteer/register/${event.id}`}
+            className="w-full flex justify-center"
+            state={{ eventData: event }}
           >
-            Apply Now
-          </Button>
+            <Button 
+              className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400" 
+              aria-label={`Apply to volunteer with ${event.organization}`}
+              tabIndex={0}
+            >
+              Apply Now
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
