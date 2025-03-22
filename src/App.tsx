@@ -16,8 +16,8 @@ const App = () => {
                 <Router>
                     <Routes>
                         <Route path="/" element={<Layout><div><h1>Layout Test</h1><p>This is a placeholder to see if the layout is working.</p></div></Layout>} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/signup" element={<SignupPage />} />
+                        <Route path="/login" element={<Layout><LoginPage /></Layout>} />
+                        <Route path="/signup" element={<Layout><SignupPage /></Layout>} />
                     </Routes>
                 </Router>
             </FontSizeContext.Provider>

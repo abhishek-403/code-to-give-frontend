@@ -35,8 +35,8 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-background border-b p-4 flex items-center justify-between">
-            <Link to="/" className="flex items-center h-20 w-auto">
+        <header className="bg-background border-b p-4 pl-8 pr-8 flex items-center justify-between">
+            <Link to="/" className="flex items-center h-16 w-60">
                 <img src={SamarthanamLogo} alt="Samarthanam Logo" className="h-20 w-auto" />
             </Link>
 

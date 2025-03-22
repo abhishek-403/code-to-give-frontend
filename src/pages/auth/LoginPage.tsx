@@ -13,7 +13,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Logo from "@/assets/samarthanam_logo_nobg.png";
 import googleLogo from "@/assets/googleicon.png";
 
-// Create a single GoogleAuthProvider instance (Efficiency)
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
@@ -24,24 +23,24 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [user, loading, authError] = useAuthState(auth);
 
-  // Handle Email/Password Login
+  // Email/Password Login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
+    setError(null); 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/"); // Redirect to home on successful login
+      navigate("/"); // Redirect
     } catch (err: any) {
       setError(err.message);
     }
   };
 
-  // Handle Google Login
+  // Google Login
   const handleGoogleLogin = async () => {
-    setError(null); // Clear previous errors
+    setError(null); 
     try {
       await signInWithPopup(auth, googleProvider);
-      navigate("/"); // Redirect on success
+      navigate("/"); // Redirect
     } catch (err: any) {
       if (err.code === "auth/popup-blocked") {
         // Fallback for pop-up blocker issue
