@@ -12,6 +12,7 @@ import UserProfilePage from './pages/UserProfilePage';
 
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import EventCreationPage from './pages/admin/EventCreationPage';
+import EventManagementPage from './pages/admin/EventManagementPage';
 
 const App = () => {
     const [fontSize, setFontSize] = useState(16);
@@ -30,6 +31,7 @@ const App = () => {
 
                         <Route path="/admin" element={<Layout><AdminDashboardPage /></Layout>} />
                         <Route path="/admin/events/create" element={<Layout><EventCreationPage /></Layout>} />
+                        <Route path="/admin/events/manage" element={<Layout><EventManagementPage /></Layout>} />
                     </Routes>
                 </Router>
             </FontSizeContext.Provider>
