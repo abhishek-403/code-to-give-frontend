@@ -16,7 +16,7 @@ import { useFontSize } from '@/contexts/FontSizeContext';
 
 const Header = () => {
     const { fontSize, setFontSize } = useFontSize(); 
-    const [isLoggedIn, setIsLoggedIn] = useState(false); //!!! need later implementation of user authentication
+    const [isLoggedIn, setIsLoggedIn] = useState(true); //!!! need later implementation of user authentication
 
     const increaseFontSize = () => {
         if (fontSize < 20) {
@@ -56,8 +56,12 @@ const Header = () => {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem><a href="/contact-form" className="block w-full">Contact Form</a></DropdownMenuItem>
-                        <DropdownMenuItem><a href="/contact-details" className="block w-full">Contact Details</a></DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link to="/contact-form" className="w-full block">Contact Form</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link to="/contact-details" className="w-full block">Contact Details</Link>
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -90,27 +94,34 @@ const Header = () => {
                 <span className="text-gray-400">|</span>
 
                 {isLoggedIn ? (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Avatar className="cursor-pointer">
-                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem><Link to="/profile">Profile</Link></DropdownMenuItem>
-                            <DropdownMenuItem><Link to="/settings">Settings</Link></DropdownMenuItem>
-                            <DropdownMenuItem><Button>Logout</Button></DropdownMenuItem>
-                        </DropdownMenuContent>
+                    <>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Avatar className="cursor-pointer">
+                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem>
+                                    <Link to="/profile" className="w-full block">Profile</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Link to="/settings" className="w-full block">Settings</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <button className="w-full text-left">Logout</button>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         <Button variant="outline" size="sm"><Bell className="h-4 w-4 mr-2" /> Notifications</Button>
-                    </DropdownMenu>
+                    </>
                 ) : (
                     <>
                         <Link to="/login" className="hover:underline"><Button variant="outline" size="sm">Login</Button></Link>
                         <Link to="/signup" className="hover:underline"><Button variant="outline" size="sm">Register</Button></Link>
                     </>
                 )}
-
             </div>
 
 
@@ -132,14 +143,14 @@ const Header = () => {
                             </div>
                         </DropdownMenuItem>
                         
-                        <DropdownMenuItem asChild>
-                            <Link to="/contact-form" className="flex items-center cursor-default">
+                        <DropdownMenuItem>
+                            <Link to="/contact-form" className="w-full flex items-center">
                                 <Contact2 className="h-4 w-4 mr-2" /> Contact Form
                             </Link>
                         </DropdownMenuItem>
                         
-                        <DropdownMenuItem asChild>
-                            <Link to="/contact-details" className="flex items-center cursor-default">
+                        <DropdownMenuItem>
+                            <Link to="/contact-details" className="w-full flex items-center">
                                 <Contact2 className="h-4 w-4 mr-2" /> Contact Details
                             </Link>
                         </DropdownMenuItem>
@@ -170,8 +181,8 @@ const Header = () => {
                         
                         {isLoggedIn ? (
                             <>
-                                <DropdownMenuItem asChild>
-                                    <Link to="/profile" className="flex items-center cursor-default">
+                                <DropdownMenuItem>
+                                    <Link to="/profile" className="w-full flex items-center">
                                         <Avatar className="h-5 w-5 mr-2">
                                             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                             <AvatarFallback>CN</AvatarFallback>
@@ -179,18 +190,20 @@ const Header = () => {
                                         Profile
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link to="/settings" className="flex items-center cursor-default">Settings</Link>
+                                <DropdownMenuItem>
+                                    <Link to="/settings" className="w-full flex items-center">Settings</Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>Logout</DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <button className="w-full text-left">Logout</button>
+                                </DropdownMenuItem>
                             </>
                         ) : (
                             <>
-                                <DropdownMenuItem asChild>
-                                    <Link to="/login" className="cursor-default">Login</Link>
+                                <DropdownMenuItem>
+                                    <Link to="/login" className="w-full block">Login</Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link to="/signup" className="cursor-default">Register</Link>
+                                <DropdownMenuItem>
+                                    <Link to="/signup" className="w-full block">Register</Link>
                                 </DropdownMenuItem>
                             </>
                         )}
