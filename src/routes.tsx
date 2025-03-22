@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from "react-router";
 import { useAuth } from "./lib/hooks/useAuth";
-import Home from "./pages/Home";
+import Home from "./pages/HomePage";
 import Loader from "./utils/loader";
 
 const ProtectedRoute = () => {
