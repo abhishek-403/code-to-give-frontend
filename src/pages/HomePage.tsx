@@ -16,11 +16,11 @@ import { Search, Info } from "lucide-react";
 interface EventType {
   id: number;
   organization: string;
-  rehabilitation: string;
+  domain: string;
   dateRange: string;
   startDate: Date;
   endDate: Date;
-  description?: string;
+  description?: string; 
   location?: string;
   availability?: string;
 }
@@ -38,7 +38,6 @@ const customStyles = `
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
   }
   
-  /* Improved tab navigation styling */
   .tabs-list {
     display: flex;
     border-bottom: 1px solid #e2e8f0;
@@ -61,6 +60,7 @@ const customStyles = `
   
   .tab-trigger:hover {
     background-color: #f1f5f9;
+    color:rgb(0, 0, 0);
   }
   
   .tab-trigger:focus {
@@ -68,13 +68,11 @@ const customStyles = `
     outline-offset: -2px;
   }
   
-  /* High contrast focus indicators */
   :focus {
     outline: 3px solid #2563eb !important;
     outline-offset: 2px;
   }
   
-  /* Skip to content link - visually hidden until focused */
   .skip-link {
     position: absolute;
     top: -40px;
@@ -90,7 +88,6 @@ const customStyles = `
     top: 0;
   }
   
-  /* Custom styling for focused interactive elements */
   button:focus, 
   a:focus, 
   input:focus, 
@@ -99,18 +96,16 @@ const customStyles = `
     outline-offset: 2px;
   }
   
-  /* Improved color contrast base */
   .text-gray-500 {
-    color: #64748b !important; /* Darker gray for better contrast on white */
+    color: #64748b !important;
   }
   
   .dark .text-gray-500 {
-    color: #94a3b8 !important; /* Lighter gray for better contrast on dark backgrounds */
+    color: #94a3b8 !important;
   }
 `;
 
 const HomePage = () => {
-  // State for filters - using empty string as default instead of undefined
   const [city, setCity] = useState<string>("");
   const [domain, setDomain] = useState<string>("");
   const [availability, setAvailability] = useState<string>("");
@@ -118,85 +113,74 @@ const HomePage = () => {
   const [endDate, setEndDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // State for filtered events
   const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
   
-  // State for active tab
   const [activeTab, setActiveTab] = useState("active");
 
-  // References for tab buttons for keyboard navigation
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
     underReview: useRef<HTMLButtonElement>(null),
     history: useRef<HTMLButtonElement>(null)
   };
 
-  // Sample event data with added fields for filtering
-  const events: EventType[] = [
-    {
-      id: 1,
-      organization: "XYZ Event",
-      rehabilitation: "Rehabilitation",
-      dateRange: "20/02/25 to 20/03/25",
-      startDate: new Date(2025, 1, 20), // Month is 0-indexed in JS Date
-      endDate: new Date(2025, 2, 20),
-      description: "Help with rehabilitation activities for people with disabilities",
-      location: "Delhi",
-      availability: "Weekdays"
-    },
-    {
-      id: 2,
-      organization: "ABC Event",
-      rehabilitation: "Community Support",
-      dateRange: "15/03/25 to 30/03/25",
-      startDate: new Date(2025, 2, 15),
-      endDate: new Date(2025, 2, 30),
-      description: "Provide community support services to underprivileged families",
-      location: "Mumbai",
-      availability: "Both"
-    },
-    {
-      id: 3,
-      organization: "PQR Event",
-      rehabilitation: "Education",
-      dateRange: "01/04/25 to 15/04/25",
-      startDate: new Date(2025, 3, 1),
-      endDate: new Date(2025, 3, 15),
-      description: "Teach basic skills to children with special needs",
-      location: "Bangalore",
-      availability: "Weekends"
-    },
-  ];
+  const events = React.useMemo<EventType[]>(() => [
+      {
+        id: 1,
+        organization: "XYZ Event",
+        domain: "Rehabilitation",
+        dateRange: "20/02/25 to 20/03/25",
+        startDate: new Date(2025, 1, 20), 
+        endDate: new Date(2025, 2, 20),
+        description: "Help with rehabilitation activities for people with disabilities",
+        location: "Delhi",
+        availability: "Weekdays"
+      },
+      {
+        id: 2,
+        organization: "ABC Event",
+        domain: "Community Support",
+        dateRange: "15/03/25 to 30/03/25",
+        startDate: new Date(2025, 2, 15),
+        endDate: new Date(2025, 2, 30),
+        description: "Provide community support services to underprivileged families",
+        location: "Mumbai",
+        availability: "Both"
+      },
+      {
+        id: 3,
+        organization: "PQR Event",
+        domain: "Education",
+        dateRange: "01/04/25 to 15/04/25",
+        startDate: new Date(2025, 3, 1),
+        endDate: new Date(2025, 3, 15),
+        description: "Teach basic skills to children with special needs",
+        location: "Bangalore",
+        availability: "Weekends"
+      },
+    ], []);
 
-  // Function to parse date strings into Date objects
   const parseDate = (dateString: string): Date | null => {
     if (!dateString) return null;
     return new Date(dateString);
   };
 
-  // Filter the events whenever any filter changes
   useEffect(() => {
     const filtered = events.filter(event => {
-      // Search query filter
       const matchesSearch = !searchQuery || 
         event.organization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.rehabilitation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (event.description && event.description.toLowerCase().includes(searchQuery.toLowerCase()));
       
-      // City filter - modified to handle empty string and "all_cities" value
       const matchesCity = !city || city === "" || city === "all_cities" || event.location === city;
       
-      // Domain filter - modified to handle empty string and "all_domains" value
-      const matchesDomain = !domain || domain === "" || domain === "all_domains" || event.rehabilitation === domain;
+      const matchesDomain = !domain || domain === "" || domain === "all_domains" || event.domain === domain;
       
-      // Availability filter - modified to handle empty string and "all_availability" value
       const matchesAvailability = !availability || 
         availability === "" || 
         availability === "all_availability" || 
         event.availability === availability || 
         (event.availability === "Both" && availability !== "");
       
-      // Date range filter
       let matchesDate = true;
       const filterStartDate = parseDate(startDate);
       const filterEndDate = parseDate(endDate);
@@ -209,19 +193,16 @@ const HomePage = () => {
         matchesDate = matchesDate && event.startDate <= filterEndDate;
       }
       
-      // Combined filters
       return matchesSearch && matchesCity && matchesDomain && matchesAvailability && matchesDate;
     });
     
     setFilteredEvents(filtered);
-  }, [searchQuery, city, domain, availability, startDate, endDate]);
+  }, [searchQuery, city, domain, availability, startDate, endDate, events]);
 
-  // Initialize filtered events with all events on component mount
   useEffect(() => {
     setFilteredEvents(events);
-  }, []);
+  }, [events]);
 
-  // Function to clear all filters
   const clearAllFilters = () => {
     setCity("");
     setDomain("");
@@ -231,7 +212,6 @@ const HomePage = () => {
     setSearchQuery("");
   };
 
-  // Handle tab key navigation
   const handleTabKeyDown = (e: React.KeyboardEvent, tabId: string) => {
     const tabs = ["active", "underReview", "history"];
     const currentIndex = tabs.indexOf(tabId);
@@ -282,7 +262,7 @@ const HomePage = () => {
                 variant="outline" 
                 className="mr-2 border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
               >
-                {event.rehabilitation}
+                {event.domain}
               </Badge>
               {event.location && (
                 <Badge 
@@ -329,17 +309,16 @@ const HomePage = () => {
     <div className="p-6 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
       <style>{customStyles}</style>
       
-      {/* Skip to content link for keyboard users */}
+      {/* Main content link for keyboard nav */}
       <a href="#main-content" className="skip-link">Skip to main content</a>
       
-      {/* Left Sidebar: Filters */}
+      {/*Filters */}
       <div>
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Find events</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Search Bar */}
             <div className="relative">
               <Label htmlFor="searchInput" className="sr-only">Search for an event</Label>
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" aria-hidden="true" />
@@ -353,7 +332,6 @@ const HomePage = () => {
               />
             </div>
 
-            {/* Filters */}
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="city-select" className="text-sm font-medium text-gray-800 dark:text-gray-200">City</Label>
@@ -450,8 +428,7 @@ const HomePage = () => {
             </div>
           </CardContent>
         </Card>
-        
-        {/* Filter summary */}
+        {/*filter badges */}
         {(city || domain || availability || startDate || endDate || searchQuery) && (
           <Card className="mt-4 shadow-sm">
             <CardContent className="py-3">
@@ -541,10 +518,8 @@ const HomePage = () => {
         )}
       </div>
 
-      {/* Right Section: Tabs & Events - Improved Tab Navigation */}
       <div id="main-content">
         <div className="w-full">
-          {/* Accessible tabs navigation */}
           <div 
             role="tablist" 
             aria-label="Event categories" 
@@ -603,7 +578,6 @@ const HomePage = () => {
             </button>
           </div>
           
-          {/* Tab content */}
           <div 
             role="tabpanel" 
             id="active-tab" 
