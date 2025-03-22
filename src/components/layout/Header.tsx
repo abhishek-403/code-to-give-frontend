@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { useFontSize } from '@/contexts/FontSizeContext'; // Import the hook
+import { useFontSize } from '@/contexts/FontSizeContext'; 
 
 const Header = () => {
-    const { fontSize, setFontSize } = useFontSize(); // Use the context hook
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Placeholder for login state
+    const { fontSize, setFontSize } = useFontSize(); 
+    const [isLoggedIn, setIsLoggedIn] = useState(false); //!!! need later implementation of user authentication
 
     const increaseFontSize = () => {
         if (fontSize < 20) {
@@ -102,15 +102,15 @@ const Header = () => {
                             <DropdownMenuItem><Link to="/settings">Settings</Link></DropdownMenuItem>
                             <DropdownMenuItem><Button>Logout</Button></DropdownMenuItem>
                         </DropdownMenuContent>
+                        <Button variant="outline" size="sm"><Bell className="h-4 w-4 mr-2" /> Notifications</Button>
                     </DropdownMenu>
                 ) : (
                     <>
                         <Link to="/login" className="hover:underline"><Button variant="outline" size="sm">Login</Button></Link>
-                        <Link to="/register" className="hover:underline"><Button variant="outline" size="sm">Register</Button></Link>
+                        <Link to="/signup" className="hover:underline"><Button variant="outline" size="sm">Register</Button></Link>
                     </>
                 )}
 
-                <Button variant="outline" size="sm"><Bell className="h-4 w-4 mr-2" /> Notifications</Button>
             </div>
 
 
@@ -190,7 +190,7 @@ const Header = () => {
                                     <Link to="/login" className="cursor-default">Login</Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                    <Link to="/register" className="cursor-default">Register</Link>
+                                    <Link to="/signup" className="cursor-default">Register</Link>
                                 </DropdownMenuItem>
                             </>
                         )}

@@ -1,8 +1,11 @@
-// src/App.tsx (or main.tsx)
+// src/App.tsx
 import { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { ThemeProvider } from 'next-themes';
 import { FontSizeContext } from '@/contexts/FontSizeContext';
+import LoginPage from './pages/auth/LoginPage';
+import SignupPage from './pages/auth/SignupPage';
 
 const App = () => {
     const [fontSize, setFontSize] = useState(16);
@@ -10,12 +13,13 @@ const App = () => {
     return (
         <ThemeProvider attribute="class">
             <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
-                <Layout>
-                    <div>
-                        <h1>Layout Test</h1>
-                        <p>This is a placeholder to see if the layout is working.</p>
-                    </div>
-                </Layout>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<Layout><div><h1>Layout Test</h1><p>This is a placeholder to see if the layout is working.</p></div></Layout>} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/signup" element={<SignupPage />} />
+                    </Routes>
+                </Router>
             </FontSizeContext.Provider>
         </ThemeProvider>
     );
