@@ -7,6 +7,7 @@ import { FontSizeContext } from '@/contexts/FontSizeContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
+import EventRegistrationVolunteerPage from './pages/EventRegistrationVolunteerPage';
 
 const App = () => {
     const [fontSize, setFontSize] = useState(16);
@@ -19,6 +20,7 @@ const App = () => {
                         <Route path="/" element={<Layout><HomePage /></Layout>} />
                         <Route path="/login" element={<Layout><LoginPage /></Layout>} />
                         <Route path="/signup" element={<Layout><SignupPage /></Layout>} />
+                        <Route path="/volunteer/register/:eventId" element={<Layout><EventRegistrationVolunteerPage /></Layout>} />
                     </Routes>
                 </Router>
             </FontSizeContext.Provider>
