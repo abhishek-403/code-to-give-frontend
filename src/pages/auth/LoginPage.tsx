@@ -1,17 +1,14 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import googleLogo from "@/assets/googleicon.png";
+import Logo from "@/assets/samarthanam_logo_nobg.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signInWithRedirect,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebaseConfig";
+import { useSignUpWithGoogleMutation } from "@/services/auth";
+import { formatFirebaseError } from "@/utils/formattedError";
+import { GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Logo from "@/assets/samarthanam_logo_nobg.png";
-import googleLogo from "@/assets/googleicon.png";
+import { Link, useNavigate } from "react-router-dom";
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
@@ -22,33 +19,20 @@ const LoginPage = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [user, loading, authError] = useAuthState(auth);
-
-  // Email/Password Login
+  const { mutate: signIn, isPending } = useSignUpWithGoogleMutation();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); 
+    setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/"); // Redirect
+      navigate("/");
     } catch (err: any) {
       setError(err.message);
     }
   };
 
-  // Google Login
   const handleGoogleLogin = async () => {
-    setError(null); 
-    try {
-      await signInWithPopup(auth, googleProvider);
-      navigate("/"); // Redirect
-    } catch (err: any) {
-      if (err.code === "auth/popup-blocked") {
-        // Fallback for pop-up blocker issue
-        await signInWithRedirect(auth, googleProvider);
-      } else {
-        setError(err.message);
-      }
-    }
+    signIn();
   };
 
   if (loading) {
@@ -56,12 +40,15 @@ const LoginPage = () => {
   }
 
   if (authError) {
+    console.log(authError.message);
+    
     return (
       <div className="text-red-500 text-center p-4">
-        Error: {authError.message}
+        Error: {formatFirebaseError(authError.message)}
       </div>
     );
   }
+  
 
   if (user) {
     navigate("/");
@@ -71,9 +58,9 @@ const LoginPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       {/* <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" /> */}
-			<Link to="/">
-				<img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" />
-			</Link>
+      <Link to="/">
+        <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" />
+      </Link>
 
       <h2 className="text-2xl font-semibold mb-6">Login</h2>
 
@@ -111,13 +98,17 @@ const LoginPage = () => {
         />
 
         {/* Submit Button */}
-        <Button type="submit">Login</Button>
+
+        <Button disabled={isPending || loading} type="submit">
+          Login
+        </Button>
 
         {/* Google Login Button */}
         <Button
           type="button"
           variant="outline"
           onClick={handleGoogleLogin}
+          disabled={isPending || loading}
           aria-label="Sign in with Google"
         >
           <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />

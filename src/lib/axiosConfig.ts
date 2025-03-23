@@ -28,4 +28,11 @@ axiosClient.interceptors.request.use(
   }
 );
 
+axiosClient.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    console.log("axioserror :", error);
 
+    return Promise.reject(error);
+  }
+);

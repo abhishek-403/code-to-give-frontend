@@ -1,8 +1,7 @@
-import React, { ReactNode, useContext } from "react";
-import { ThemeProvider } from "next-themes";
-import Header from "./Header";
-import Footer from "./Footer";
 import { FontSizeContext } from "@/contexts/FontSizeContext"; // Import the Context
+import React, { ReactNode, useContext } from "react";
+import Footer from "./Footer";
+import Header from "./Header";
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,17 +12,16 @@ const Layout = ({ children }: LayoutProps) => {
 
   React.useEffect(() => {
     document.documentElement.style.fontSize = `${fontSize}px`;
-    // Or alternatively:
-    // document.body.style.fontSize = `${fontSize}px`;
   }, [fontSize]);
   return (
-    <ThemeProvider attribute="class">
-      <div className="flex flex-col min-h-screen" style={{ fontSize: `${fontSize}px` }}> {/* Apply font size to the entire layout */}
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </div>
-    </ThemeProvider>
+    <div
+      className="flex flex-col min-h-screen"
+      style={{ fontSize: `${fontSize}px` }}
+    >
+      <Header />
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
   );
 };
 

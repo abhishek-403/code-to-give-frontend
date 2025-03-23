@@ -1,8 +1,10 @@
 type Props = { children: React.ReactNode };
+import { FontSizeContext } from "@/contexts/FontSizeContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { ThemeProvider } from "next-themes";
+import { useEffect, useState } from "react";
 import toast, { Toaster, useToasterStore } from "react-hot-toast";
-import { ThemeProvider } from "./theme-provider";
+import { BrowserRouter } from "react-router";
 
 export function ToastProvider() {
   const { toasts } = useToasterStore();
@@ -31,18 +33,18 @@ export function ToastProvider() {
 export const queryClient = new QueryClient();
 
 export default function GlobalProvider({ children }: Props) {
+  const [fontSize, setFontSize] = useState(16);
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <ToastProvider />
-        {children}
-      </ThemeProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider attribute="class">
+          <FontSizeContext.Provider
+            value={{ fontSize, setFontSize }}
+          ></FontSizeContext.Provider>
+          <ToastProvider />
+          {children}
+        </ThemeProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 }
-
-// a good commit message for changes made to this file are:
-// initially google console was showing error for router inside router
-// so i removed the router from here and added it to the App.tsx file
-
-// commit msg: removed router from here and added it to App.tsx file

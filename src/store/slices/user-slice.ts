@@ -24,7 +24,7 @@ export const authSlice = createSlice({
         uid: action.payload.uid,
       };
     },
-    resetAuth: (state) => {
+    resetAuth: (_) => {
       return {
         accessToken: null,
         refreshToken: null,
