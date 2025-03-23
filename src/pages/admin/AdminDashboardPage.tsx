@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,7 +30,13 @@ import {
 } from "chart.js";
 import { Bar, Line, Doughnut, Radar } from "react-chartjs-2";
 import * as d3 from "d3";
-import { CalendarDays, Activity, CheckCircle, Star, RefreshCw } from "lucide-react";
+import { CalendarDays, Activity, CheckCircle, Star, RefreshCw, Download, FileText, Database } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Register ChartJS components
 ChartJS.register(
@@ -73,46 +79,102 @@ interface VolunteerActivity {
   events: number;
 }
 
-// Mock API functions that would be replaced with actual API calls
-const fetchEngagementData = (): Promise<EngagementData[]> => {
-  return Promise.resolve([
-    { date: "Jan", volunteers: 65, events: 4 },
-    { date: "Feb", volunteers: 59, events: 3 },
-    { date: "Mar", volunteers: 80, events: 5 },
-    { date: "Apr", volunteers: 81, events: 6 },
-    { date: "May", volunteers: 76, events: 4 },
-    { date: "Jun", volunteers: 92, events: 7 },
-  ]);
+// Backend API service - will be replaced with actual API calls in the future
+// This creates clear integration points for the backend
+class DashboardService {
+  static async getEngagementData(): Promise<EngagementData[]> {
+    // TODO: Replace with actual API call
+    return Promise.resolve([
+      { date: "Jan", volunteers: 65, events: 4 },
+      { date: "Feb", volunteers: 59, events: 3 },
+      { date: "Mar", volunteers: 80, events: 5 },
+      { date: "Apr", volunteers: 81, events: 6 },
+      { date: "May", volunteers: 76, events: 4 },
+      { date: "Jun", volunteers: 92, events: 7 },
+    ]);
+  }
+
+  static async getCompletionData(): Promise<CompletionData[]> {
+    // TODO: Replace with actual API call
+    return Promise.resolve([
+      { project: "Community Cleanup", completion: 85, target: 100 },
+      { project: "Food Drive", completion: 62, target: 75 },
+      { project: "Tutoring Program", completion: 43, target: 50 },
+      { project: "Senior Support", completion: 29, target: 40 },
+      { project: "Youth Mentorship", completion: 38, target: 45 },
+    ]);
+  }
+
+  static async getFeedbackData(): Promise<FeedbackData[]> {
+    // TODO: Replace with actual API call
+    return Promise.resolve([
+      { category: "Organization", score: 4.2, count: 78 },
+      { category: "Communication", score: 3.9, count: 85 },
+      { category: "Support", score: 4.5, count: 72 },
+      { category: "Impact", score: 4.7, count: 68 },
+      { category: "Overall", score: 4.3, count: 90 },
+    ]);
+  }
+
+  static async getTopVolunteers(): Promise<VolunteerActivity[]> {
+    // TODO: Replace with actual API call
+    return Promise.resolve([
+      { name: "Sarah Johnson", hours: 48, tasks: 15, events: 6 },
+      { name: "Michael Rodriguez", hours: 42, tasks: 12, events: 5 },
+      { name: "Emma Williams", hours: 36, tasks: 10, events: 4 },
+      { name: "David Chen", hours: 30, tasks: 9, events: 3 },
+      { name: "Olivia Martinez", hours: 28, tasks: 8, events: 4 },
+    ]);
+  }
+
+  // Export endpoints - will be replaced with actual API calls
+  static async exportToCSV(dataType: string): Promise<Blob> {
+    // In a real implementation, this would call the backend API
+    // For now, we'll generate the CSV on the client side
+    return Promise.resolve(new Blob([""], { type: "text/csv" }));
+  }
+
+  static async exportToExcel(dataType: string): Promise<Blob> {
+    // In a real implementation, this would call the backend API
+    // For now, we'll generate the Excel file on the client side
+    return Promise.resolve(new Blob([""], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+  }
+}
+
+// Utility function to convert data to CSV format
+const convertToCSV = (data: any[], fields: string[]): string => {
+  // Create header row
+  let csv = fields.join(",") + "\n";
+  
+  // Add each row of data
+  data.forEach(item => {
+    const row = fields.map(field => {
+      const value = item[field];
+      // Handle values that might contain commas by wrapping in quotes
+      return typeof value === 'string' && value.includes(',') 
+        ? `"${value}"` 
+        : String(value);
+    }).join(",");
+    csv += row + "\n";
+  });
+  
+  return csv;
 };
 
-const fetchCompletionData = (): Promise<CompletionData[]> => {
-  return Promise.resolve([
-    { project: "Community Cleanup", completion: 85, target: 100 },
-    { project: "Food Drive", completion: 62, target: 75 },
-    { project: "Tutoring Program", completion: 43, target: 50 },
-    { project: "Senior Support", completion: 29, target: 40 },
-    { project: "Youth Mentorship", completion: 38, target: 45 },
-  ]);
-};
-
-const fetchFeedbackData = (): Promise<FeedbackData[]> => {
-  return Promise.resolve([
-    { category: "Organization", score: 4.2, count: 78 },
-    { category: "Communication", score: 3.9, count: 85 },
-    { category: "Support", score: 4.5, count: 72 },
-    { category: "Impact", score: 4.7, count: 68 },
-    { category: "Overall", score: 4.3, count: 90 },
-  ]);
-};
-
-const fetchTopVolunteers = (): Promise<VolunteerActivity[]> => {
-  return Promise.resolve([
-    { name: "Sarah Johnson", hours: 48, tasks: 15, events: 6 },
-    { name: "Michael Rodriguez", hours: 42, tasks: 12, events: 5 },
-    { name: "Emma Williams", hours: 36, tasks: 10, events: 4 },
-    { name: "David Chen", hours: 30, tasks: 9, events: 3 },
-    { name: "Olivia Martinez", hours: 28, tasks: 8, events: 4 },
-  ]);
+// Utility function to download a file
+const downloadFile = (content: string | Blob, fileName: string, mimeType: string): void => {
+  const blob = content instanceof Blob 
+    ? content 
+    : new Blob([content], { type: mimeType });
+  
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };
 
 const AdminDashboardPage = () => {
@@ -122,31 +184,116 @@ const AdminDashboardPage = () => {
   const [feedbackData, setFeedbackData] = useState<FeedbackData[]>([]);
   const [topVolunteers, setTopVolunteers] = useState<VolunteerActivity[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [exportLoading, setExportLoading] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("engagement");
 
-  // Similar to useEffect, but using useState for initialization
-  useState(() => {
-    const loadData = async () => {
-      try {
-        const [engagement, completion, feedback, volunteers] = await Promise.all([
-          fetchEngagementData(),
-          fetchCompletionData(),
-          fetchFeedbackData(),
-          fetchTopVolunteers(),
-        ]);
-        
-        setEngagementData(engagement);
-        setCompletionData(completion);
-        setFeedbackData(feedback);
-        setTopVolunteers(volunteers);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to load dashboard data:", error);
-        setLoading(false);
-      }
-    };
-    
+  useEffect(() => {
     loadData();
-  });
+  }, []);
+
+  // Load all dashboard data
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [engagement, completion, feedback, volunteers] = await Promise.all([
+        DashboardService.getEngagementData(),
+        DashboardService.getCompletionData(),
+        DashboardService.getFeedbackData(),
+        DashboardService.getTopVolunteers(),
+      ]);
+      
+      setEngagementData(engagement);
+      setCompletionData(completion);
+      setFeedbackData(feedback);
+      setTopVolunteers(volunteers);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to load dashboard data:", error);
+      setLoading(false);
+    }
+  };
+
+  // Export data functions
+  const exportDataToCSV = async () => {
+    setExportLoading(true);
+    try {
+      let csvContent = "";
+      let fileName = "";
+
+      // Export appropriate data based on active tab
+      switch (activeTab) {
+        case "engagement":
+          csvContent = convertToCSV(engagementData, ["date", "volunteers", "events"]);
+          fileName = "volunteer-engagement-data.csv";
+          break;
+        case "completion":
+          csvContent = convertToCSV(completionData, ["project", "completion", "target"]);
+          fileName = "project-completion-data.csv";
+          break;
+        case "feedback":
+          csvContent = convertToCSV(feedbackData, ["category", "score", "count"]);
+          fileName = "feedback-data.csv";
+          break;
+        case "overview":
+          csvContent = convertToCSV(topVolunteers, ["name", "hours", "tasks", "events"]);
+          fileName = "top-volunteers-data.csv";
+          break;
+        default:
+          csvContent = "No data available";
+          fileName = "dashboard-data.csv";
+      }
+
+      downloadFile(csvContent, fileName, "text/csv");
+    } catch (error) {
+      console.error("Failed to export data:", error);
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const exportAllDataToCSV = async () => {
+    setExportLoading(true);
+    try {
+      // Create a zip file with all data sets
+      // For now, we'll just download each dataset separately
+      
+      // Engagement data
+      const engagementCSV = convertToCSV(engagementData, ["date", "volunteers", "events"]);
+      downloadFile(engagementCSV, "volunteer-engagement-data.csv", "text/csv");
+      
+      // Completion data
+      const completionCSV = convertToCSV(completionData, ["project", "completion", "target"]);
+      downloadFile(completionCSV, "project-completion-data.csv", "text/csv");
+      
+      // Feedback data
+      const feedbackCSV = convertToCSV(feedbackData, ["category", "score", "count"]);
+      downloadFile(feedbackCSV, "feedback-data.csv", "text/csv");
+      
+      // Top volunteers data
+      const volunteersCSV = convertToCSV(topVolunteers, ["name", "hours", "tasks", "events"]);
+      downloadFile(volunteersCSV, "top-volunteers-data.csv", "text/csv");
+      
+    } catch (error) {
+      console.error("Failed to export all data:", error);
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  // When backend is implemented, these would call the appropriate API endpoints
+  const exportToExcel = async () => {
+    setExportLoading(true);
+    try {
+      // In real implementation, this would call the backend API to generate Excel file
+      // For demonstration, we're just showing the integration point
+      const blob = await DashboardService.exportToExcel(activeTab);
+      downloadFile(blob, `${activeTab}-data.xlsx`, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    } catch (error) {
+      console.error("Failed to export Excel data:", error);
+    } finally {
+      setExportLoading(false);
+    }
+  };
 
   // Prepare chart configurations
   const volunteerEngagementChartData = {
@@ -317,41 +464,46 @@ const AdminDashboardPage = () => {
     },
   };
 
-  // Refresh data function
-  const refreshData = async () => {
-    setLoading(true);
-    try {
-      const [engagement, completion, feedback, volunteers] = await Promise.all([
-        fetchEngagementData(),
-        fetchCompletionData(),
-        fetchFeedbackData(),
-        fetchTopVolunteers(),
-      ]);
-      
-      setEngagementData(engagement);
-      setCompletionData(completion);
-      setFeedbackData(feedback);
-      setTopVolunteers(volunteers);
-      setLoading(false);
-    } catch (error) {
-      console.error("Failed to refresh dashboard data:", error);
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">Admin Dashboard</h2>
-        <Button 
-          className="flex items-center" 
-          variant="outline" 
-          onClick={refreshData} 
-          disabled={loading}
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          {loading ? "Loading..." : "Refresh Data"}
-        </Button>
+        <div className="flex space-x-2">
+          {/* Export Data Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" disabled={exportLoading}>
+                <Download className="mr-2 h-4 w-4" />
+                {exportLoading ? "Exporting..." : "Export Data"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={exportDataToCSV}>
+                <FileText className="mr-2 h-4 w-4" />
+                Export Current View as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={exportAllDataToCSV}>
+                <Database className="mr-2 h-4 w-4" />
+                Export All Data as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={exportToExcel}>
+                <FileText className="mr-2 h-4 w-4" />
+                Export as Excel
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {/* Refresh Button */}
+          <Button 
+            className="flex items-center" 
+            variant="outline" 
+            onClick={loadData} 
+            disabled={loading}
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            {loading ? "Loading..." : "Refresh Data"}
+          </Button>
+        </div>
       </div>
 
       {/* Quick Stats Summary */}
@@ -412,14 +564,28 @@ const AdminDashboardPage = () => {
 
       {/* Data Visualization Tabs */}
       <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Data Visualization</CardTitle>
-          <CardDescription>
-            Metrics on engagement, task completion rates, and feedback.
-          </CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Data Visualization</CardTitle>
+            <CardDescription>
+              Metrics on engagement, task completion rates, and feedback.
+            </CardDescription>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={exportDataToCSV} 
+            disabled={exportLoading}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export View
+          </Button>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="engagement">
+          <Tabs 
+            defaultValue="engagement" 
+            onValueChange={(value) => setActiveTab(value)}
+          >
             <TabsList className="mb-4">
               <TabsTrigger value="engagement">Engagement</TabsTrigger>
               <TabsTrigger value="completion">Completion</TabsTrigger>
