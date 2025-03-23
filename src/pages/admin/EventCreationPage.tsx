@@ -8,6 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -33,7 +42,8 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, BookMarked, LayoutTemplate } from "lucide-react";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Link } from "react-router";
 
@@ -56,9 +66,80 @@ type EventFormValues = {
   formFields: FormField[];
 };
 
-const EventCreationPage = () => {
-  // Initialize with default values
+type FormTemplate = {
+  id: string;
+  name: string;
+  category: string;
+  formFields: FormField[];
+};
 
+const EventCreationPage = () => {
+  // Mock templates - this would come from API in the real implementation
+  const [templates, setTemplates] = useState<FormTemplate[]>([
+    {
+      id: "1",
+      name: "Basic Volunteer Info",
+      category: "general",
+      formFields: [
+        {
+          label: "Full Name",
+          type: "text",
+          required: true,
+          placeholder: "Enter your full name",
+        },
+        {
+          label: "Email",
+          type: "email",
+          required: true,
+          placeholder: "Enter your email address",
+        },
+        {
+          label: "Phone Number",
+          type: "phone",
+          required: true,
+          placeholder: "Enter your phone number",
+        },
+      ],
+    },
+    {
+      id: "2",
+      name: "Education Program",
+      category: "education",
+      formFields: [
+        {
+          label: "Full Name",
+          type: "text",
+          required: true,
+          placeholder: "Enter your full name",
+        },
+        {
+          label: "Email",
+          type: "email",
+          required: true,
+          placeholder: "Enter your email address",
+        },
+        {
+          label: "Teaching Experience",
+          type: "textarea",
+          required: false,
+          placeholder: "Describe your teaching experience",
+        },
+        {
+          label: "Preferred Age Group",
+          type: "select",
+          required: true,
+          placeholder: "Select age group",
+        },
+      ],
+    },
+  ]);
+
+  // States for template management
+  const [showSaveTemplateDialog, setShowSaveTemplateDialog] = useState(false);
+  const [templateName, setTemplateName] = useState("");
+  const [showLoadTemplateDialog, setShowLoadTemplateDialog] = useState(false);
+
+  // Initialize form with default values
   const form = useForm<EventFormValues>({
     defaultValues: {
       title: "",
@@ -76,12 +157,17 @@ const EventCreationPage = () => {
     control,
     handleSubmit,
     formState: { errors },
+    getValues,
+    setValue,
+    watch,
   } = form;
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "formFields",
   });
+
+  const watchCategory = watch("category");
 
   const onSubmit = (data: EventFormValues) => {
     console.log(data);
@@ -96,6 +182,51 @@ const EventCreationPage = () => {
       required: false,
       placeholder: "",
     });
+  };
+
+  // Function to save current form fields as a template
+  const saveAsTemplate = () => {
+    const formFields = getValues("formFields");
+    const category = getValues("category");
+    
+    if (formFields.length === 0) {
+      alert("Please add at least one form field to save as template");
+      return;
+    }
+
+    // This would be an API call in the real implementation
+    const newTemplate: FormTemplate = {
+      id: Date.now().toString(), // temporary ID generation
+      name: templateName,
+      category: category,
+      formFields: formFields,
+    };
+
+    setTemplates([...templates, newTemplate]);
+    setShowSaveTemplateDialog(false);
+    setTemplateName("");
+    
+    // In a real implementation, this would be:
+    // const response = await fetch('/api/templates', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ name: templateName, category, formFields })
+    // });
+    // if (response.ok) {
+    //   // Show success message
+    // }
+  };
+
+  // Function to load a template's form fields
+  const loadTemplate = (template: FormTemplate) => {
+    replace(template.formFields);
+    
+    // If the template is specific to a category, set that category
+    if (template.category && template.category !== "general") {
+      setValue("category", template.category);
+    }
+    
+    setShowLoadTemplateDialog(false);
   };
 
   return (
@@ -316,6 +447,7 @@ const EventCreationPage = () => {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger
@@ -400,19 +532,84 @@ const EventCreationPage = () => {
 
           {/* Registration Form Fields Section */}
           <Card>
-            <CardHeader>
-              <CardTitle>Volunteer Registration Form Fields</CardTitle>
-              <CardDescription>
-                Define the fields volunteers must fill out to register for this
-                event.
-              </CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Volunteer Registration Form Fields</CardTitle>
+                <CardDescription>
+                  Define the fields volunteers must fill out to register for this
+                  event.
+                </CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Dialog open={showLoadTemplateDialog} onOpenChange={setShowLoadTemplateDialog}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <LayoutTemplate size={16} />
+                      Load Template
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Load Form Template</DialogTitle>
+                      <DialogDescription>
+                        Select a template to load predefined form fields.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="max-h-[400px] overflow-y-auto">
+                      {templates.length === 0 ? (
+                        <p className="text-center py-4">No templates found.</p>
+                      ) : (
+                        <div className="space-y-4 mt-4">
+                          {templates.map((template) => {
+                            const isMatchingCategory = !watchCategory || 
+                              watchCategory === template.category || 
+                              template.category === "general";
+                            
+                            return (
+                              <div 
+                                key={template.id} 
+                                className={`border rounded-md p-4 cursor-pointer transition hover:border-primary ${
+                                  !isMatchingCategory ? "opacity-50" : ""
+                                }`}
+                                onClick={() => isMatchingCategory && loadTemplate(template)}
+                              >
+                                <div className="flex justify-between items-center">
+                                  <h3 className="font-medium">{template.name}</h3>
+                                  <span className="text-sm bg-gray-100 px-2 py-1 rounded">
+                                    {template.category === "general" 
+                                      ? "All Domains" 
+                                      : template.category.charAt(0).toUpperCase() + template.category.slice(1)}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-500 mt-2">
+                                  {template.formFields.length} field(s)
+                                </p>
+                                {!isMatchingCategory && watchCategory && (
+                                  <p className="text-xs text-amber-600 mt-2">
+                                    This template is for a different domain than currently selected.
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setShowLoadTemplateDialog(false)}>
+                        Cancel
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </CardHeader>
             <CardContent>
               {fields.length === 0 && (
                 <div className="text-center py-6 border-2 border-dashed border-gray-200 rounded-md mb-4">
                   <p className="text-gray-500">
                     No form fields added yet. Click "Add Field" to create your
-                    first form field.
+                    first form field, or load a template.
                   </p>
                 </div>
               )}
@@ -472,6 +669,7 @@ const EventCreationPage = () => {
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
+                            value={field.value}
                           >
                             <FormControl>
                               <SelectTrigger id={`formFields.${index}.type`}>
@@ -544,14 +742,60 @@ const EventCreationPage = () => {
                 </div>
               ))}
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={addNewField}
-                className="w-full mt-2"
-              >
-                Add Field
-              </Button>
+              <div className="flex gap-2 mt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addNewField}
+                  className="flex-1"
+                >
+                  Add Field
+                </Button>
+                
+                {fields.length > 0 && (
+                  <Dialog open={showSaveTemplateDialog} onOpenChange={setShowSaveTemplateDialog}>
+                    <DialogTrigger asChild>
+                      <Button type="button" variant="outline" className="flex items-center gap-2">
+                        <BookMarked size={16} />
+                        Save as Template
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Save as Template</DialogTitle>
+                        <DialogDescription>
+                          Save this form configuration as a template for future events.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4">
+                        <FormItem>
+                          <FormLabel htmlFor="templateName">Template Name</FormLabel>
+                          <Input 
+                            id="templateName"
+                            placeholder="Enter a name for this template"
+                            value={templateName}
+                            onChange={(e) => setTemplateName(e.target.value)}
+                          />
+                          <FormDescription>
+                            Choose a descriptive name that helps you identify this template
+                          </FormDescription>
+                        </FormItem>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowSaveTemplateDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button 
+                          onClick={saveAsTemplate} 
+                          disabled={!templateName.trim()}
+                        >
+                          Save Template
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </div>
             </CardContent>
           </Card>
 
