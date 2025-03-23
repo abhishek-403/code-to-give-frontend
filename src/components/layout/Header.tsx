@@ -9,9 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useFontSize } from "@/contexts/FontSizeContext";
-import { auth } from "@/lib/firebaseConfig";
-import { useGetUserProfile } from "@/services/auth";
-import Loader from "@/utils/loader";
 import {
   AArrowDown,
   AArrowUp,
@@ -22,8 +19,12 @@ import {
   Menu,
   Search,
 } from "lucide-react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
+
+import { auth } from "@/lib/firebaseConfig";
+import { useGetUserProfile } from "@/services/auth";
+import Loader from "@/utils/loader";
+import { useAuthState } from "react-firebase-hooks/auth";
 import ThemeSwitcher from "./ThemeSwitcher";
 
 const Header = () => {
@@ -264,7 +265,7 @@ const Header = () => {
               <Globe className="h-4 w-4 mr-2" /> ಕನ್ನಡ
             </DropdownMenuItem>
 
-            {/* {user ? (
+            {/* {user && u ? (
               <>
                 <DropdownMenuItem>
                   <Link to="/profile" className="w-full flex items-center">
