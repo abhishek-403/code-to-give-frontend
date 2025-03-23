@@ -5,9 +5,51 @@ import {
 } from "@/lib/constants/response-types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+// implementation in HomePage.tsx:
+/* 
+const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    refetch,
+  } = useInfiniteEvents({
+    activeTab,
+    ...filterParams,
+  });
+
+  where filterParams:
+
+  const filterParams = React.useMemo<FilterParams>(() => {
+      if (!isFiltersApplied) {
+        // Only include the search query if filters are not applied
+        return {
+          searchQuery: debouncedSearchQuery || undefined
+        };
+      }
+      
+      return {
+        city: city && city !== "all_cities" ? city : undefined,
+        domain: domain && domain !== "all_domains" ? domain : undefined,
+        availability: availability && availability !== "all_availability" ? availability : undefined,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+        searchQuery: debouncedSearchQuery || undefined
+      };
+    }, [isFiltersApplied, city, domain, availability, startDate, endDate, debouncedSearchQuery]);
+*/
+// adjust according to above implementation
+
 interface FetchEventsParams {
   activeTab: string;
-  searchQuery: string;
+  city?: string;
+  domain?: string;
+  availability?: string;
+  startDate?: string;
+  endDate?: string;
+  searchQuery?: string;
 }
 
 interface ProgramsResponse {
