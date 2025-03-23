@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Availabitity } from "@/lib/constants/server-constants";
 import { useInfiniteEvents } from "@/services/event";
-import { formatDate } from "@/utils/formattedDate";
+import { formatDateFromDate } from "@/utils/formattedDate";
 import Loader from "@/utils/loader";
 import { Info, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -29,8 +29,8 @@ interface EventType {
   name: string;
   volunteeringDomains: any[];
   dateRange: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   description?: string;
   location: string;
   availability: [Availabitity];
@@ -124,7 +124,7 @@ const HomePage = () => {
   const [endDate, setEndDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
+  // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
   const [activeTab, setActiveTab] = useState("active");
 
@@ -181,7 +181,7 @@ const HomePage = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-    refetch,
+    // refetch,
   } = useInfiniteEvents({
     activeTab,
     searchQuery,
@@ -304,6 +304,11 @@ const HomePage = () => {
   };
 
   const EventCard = ({ ev }: { ev: EventType }) => {
+    // ev = {
+    //   ...ev,
+    //   startDate:new Date(ev.startDate),
+    //   endDate:new Date(ev.endDate);
+    // }
     return (
       <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
         <CardHeader>
@@ -352,7 +357,8 @@ const HomePage = () => {
                 📅{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDate(ev.startDate)} to {formatDate(ev.endDate)}
+                {formatDateFromDate(ev.startDate)} to{" "}
+                {formatDateFromDate(ev.endDate)}
               </span>
             </p>
             <Link
@@ -384,7 +390,7 @@ const HomePage = () => {
       </a>
 
       {/*Filters */}
-      <div>
+      <div className="sticky  self-start top-[10px]">
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Find events</CardTitle>
@@ -527,18 +533,18 @@ const HomePage = () => {
                 <Button
                   variant="default"
                   className="w-full focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  onClick={() => {
-                    if (
-                      !city &&
-                      !domain &&
-                      !availability &&
-                      !startDate &&
-                      !endDate &&
-                      !searchQuery
-                    ) {
-                      setFilteredEvents(events);
-                    }
-                  }}
+                  // onClick={() => {
+                  //   if (
+                  //     !city &&
+                  //     !domain &&
+                  //     !availability &&
+                  //     !startDate &&
+                  //     !endDate &&
+                  //     !searchQuery
+                  //   ) {
+                  //     setFilteredEvents(events);
+                  //   }
+                  // }}
                   aria-label="Apply filters"
                 >
                   Apply Filters
@@ -730,7 +736,7 @@ const HomePage = () => {
             aria-labelledby="active-tab-trigger"
             hidden={activeTab !== "active"}
             tabIndex={0}
-            className="md:max-h-[70vh] overflow-auto"
+            className=" overflow-auto"
           >
             {activeTab === "active" &&
               (isLoading ? (

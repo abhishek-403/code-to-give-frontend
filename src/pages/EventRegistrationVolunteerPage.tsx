@@ -1,20 +1,22 @@
-import { useRef, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { Availabitity } from "@/lib/constants/server-constants";
 import { cn } from "@/lib/utils";
+import { formatDateFromDate } from "@/utils/formattedDate";
 import { format } from "date-fns";
-import { CalendarIcon, ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarIcon } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 interface FormData {
   name: string;
@@ -27,15 +29,15 @@ interface FormData {
 }
 
 interface EventType {
-  id: number;
-  organization: string;
-  domain: string;
+  _id: string;
+  name: string;
+  volunteeringDomains: any[];
   dateRange: string;
   startDate: Date;
   endDate: Date;
   description?: string;
-  location?: string;
-  availability?: string;
+  location: string;
+  availability: [Availabitity];
 }
 
 const EventRegistrationVolunteerPage = () => {
@@ -43,6 +45,7 @@ const EventRegistrationVolunteerPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const eventData = location.state?.eventData as EventType | undefined;
+  console.log(eventData);
 
   // used to enable tab keys functioing over calendars
   const endDateButtonRef = useRef<HTMLButtonElement>(null);
@@ -69,15 +72,15 @@ const EventRegistrationVolunteerPage = () => {
       setValue("startDate", eventData.startDate);
       setValue("endDate", eventData.endDate);
 
-      if (eventData.availability) {
-        if (eventData.availability === "Weekdays") {
-          setValue("availabilityOption", "weekdays");
-        } else if (eventData.availability === "Weekends") {
-          setValue("availabilityOption", "weekends");
-        } else if (eventData.availability === "Both") {
-          setValue("availabilityOption", "both");
-        }
-      }
+      // if (eventData.availability) {
+      //   if (eventData.availability === "Weekdays") {
+      //     setValue("availabilityOption", "weekdays");
+      //   } else if (eventData.availability === "Weekends") {
+      //     setValue("availabilityOption", "weekends");
+      //   } else if (eventData.availability === "Both") {
+      //     setValue("availabilityOption", "both");
+      //   }
+      // }
     }
   }, [eventData, setValue]);
 
@@ -85,7 +88,7 @@ const EventRegistrationVolunteerPage = () => {
 
   const onSubmit = async (data: FormData) => {
     // later we will send this data to the server !!!!!!!!!!!!
-	console.log(data);
+    console.log(data);
   };
 
   const handleStartDateSelect = (date: Date | undefined) => {
@@ -122,7 +125,9 @@ const EventRegistrationVolunteerPage = () => {
       </div>
     );
   }
-
+  if (!eventData) {
+    return <div>Loading..</div>;
+  }
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
@@ -138,16 +143,17 @@ const EventRegistrationVolunteerPage = () => {
         {eventData && (
           <div className="mb-4">
             <h1 className="text-3xl font-bold" id="form-title">
-              Volunteer Registration: {eventData.organization}
+              Volunteer Registration: {eventData.name}
             </h1>
             <p className="mt-2 text-gray-600">{eventData.description}</p>
             <p className="mt-1 text-sm text-gray-500">
               <span className="font-medium">Location:</span>{" "}
               {eventData.location} •
-              <span className="font-medium ml-2">Domain:</span>{" "}
-              {eventData.domain} •
+              {/* <span className="font-medium ml-2">Domain:</span>{" "}
+              {eventData.volunteeringDomains[0].name} • */}
               <span className="font-medium ml-2">Dates:</span>{" "}
-              {eventData.dateRange}
+              {formatDateFromDate(eventData.startDate)} to{" "}
+              {formatDateFromDate(eventData.endDate)}
             </p>
           </div>
         )}
@@ -351,24 +357,28 @@ const EventRegistrationVolunteerPage = () => {
                   aria-labelledby="availability-group-label"
                   aria-invalid={!!errors.availabilityOption}
                 >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="weekdays" id="weekdays" />
-                    <Label htmlFor="weekdays" className="font-normal">
-                      Weekdays (Monday-Friday)
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="weekends" id="weekends" />
-                    <Label htmlFor="weekends" className="font-normal">
-                      Weekends (Saturday-Sunday)
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="both" id="both" />
-                    <Label htmlFor="both" className="font-normal">
-                      Both Weekdays and Weekends
-                    </Label>
-                  </div>
+                  {
+                    eventData.availability.map((avail) => (
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="weekdays" id="weekdays" />
+                        <Label htmlFor="weekdays" className="font-normal">
+                          {avail}
+                        </Label>
+                      </div>
+                    ))
+                    // <div className="flex items-center space-x-2">
+                    //   <RadioGroupItem value="weekends" id="weekends" />
+                    //   <Label htmlFor="weekends" className="font-normal">
+                    //     Weekends (Saturday-Sunday)
+                    //   </Label>
+                    // </div>
+                    // <div className="flex items-center space-x-2">
+                    //   <RadioGroupItem value="both" id="both" />
+                    //   <Label htmlFor="both" className="font-normal">
+                    //     Both Weekdays and Weekends
+                    //   </Label>
+                    // </div>
+                  }
                 </RadioGroup>
               )}
             />
@@ -434,19 +444,11 @@ const EventRegistrationVolunteerPage = () => {
                           handleStartDateSelect(date);
                         }}
                         disabled={(date) =>
-                          date < new Date() ||
-                          (eventData
-                            ? // Start date cannot be after event's end date
-                              date > eventData.endDate ||
-                              // Start date cannot be earlier than 1 week before event starts
-                              date <
-                                new Date(
-                                  eventData.startDate.getTime() -
-                                    7 * 24 * 60 * 60 * 1000
-                                )
-                            : false)
+                          date <= new Date(eventData.startDate) ||
+                          date >= new Date(eventData.endDate)
                         }
-                        initialFocus
+                        toDate={new Date(eventData.endDate)}
+                        defaultMonth={new Date(eventData.startDate)}
                       />
                     </PopoverContent>
                   </Popover>
@@ -519,10 +521,19 @@ const EventRegistrationVolunteerPage = () => {
                           field.onChange(date);
                           handleEndDateSelect(date);
                         }}
+                        // disabled={(date) =>
+                        //   date < new Date() ||
+                        //   (startDate ? date < startDate : false) ||
+                        //   (eventData ? date > eventData.endDate : false)
+                        // }
+                        fromDate={startDate || new Date(eventData.startDate)}
+                        toDate={new Date(eventData.endDate)}
+                        defaultMonth={
+                          startDate || new Date(eventData.startDate)
+                        }
                         disabled={(date) =>
-                          date < new Date() ||
-                          (startDate ? date < startDate : false) ||
-                          (eventData ? date > eventData.endDate : false)
+                          date < (startDate || new Date(eventData.startDate)) ||
+                          date > new Date(eventData.endDate)
                         }
                         initialFocus
                       />
