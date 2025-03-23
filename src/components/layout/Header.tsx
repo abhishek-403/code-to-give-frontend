@@ -130,7 +130,7 @@ const Header = () => {
 
         {loading || isLoading ? (
           <Loader />
-        ) : u ? (
+        ) : u && user ? (
           <>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
