@@ -25,6 +25,8 @@ import Loader from "@/utils/loader";
 import { Info, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+
+import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
 interface EventType {
@@ -51,6 +53,15 @@ interface MyApplicationType {
   volunteeringDomain: any;
   willingEndDate: Date;
   willingStartDate: Date;
+}
+
+interface FilterParams {
+  city?: string;
+  domain?: string;
+  availability?: string;
+  startDate?: string;
+  endDate?: string;
+  searchQuery?: string;
 }
 
 const customStyles = `
@@ -140,11 +151,13 @@ const HomePage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFiltersApplied, setIsFiltersApplied] = useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
-  const [activeTab, setActiveTab] = useState<TABS>("active");
-  const [user, loading] = useAuthState(auth);
+  const [activeTab, setActiveTab] = useState("active");
+  const [user, _] = useAuthState(auth);
   const navigate = useNavigate();
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
@@ -159,6 +172,63 @@ const HomePage = () => {
     isEnabled: activeTab === "myApplications",
   });
 
+  // const events = React.useMemo<EventType[]>(
+  //   () => [
+  //     {
+  //       id: 1,
+  //       organization: "XYZ Event",
+  //       domain: "Rehabilitation",
+  //       dateRange: "20/02/25 to 20/03/25",
+  //       startDate: new Date(2025, 1, 20),
+  //       endDate: new Date(2025, 2, 20),
+  //       description:
+  //         "Help with rehabilitation activities for people with disabilities",
+  //       location: "Delhi",
+  //       availability: "Weekdays",
+  //     },
+  //     {
+  //       id: 2,
+  //       organization: "ABC Event",
+  //       domain: "Community Support",
+  //       dateRange: "15/03/25 to 30/03/25",
+  //       startDate: new Date(2025, 2, 15),
+  //       endDate: new Date(2025, 2, 30),
+  //       description:
+  //         "Provide community support services to underprivileged families",
+  //       location: "Mumbai",
+  //       availability: "Both",
+  //     },
+  //     {
+  //       id: 3,
+  //       organization: "PQR Event",
+  //       domain: "Education",
+  //       dateRange: "01/04/25 to 15/04/25",
+  //       startDate: new Date(2025, 3, 1),
+  //       endDate: new Date(2025, 3, 15),
+  //       description: "Teach basic skills to children with special needs",
+  //       location: "Bangalore",
+  //       availability: "Weekends",
+  //     },
+  //   ],
+  //   []
+  // );
+  const filterParams = React.useMemo<FilterParams>(() => {
+    if (!isFiltersApplied) {
+      // Only include the search query if filters are not applied
+      return {
+        searchQuery: debouncedSearchQuery || undefined
+      };
+    }
+    
+    return {
+      city: city && city !== "all_cities" ? city : undefined,
+      domain: domain && domain !== "all_domains" ? domain : undefined,
+      availability: availability && availability !== "all_availability" ? availability : undefined,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
+      searchQuery: debouncedSearchQuery || undefined
+    };
+  }, [isFiltersApplied, city, domain, availability, startDate, endDate, debouncedSearchQuery]);
   const {
     data,
     fetchNextPage,
@@ -166,14 +236,16 @@ const HomePage = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-    // refetch,
+    refetch,
   } = useInfiniteEvents({
     activeTab,
-    searchQuery,
+    ...filterParams,
   });
+
   const { ref: loadMoreRef, inView } = useInView();
 
   const events = data?.pages.flatMap((page) => page.events) || [];
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -239,6 +311,11 @@ const HomePage = () => {
   // useEffect(() => {
   //   setFilteredEvents(events);
   // }, [events]);
+  
+  useEffect(() => {
+    // Only trigger refetch if the debounced value has changed
+    refetch();
+  }, [debouncedSearchQuery, refetch]);
 
   const clearAllFilters = () => {
     setCity("");
@@ -247,6 +324,15 @@ const HomePage = () => {
     setStartDate("");
     setEndDate("");
     setSearchQuery("");
+    setIsFiltersApplied(false);
+    // Refetch with cleared filters
+    refetch();
+  };
+
+  const handleApplyFilters = () => {
+    setIsFiltersApplied(true);
+    // Refetch with applied filters
+    refetch();
   };
 
   const handleTabKeyDown = (e: React.KeyboardEvent, tabId: TABS) => {
@@ -485,6 +571,8 @@ const HomePage = () => {
             </div>
 
             <div className="space-y-4">
+              {/* Filter controls - keep them the same */}
+              {/* City filter */}
               <div className="space-y-2">
                 <Label
                   htmlFor="city-select"
@@ -509,6 +597,7 @@ const HomePage = () => {
                 </Select>
               </div>
 
+              {/* Domain filter */}
               <div className="space-y-2">
                 <Label
                   htmlFor="domain-select"
@@ -537,6 +626,7 @@ const HomePage = () => {
                 </Select>
               </div>
 
+              {/* Availability filter */}
               <div className="space-y-2">
                 <Label
                   htmlFor="availability-select"
@@ -565,6 +655,7 @@ const HomePage = () => {
                 </Select>
               </div>
 
+              {/* Start Date filter */}
               <div className="space-y-2">
                 <Label
                   htmlFor="start-date"
@@ -582,6 +673,7 @@ const HomePage = () => {
                 />
               </div>
 
+              {/* End Date filter */}
               <div className="space-y-2">
                 <Label
                   htmlFor="end-date"
@@ -603,7 +695,7 @@ const HomePage = () => {
                 <Button
                   variant="default"
                   className="w-full focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  // onClick={() => {
+                   // onClick={() => {
                   //   if (
                   //     !city &&
                   //     !domain &&
@@ -615,6 +707,7 @@ const HomePage = () => {
                   //     setFilteredEvents(events);
                   //   }
                   // }}
+                  onClick={handleApplyFilters}
                   aria-label="Apply filters"
                 >
                   Apply Filters
@@ -645,6 +738,8 @@ const HomePage = () => {
                 Active Filters:
               </p>
               <div className="flex flex-wrap gap-2">
+                {/* Here the filter badges will be rendered - same as original code */}
+                {/* Search query badge */}
                 {searchQuery && (
                   <Badge
                     variant="secondary"
@@ -660,6 +755,8 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
+                
+                {/* City badge */}
                 {city && (
                   <Badge
                     variant="secondary"
@@ -668,7 +765,13 @@ const HomePage = () => {
                     City: {city === "all_cities" ? "All Cities" : city}
                     <button
                       className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-                      onClick={() => setCity("")}
+                      onClick={() => {
+                        setCity("");
+                        if (isFiltersApplied) {
+                          setIsFiltersApplied(true);
+                          refetch();
+                        }
+                      }}
                       aria-label={`Clear city filter: ${
                         city === "all_cities" ? "All Cities" : city
                       }`}
@@ -677,6 +780,8 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
+                
+                {/* Domain badge */}
                 {domain && (
                   <Badge
                     variant="secondary"
@@ -685,7 +790,13 @@ const HomePage = () => {
                     Domain: {domain === "all_domains" ? "All Domains" : domain}
                     <button
                       className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-                      onClick={() => setDomain("")}
+                      onClick={() => {
+                        setDomain("");
+                        if (isFiltersApplied) {
+                          setIsFiltersApplied(true);
+                          refetch();
+                        }
+                      }}
                       aria-label={`Clear domain filter: ${
                         domain === "all_domains" ? "All Domains" : domain
                       }`}
@@ -694,6 +805,8 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
+                
+                {/* Availability badge */}
                 {availability && (
                   <Badge
                     variant="secondary"
@@ -705,7 +818,13 @@ const HomePage = () => {
                       : availability}
                     <button
                       className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-                      onClick={() => setAvailability("")}
+                      onClick={() => {
+                        setAvailability("");
+                        if (isFiltersApplied) {
+                          setIsFiltersApplied(true);
+                          refetch();
+                        }
+                      }}
                       aria-label={`Clear availability filter: ${
                         availability === "all_availability"
                           ? "Any Availability"
@@ -716,6 +835,8 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
+                
+                {/* Date range badge */}
                 {(startDate || endDate) && (
                   <Badge
                     variant="secondary"
@@ -727,6 +848,10 @@ const HomePage = () => {
                       onClick={() => {
                         setStartDate("");
                         setEndDate("");
+                        if (isFiltersApplied) {
+                          setIsFiltersApplied(true);
+                          refetch();
+                        }
                       }}
                       aria-label="Clear date range filter"
                     >
