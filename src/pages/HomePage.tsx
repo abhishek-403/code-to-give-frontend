@@ -24,7 +24,7 @@ import { Info, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 interface EventType {
   _id: string;
