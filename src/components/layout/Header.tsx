@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import SamarthanamLogo from '@/assets/samarthanam_logo_nobg.png';
-import { Menu, Contact2, Baseline, AArrowUp, AArrowDown, Bell, Search, Globe } from 'lucide-react';
+import { Menu, Contact2, Baseline, AArrowUp, AArrowDown, Bell, Globe } from 'lucide-react';
 import ThemeSwitcher from "./ThemeSwitcher";
 import {
   DropdownMenu,
@@ -10,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useFontSize } from '@/contexts/FontSizeContext'; 
 
@@ -42,12 +41,6 @@ const Header = () => {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full">
-				<div className="flex items-center border rounded-lg p-1 h-9 mr-16">
-					<Input placeholder="Search..." className="border-none shadow-none focus-visible:ring-0 h-5 w-25" />
-					<Button variant="ghost" size="sm">
-						<Search className="h-4 w-4" />
-					</Button>
-				</div>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -131,17 +124,6 @@ const Header = () => {
                         <Button variant="outline" size="icon"><Menu className="h-4 w-4" /></Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end" sideOffset={5} alignOffset={0}>
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-                            <div className="flex items-center border rounded-lg p-1 h-9 w-full" onClick={(e) => e.stopPropagation()}>
-                                <Input 
-                                    placeholder="Search..." 
-                                    className="border-none shadow-none focus-visible:ring-0 h-5 w-full"
-                                    onClick={(e) => e.stopPropagation()}
-                                    onKeyDown={(e) => e.stopPropagation()}
-                                />
-                                <Search className="h-4 w-4 mr-1" />
-                            </div>
-                        </DropdownMenuItem>
                         
                         <DropdownMenuItem>
                             <Link to="/contact-form" className="w-full flex items-center">
