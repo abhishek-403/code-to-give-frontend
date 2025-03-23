@@ -38,11 +38,10 @@ export default function GlobalProvider({ children }: Props) {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class">
-          <FontSizeContext.Provider
-            value={{ fontSize, setFontSize }}
-          ></FontSizeContext.Provider>
-          <ToastProvider />
-          {children}
+          <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
+            <ToastProvider />
+            {children}
+          </FontSizeContext.Provider>
         </ThemeProvider>
       </QueryClientProvider>
     </BrowserRouter>
