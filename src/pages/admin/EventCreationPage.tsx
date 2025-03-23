@@ -42,7 +42,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { AlertCircle, BookMarked, LayoutTemplate } from "lucide-react";
+import { AlertCircle, ArrowLeft, BookMarked, LayoutTemplate } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Link } from "react-router";
@@ -231,6 +231,12 @@ const EventCreationPage = () => {
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
+      <Link to="/admin" className="text-primary-600">
+        <Button variant="outline" className="mb-4">
+          <ArrowLeft size={16} />
+          Back to Dashboard
+        </Button>
+      </Link>
       <h1 className="text-3xl font-bold mb-6">Create Event</h1>
 
       <Form {...form}>
