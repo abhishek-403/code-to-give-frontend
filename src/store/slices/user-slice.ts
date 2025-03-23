@@ -1,34 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserState {
-  accessToken: string | null;
-  refreshToken: string | null;
+  displayName: string | null;
+  profileImage: string | null;
+  email: string | null;
   uid: string | null;
+  _id: string | null;
 }
 
 const initialState: UserState = {
-  accessToken: null,
-  refreshToken: null,
+  displayName: null,
+  profileImage: null,
+  email: null,
   uid: null,
+  _id: null,
 };
 
-export const authSlice = createSlice({
-  name: "user",
+export const userSlice = createSlice({
+  name: "userDetails",
   initialState: initialState,
   reducers: {
-    setAuth: (state, action) => {
+    setUserDetails: (state, action) => {
       return {
         ...state,
-        accessToken: action.payload.accessToken,
-        refreshToken: action.payload.refreshToken,
+        displayName: action.payload.displayName,
+        profileImage: action.payload.profileImage,
+        email: action.payload.email,
         uid: action.payload.uid,
+        _id: action.payload._id,
       };
     },
-    resetAuth: (_) => {
+    resetUserDetails: (_) => {
       return {
-        accessToken: null,
-        refreshToken: null,
+        profileImage: null,
+        displayName: null,
+        email: null,
         uid: null,
+        _id: null,
       };
     },
     setAccessToken: (state, action) => ({
@@ -38,6 +46,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setAuth, resetAuth, setAccessToken } = authSlice.actions;
+export const { setUserDetails, resetUserDetails, setAccessToken } =
+  userSlice.actions;
 
-export default authSlice.reducer;
+export default userSlice.reducer;

@@ -22,17 +22,19 @@ import {
 import { Link } from "react-router-dom";
 
 import { auth } from "@/lib/firebaseConfig";
-import { useGetUserProfile } from "@/services/auth";
+import { useGetUserProfile } from "@/services/user";
+import { resetUserDetails } from "@/store/slices/user-slice";
 import Loader from "@/utils/loader";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useDispatch } from "react-redux";
 import ThemeSwitcher from "./ThemeSwitcher";
 
 const Header = () => {
   const { fontSize, setFontSize } = useFontSize();
-
-  const [user, loading] = useAuthState(auth);
-  const { data: u, isLoading } = useGetUserProfile({
-    isEnabled: !!user && !loading,
+  const dispatch = useDispatch();
+  const [u, loading] = useAuthState(auth);
+  const { data: user, isLoading } = useGetUserProfile({
+    isEnabled: !!u && !loading,
   });
   const increaseFontSize = () => {
     if (fontSize < 20) {
@@ -59,9 +61,6 @@ const Header = () => {
           className="h-20 w-auto"
         />
       </Link>
-      {/* <button className="w-full text-left" onClick={() => auth.signOut()}>
-        Logout
-      </button> */}
 
       {/* Desktop Menu */}
       <div className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full">
@@ -131,14 +130,14 @@ const Header = () => {
 
         {loading || isLoading ? (
           <Loader />
-        ) : u && user ? (
+        ) : u ? (
           <>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={u.profileImage} alt="@shadcn" />
+                  <AvatarImage src={user.profileImage} alt="@shadcn" />
                   <AvatarFallback className="border border-neutral-400">
-                    {u.displayName
+                    {user.displayName
                       ?.split(" ")
                       .map((n: string) => n[0])
                       .join("")}
@@ -159,7 +158,10 @@ const Header = () => {
                 <DropdownMenuItem>
                   <button
                     className="w-full text-left"
-                    onClick={() => auth.signOut()}
+                    onClick={async () => {
+                      await auth.signOut();
+                      dispatch(resetUserDetails());
+                    }}
                   >
                     Logout
                   </button>

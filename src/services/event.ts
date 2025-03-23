@@ -1,9 +1,12 @@
+import { queryClient } from "@/components/global-provider";
 import { axiosClient } from "@/lib/axiosConfig";
 import {
   ApiResponseFormat,
   ResponseStatusType,
 } from "@/lib/constants/response-types";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 interface FetchEventsParams {
   activeTab: string;
@@ -48,5 +51,31 @@ export const useInfiniteEvents = ({
     getNextPageParam: (lastPage) =>
       lastPage.pagination.hasMore ? lastPage.pagination.page + 1 : undefined,
     initialPageParam: 1,
+  });
+};
+
+export const useSubmitApplicationMutation = () => {
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: async (applicationData: any) => {
+      const res: ApiResponseFormat = await axiosClient.post(
+        `/application`,
+        applicationData
+      );
+
+      if (res.status === ResponseStatusType.Success) {
+        toast.success(res.result);
+      }
+      throw new Error(res.result);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myApplications"] });
+      toast.success("Application Submitted Succesfully!!");
+      navigate("/");
+    },
+
+    onError: (error) => {
+      toast.success(error.message);
+    },
   });
 };

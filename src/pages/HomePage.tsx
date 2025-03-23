@@ -17,13 +17,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Availabitity } from "@/lib/constants/server-constants";
+import { auth } from "@/lib/firebaseConfig";
 import { useInfiniteEvents } from "@/services/event";
+import { useGetMyApplications } from "@/services/user";
 import { formatDateFromDate } from "@/utils/formattedDate";
 import Loader from "@/utils/loader";
 import { Info, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useInView } from "react-intersection-observer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 interface EventType {
   _id: string;
   name: string;
@@ -34,6 +37,20 @@ interface EventType {
   description?: string;
   location: string;
   availability: [Availabitity];
+}
+interface MyApplicationType {
+  _id: string;
+  applicantEmail: string;
+  applicantId: string;
+  applicantName: string;
+  applicantPhone: string;
+  eventId: { name: string; description: string };
+  availability: Availabitity;
+  notes?: string;
+  status: string;
+  volunteeringDomain: any;
+  willingEndDate: Date;
+  willingStartDate: Date;
 }
 
 const customStyles = `
@@ -115,7 +132,7 @@ const customStyles = `
     color: #94a3b8 !important;
   }
 `;
-
+type TABS = "active" | "history" | "myApplications";
 const HomePage = () => {
   const [city, setCity] = useState<string>("");
   const [domain, setDomain] = useState<string>("");
@@ -126,54 +143,22 @@ const HomePage = () => {
 
   // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
-  const [activeTab, setActiveTab] = useState("active");
-
+  const [activeTab, setActiveTab] = useState<TABS>("active");
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
-    underReview: useRef<HTMLButtonElement>(null),
+    myApplications: useRef<HTMLButtonElement>(null),
     history: useRef<HTMLButtonElement>(null),
   };
+  const {
+    data: myApplicationData,
+    isLoading: applicationLoading,
+    isError: isApplicationError,
+  } = useGetMyApplications({
+    isEnabled: activeTab === "myApplications",
+  });
 
-  // const events = React.useMemo<EventType[]>(
-  //   () => [
-  //     {
-  //       id: 1,
-  //       organization: "XYZ Event",
-  //       domain: "Rehabilitation",
-  //       dateRange: "20/02/25 to 20/03/25",
-  //       startDate: new Date(2025, 1, 20),
-  //       endDate: new Date(2025, 2, 20),
-  //       description:
-  //         "Help with rehabilitation activities for people with disabilities",
-  //       location: "Delhi",
-  //       availability: "Weekdays",
-  //     },
-  //     {
-  //       id: 2,
-  //       organization: "ABC Event",
-  //       domain: "Community Support",
-  //       dateRange: "15/03/25 to 30/03/25",
-  //       startDate: new Date(2025, 2, 15),
-  //       endDate: new Date(2025, 2, 30),
-  //       description:
-  //         "Provide community support services to underprivileged families",
-  //       location: "Mumbai",
-  //       availability: "Both",
-  //     },
-  //     {
-  //       id: 3,
-  //       organization: "PQR Event",
-  //       domain: "Education",
-  //       dateRange: "01/04/25 to 15/04/25",
-  //       startDate: new Date(2025, 3, 1),
-  //       endDate: new Date(2025, 3, 15),
-  //       description: "Teach basic skills to children with special needs",
-  //       location: "Bangalore",
-  //       availability: "Weekends",
-  //     },
-  //   ],
-  //   []
-  // );
   const {
     data,
     fetchNextPage,
@@ -264,8 +249,8 @@ const HomePage = () => {
     setSearchQuery("");
   };
 
-  const handleTabKeyDown = (e: React.KeyboardEvent, tabId: string) => {
-    const tabs = ["active", "underReview", "history"];
+  const handleTabKeyDown = (e: React.KeyboardEvent, tabId: TABS) => {
+    const tabs: TABS[] = ["active", "myApplications", "history"];
     const currentIndex = tabs.indexOf(tabId);
 
     switch (e.key) {
@@ -361,17 +346,102 @@ const HomePage = () => {
                 {formatDateFromDate(ev.endDate)}
               </span>
             </p>
-            <Link
-              to={`/volunteer/register/${ev._id}`}
-              className="w-full flex mt-auto justify-center"
-              state={{ eventData: ev }}
-            >
+            {!user ? (
               <Button
                 className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
                 aria-label={`Apply to volunteer with ${ev.name}`}
                 tabIndex={0}
+                onClick={() => navigate("/login")}
               >
-                Apply Now
+                Login To apply
+              </Button>
+            ) : (
+              <Link
+                to={`/volunteer/register/${ev._id}`}
+                className="w-full flex mt-auto justify-center"
+                state={{ eventData: ev }}
+              >
+                <Button
+                  className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
+                  aria-label={`Apply to volunteer with ${ev.name}`}
+                  tabIndex={0}
+                >
+                  Apply Now
+                </Button>
+              </Link>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+  const MyApplicationCard = ({
+    application,
+  }: {
+    application: MyApplicationType;
+  }) => {
+    // ev = {
+    //   ...ev,
+    //   startDate:new Date(ev.startDate),
+    //   endDate:new Date(ev.endDate);
+    // }
+    return (
+      <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
+        <CardHeader>
+          <div className="flex justify-between mb-2 items-start">
+            <div>
+              <CardTitle className="text-lg font-semibold">
+                {application.eventId.name}
+              </CardTitle>
+              <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
+                <Badge
+                  variant="outline"
+                  className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                >
+                  {application.volunteeringDomain.name}
+                </Badge>
+
+                {application.availability && (
+                  <Badge
+                    variant="outline"
+                    className=" bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
+                  >
+                    {application.availability}
+                  </Badge>
+                )}
+              </CardDescription>
+            </div>
+          </div>
+          {application.notes && (
+            <p className="text-sm text-gray-800 dark:text-gray-200">
+              {application.eventId.description}
+            </p>
+          )}
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3 ">
+            <p className="text-sm font-medium">
+              <span
+                className="text-gray-700 dark:text-gray-300"
+                aria-hidden="true"
+              >
+                📅{" "}
+              </span>
+              <span className="text-gray-800 dark:text-gray-200">
+                {formatDateFromDate(application.willingEndDate)} to{" "}
+                {formatDateFromDate(application.willingEndDate)}
+              </span>
+            </p>
+            <Link
+              to={`/volunteer/register/${application._id}`}
+              className="w-full flex mt-auto justify-center"
+              state={{ applicationData: application }}
+            >
+              <Button
+                className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
+                tabIndex={0}
+              >
+                {application.status}
               </Button>
             </Link>
           </div>
@@ -695,21 +765,27 @@ const HomePage = () => {
               Active
             </button>
             <button
-              ref={tabRefs.underReview}
+              ref={tabRefs.myApplications}
               role="tab"
-              id="underReview-tab-trigger"
-              aria-controls="underReview-tab"
-              aria-selected={activeTab === "underReview"}
+              id="myApplications-tab-trigger"
+              aria-controls="myApplications-tab"
+              aria-selected={activeTab === "myApplications"}
               className={`tab-trigger ${
-                activeTab === "underReview"
+                activeTab === "myApplications"
                   ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
                   : "text-gray-600 dark:text-gray-300"
               }`}
-              onClick={() => setActiveTab("underReview")}
-              onKeyDown={(e) => handleTabKeyDown(e, "underReview")}
+              onClick={() => {
+                if (!user) {
+                  navigate("/login");
+                  return;
+                }
+                setActiveTab("myApplications");
+              }}
+              onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
               tabIndex={0}
             >
-              Under Review
+              My Applications
             </button>
             <button
               ref={tabRefs.history}
@@ -795,18 +871,69 @@ const HomePage = () => {
 
           <div
             role="tabpanel"
-            id="underReview-tab"
-            aria-labelledby="underReview-tab-trigger"
-            hidden={activeTab !== "underReview"}
+            id="myApplications-tab"
+            aria-labelledby="myApplications-tab-trigger"
+            hidden={activeTab !== "myApplications"}
             tabIndex={0}
           >
-            {activeTab === "underReview" && (
-              <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                  You have no applications under review.
+            {activeTab === "myApplications" &&
+              (applicationLoading ? (
+                <div className="flex justify-center">
+                  <Loader />
+                </div>
+              ) : isApplicationError ? (
+                <p className="text-red-400">
+                  Error loading programs. Please try again.
                 </p>
-              </div>
-            )}
+              ) : myApplicationData.length > 0 ? (
+                <>
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    Showing {myApplicationData.length}{" "}
+                    {myApplicationData.length === 1
+                      ? "application"
+                      : "applications"}
+                  </div>
+                  <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
+                    {myApplicationData.map((application: MyApplicationType) => (
+                      <MyApplicationCard
+                        key={application._id}
+                        application={application}
+                      />
+                    ))}
+                  </div>
+                  {/* <div ref={loadMoreRef} className="py-4 flex justify-center">
+                    {isFetchingNextPage ? (
+                      <Loader />
+                    ) : (
+                      hasNextPage && (
+                        <span className="text-customNeutral-40 dark:text-contrast-30">
+                          <Loader />
+                        </span>
+                      )
+                    )}
+                  </div> */}
+                </>
+              ) : (
+                <div
+                  className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  role="alert"
+                >
+                  <Info
+                    className="h-12 w-12 text-gray-500 dark:text-gray-400 mx-auto mb-4"
+                    aria-hidden="true"
+                  />
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                    No applications found.
+                  </p>
+                  <Button
+                    variant="link"
+                    onClick={clearAllFilters}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 rounded-md"
+                  >
+                    Clear filters and try again
+                  </Button>
+                </div>
+              ))}
           </div>
 
           <div

@@ -1,9 +1,11 @@
 type Props = { children: React.ReactNode };
 import { FontSizeContext } from "@/contexts/FontSizeContext";
+import { store } from "@/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
 import toast, { Toaster, useToasterStore } from "react-hot-toast";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router";
 
 export function ToastProvider() {
@@ -36,14 +38,16 @@ export default function GlobalProvider({ children }: Props) {
   const [fontSize, setFontSize] = useState(16);
   return (
     <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class">
-          <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
-            <ToastProvider />
-            {children}
-          </FontSizeContext.Provider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider attribute="class">
+            <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
+              <ToastProvider />
+              {children}
+            </FontSizeContext.Provider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </Provider>
     </BrowserRouter>
   );
 }

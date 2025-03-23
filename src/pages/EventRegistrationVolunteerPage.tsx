@@ -8,21 +8,32 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Availabitity } from "@/lib/constants/server-constants";
 import { cn } from "@/lib/utils";
+import { useSubmitApplicationMutation } from "@/services/event";
+import { RootState } from "@/store";
 import { formatDateFromDate } from "@/utils/formattedDate";
 import { format } from "date-fns";
 import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 interface FormData {
   name: string;
   email: string;
   phone: string;
-  availabilityOption: "weekdays" | "weekends" | "both";
+  availabilityOption: Availabitity;
+  volunteeringDomains: any;
   startDate: Date;
   endDate: Date;
   comments?: string;
@@ -44,9 +55,9 @@ const EventRegistrationVolunteerPage = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const eventData = location.state?.eventData as EventType | undefined;
-  console.log(eventData);
 
+  const user = useSelector((s: RootState) => s.user);
+  const eventData = location.state?.eventData as EventType | undefined;
   // used to enable tab keys functioing over calendars
   const endDateButtonRef = useRef<HTMLButtonElement>(null);
   const commentsRef = useRef<HTMLTextAreaElement>(null);
@@ -59,13 +70,19 @@ const EventRegistrationVolunteerPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
-      name: "",
-      email: "",
+      name: user.displayName || "",
+      email: user.email || "",
       phone: "",
-      availabilityOption: "weekdays",
+      availabilityOption: Availabitity.WEEKDAYS,
       comments: "",
     },
   });
+
+  const {
+    mutate: submitApplication,
+    isPending,
+    isSuccess,
+  } = useSubmitApplicationMutation();
 
   useEffect(() => {
     if (eventData) {
@@ -88,7 +105,18 @@ const EventRegistrationVolunteerPage = () => {
 
   const onSubmit = async (data: FormData) => {
     // later we will send this data to the server !!!!!!!!!!!!
-    console.log(data);
+
+    submitApplication({
+      eventId,
+      applicantPhone: data.phone,
+      applicantEmail: data.email,
+      applicantName: data.name,
+      volunteeringDomain: data.volunteeringDomains,
+      willingStartDate: data.startDate,
+      willingEndDate: data.endDate,
+      availability: data.availabilityOption,
+      notes: data.comments,
+    });
   };
 
   const handleStartDateSelect = (date: Date | undefined) => {
@@ -213,6 +241,80 @@ const EventRegistrationVolunteerPage = () => {
                   className={cn(errors.name && "border-red-500")}
                   {...field}
                 />
+              )}
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-baseline justify-between">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Volunteering Domain{" "}
+                <span className="text-red-500" aria-hidden="true">
+                  *
+                </span>
+              </Label>
+              {errors.name && (
+                <p
+                  className="text-sm text-red-500"
+                  id="name-error"
+                  aria-live="assertive"
+                >
+                  {errors.name?.message?.toString()}
+                </p>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mb-1" id="volunteering-domains">
+              Select your Volunteering Domain
+            </p>
+            {/* <Controller
+              name="volunteeringDomains"
+              control={control}
+              rules={{ required: "At least one skill is required" }}
+              render={({ field }) => (
+                <MultiSelect
+                  options={eventData.volunteeringDomains.map((event) => ({
+                    value: event._id,
+                    label: event.name,
+                  }))}
+                  onValueChange={(selected) => {
+                    field.onChange(selected);
+                    setValue("volunteeringDomains", selected);
+                  }}
+                  value={field.value}
+                  placeholder="Select Dominas"
+                  variant="default"
+                  animation={1}
+                  maxCount={3}
+                  className={cn(errors.volunteeringDomains && "border-red-500")}
+                />
+              )}
+            /> */}
+            <Controller
+              name="volunteeringDomains"
+              control={control}
+              rules={{ required: "At least one domain is required" }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={(selected) => {
+                    field.onChange(selected);
+                    setValue("volunteeringDomains", selected);
+                  }}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      errors.volunteeringDomains && "border-red-500"
+                    )}
+                  >
+                    <SelectValue placeholder="Select Domain" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {eventData.volunteeringDomains.map((event) => (
+                      <SelectItem key={event._id} value={event._id}>
+                        {event.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             />
           </div>
@@ -360,8 +462,8 @@ const EventRegistrationVolunteerPage = () => {
                   {
                     eventData.availability.map((avail) => (
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="weekdays" id="weekdays" />
-                        <Label htmlFor="weekdays" className="font-normal">
+                        <RadioGroupItem value={avail} id={avail} />
+                        <Label htmlFor={avail} className="font-normal">
                           {avail}
                         </Label>
                       </div>
@@ -583,11 +685,18 @@ const EventRegistrationVolunteerPage = () => {
         <div className="space-y-2">
           <Button
             type="submit"
-            className="w-full md:w-auto"
-            disabled={isSubmitting}
+            className={cn(
+              "w-full md:w-auto",
+              isSuccess && "bg-green-700 hover:bg-green-700"
+            )}
+            disabled={isSubmitting || isPending}
             aria-disabled={isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Register as Volunteer"}
+            {isSubmitting || isPending
+              ? "Submitting..."
+              : isSuccess
+              ? "You have applied!!"
+              : "Register as Volunteer"}
           </Button>
 
           {/* Add help text for required fields */}

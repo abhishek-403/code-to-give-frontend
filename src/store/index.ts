@@ -3,8 +3,11 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { useDispatch, useSelector, useStore } from "react-redux";
 
+import userReducer from "./slices/user-slice";
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    user: userReducer,
+  },
 });
 
 setupListeners(store.dispatch);

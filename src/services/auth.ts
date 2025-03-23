@@ -4,29 +4,15 @@ import {
   ResponseStatusType,
 } from "@/lib/constants/response-types";
 import { auth, googleAuthProvider } from "@/lib/firebaseConfig";
+import { resetUserDetails } from "@/store/slices/user-slice";
 import { formatFirebaseError } from "@/utils/formattedError";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import toast from "react-hot-toast";
-
-export const useGetUserProfile = ({ isEnabled }: { isEnabled: boolean }) => {
-  return useQuery({
-    queryKey: ["userProfile"],
-    queryFn: async function fetchProfile() {
-      const response: ApiResponseFormat = await axiosClient.get(
-        "/user/get-profile"
-      );
-      if (response.status === ResponseStatusType.Success) {
-        return response.result;
-      }
-
-      return null;
-    },
-    enabled: isEnabled,
-  });
-};
+import { useDispatch } from "react-redux";
 
 export const useSignUpWithGoogleMutation = () => {
+  const dispatch = useDispatch();
   return useMutation<any, void>({
     mutationFn: async () => {
       const { user } = await signInWithPopup(auth, googleAuthProvider);
@@ -42,6 +28,7 @@ export const useSignUpWithGoogleMutation = () => {
 
       if (response.status === ResponseStatusType.Error) {
         await auth.signOut();
+        dispatch(resetUserDetails());
       }
       return user;
     },
@@ -56,6 +43,7 @@ export const useSignUpWithGoogleMutation = () => {
 };
 
 export const useSignUpWithEmailPasswordMutation = () => {
+  const dispatch = useDispatch();
   return useMutation<
     void,
     Error,
@@ -74,6 +62,7 @@ export const useSignUpWithEmailPasswordMutation = () => {
 
         if (response.status === ResponseStatusType.Error) {
           await auth.signOut();
+          dispatch(resetUserDetails());
 
           throw new Error("User creation failed in backend.");
         }
