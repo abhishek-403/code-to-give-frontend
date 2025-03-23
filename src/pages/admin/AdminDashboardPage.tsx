@@ -626,12 +626,12 @@ const AdminDashboardPage = () => {
                 </div>
                 <div className="overflow-auto max-h-64 bg-card rounded-lg border">
                   {/* Table with proper dark mode styling */}
-                  <table className="w-full">
-                    <thead className="bg-muted/50 sticky top-0">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Score</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Responses</th>
+                  <table className="w-full border-collapse">
+                    <thead className="sticky top-0 z-20">
+                    <tr className="bg-card shadow-sm">
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Category</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Score</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Responses</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -655,13 +655,13 @@ const AdminDashboardPage = () => {
                 </div>
                 <div className="flex flex-col h-64">
                   <h3 className="font-medium mb-2">Top Volunteers This Month</h3>
-                  <div className="overflow-auto flex-grow bg-card rounded-lg border">
-                    <table className="w-full">
-                      <thead className="bg-muted/50 sticky top-0">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Hours</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Tasks</th>
+                  <div className="overflow-auto max-h-64 bg-card rounded-lg border">
+                    <table className="w-full border-collapse">
+                      <thead className="sticky top-0">
+                      <tr className="bg-card shadow-sm">
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Name</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Hours</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Tasks</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
