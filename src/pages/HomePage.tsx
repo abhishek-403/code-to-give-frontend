@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Availabitity } from "@/lib/constants/server-constants";
+import { ApplicationStatus, Availabitity } from "@/lib/constants/server-constants";
 import { auth } from "@/lib/firebaseConfig";
 import { useGetVolunteerDomains, useInfiniteEvents } from "@/services/event";
 import { useGetMyApplications } from "@/services/user";
@@ -29,6 +29,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 interface EventType {
   _id: string;
   name: string;
@@ -154,10 +155,9 @@ const HomePage = () => {
   const [isFiltersApplied, setIsFiltersApplied] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const { data: volunteerArray } = useGetVolunteerDomains({ isEnabled: true });
-  // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
   const [activeTab, setActiveTab] = useState("active");
-  const [user, _] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
@@ -172,45 +172,6 @@ const HomePage = () => {
     isEnabled: activeTab === "myApplications",
   });
 
-  //   () => [
-  //     {
-  //       id: 1,
-  //       organization: "XYZ Event",
-  //       domain: "Rehabilitation",
-  //       dateRange: "20/02/25 to 20/03/25",
-  //       startDate: new Date(2025, 1, 20),
-  //       endDate: new Date(2025, 2, 20),
-  //       description:
-  //         "Help with rehabilitation activities for people with disabilities",
-  //       location: "Delhi",
-  //       availability: "Weekdays",
-  //     },
-  //     {
-  //       id: 2,
-  //       organization: "ABC Event",
-  //       domain: "Community Support",
-  //       dateRange: "15/03/25 to 30/03/25",
-  //       startDate: new Date(2025, 2, 15),
-  //       endDate: new Date(2025, 2, 30),
-  //       description:
-  //         "Provide community support services to underprivileged families",
-  //       location: "Mumbai",
-  //       availability: "Both",
-  //     },
-  //     {
-  //       id: 3,
-  //       organization: "PQR Event",
-  //       domain: "Education",
-  //       dateRange: "01/04/25 to 15/04/25",
-  //       startDate: new Date(2025, 3, 1),
-  //       endDate: new Date(2025, 3, 15),
-  //       description: "Teach basic skills to children with special needs",
-  //       location: "Bangalore",
-  //       availability: "Weekends",
-  //     },
-  //   ],
-  //   []
-  // );
   const filterParams = React.useMemo<FilterParams>(() => {
     if (!isFiltersApplied) {
       // Only include the search query if filters are not applied
@@ -359,7 +320,7 @@ const HomePage = () => {
                     variant="outline"
                     className=" bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
                   >
-                    {ev.availability}
+                    {ev.availability[0]}
                   </Badge>
                 )}
               </CardDescription>
@@ -392,7 +353,7 @@ const HomePage = () => {
                 tabIndex={0}
                 onClick={() => navigate("/login")}
               >
-                Login To apply
+                {loading ? <Loader /> : "Login To apply"}
               </Button>
             ) : (
               <Link
@@ -452,11 +413,10 @@ const HomePage = () => {
               </CardDescription>
             </div>
           </div>
-          {application.notes && (
-            <p className="text-sm text-gray-800 dark:text-gray-200">
-              {application.eventId.description}
-            </p>
-          )}
+
+          <p className="text-sm text-gray-800 dark:text-gray-200">
+            {application.eventId.description}
+          </p>
         </CardHeader>
         <CardContent>
           <div className="space-y-3 ">
@@ -478,7 +438,7 @@ const HomePage = () => {
               state={{ applicationData: application }}
             >
               <Button
-                className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
+                className={cn("w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400",application.status===ApplicationStatus.PENDING ? "bg-zinc-200 text-black hover:bg-zinc-200": application.status===ApplicationStatus.APPROVED && "bg-green-700 hover:bg-green-700 ")}
                 tabIndex={0}
               >
                 {application.status}
@@ -609,8 +569,8 @@ const HomePage = () => {
                     <SelectItem value="Both">
                       Both Weekdays & Weekends
                     </SelectItem>
-                    <SelectItem value="Weekdays">Weekdays Only</SelectItem>
-                    <SelectItem value="Weekends">Weekends Only</SelectItem>
+                    <SelectItem value="Week days">Weekdays</SelectItem>
+                    <SelectItem value="Week ends">Weekends</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -844,46 +804,46 @@ const HomePage = () => {
             >
               Active
             </button>
-            <button
-              ref={tabRefs.myApplications}
-              role="tab"
-              id="myApplications-tab-trigger"
-              aria-controls="myApplications-tab"
-              aria-selected={activeTab === "myApplications"}
-              className={`tab-trigger ${
-                activeTab === "myApplications"
-                  ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-              onClick={() => {
-                if (!user) {
-                  navigate("/login");
-                  return;
-                }
-                setActiveTab("myApplications");
-              }}
-              onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
-              tabIndex={0}
-            >
-              My Applications
-            </button>
-            <button
-              ref={tabRefs.history}
-              role="tab"
-              id="history-tab-trigger"
-              aria-controls="history-tab"
-              aria-selected={activeTab === "history"}
-              className={`tab-trigger ${
-                activeTab === "history"
-                  ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-              onClick={() => setActiveTab("history")}
-              onKeyDown={(e) => handleTabKeyDown(e, "history")}
-              tabIndex={0}
-            >
-              History
-            </button>
+            {user && (
+              <button
+                ref={tabRefs.myApplications}
+                role="tab"
+                id="myApplications-tab-trigger"
+                aria-controls="myApplications-tab"
+                aria-selected={activeTab === "myApplications"}
+                className={`tab-trigger ${
+                  activeTab === "myApplications"
+                    ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
+                    : "text-gray-600 dark:text-gray-300"
+                }`}
+                onClick={() => {
+                  setActiveTab("myApplications");
+                }}
+                onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
+                tabIndex={0}
+              >
+                My Applications
+              </button>
+            )}
+            {user && (
+              <button
+                ref={tabRefs.history}
+                role="tab"
+                id="history-tab-trigger"
+                aria-controls="history-tab"
+                aria-selected={activeTab === "history"}
+                className={`tab-trigger ${
+                  activeTab === "history"
+                    ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
+                    : "text-gray-600 dark:text-gray-300"
+                }`}
+                onClick={() => setActiveTab("history")}
+                onKeyDown={(e) => handleTabKeyDown(e, "history")}
+                tabIndex={0}
+              >
+                History
+              </button>
+            )}
           </div>
 
           <div
