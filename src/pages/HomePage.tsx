@@ -29,7 +29,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
-import HistoryEventCard from '@/components/HistoryEventCard';
+import HistoryEventCard from "@/components/HistoryEventCard";
 
 interface EventType {
   _id: string;
@@ -536,16 +536,10 @@ const HomePage = () => {
               </span>
             </p>
             <Link
-              to={`/volunteer/register/${application._id}`}
-              className="w-full flex mt-auto justify-center"
+              to={`/volunteer/event/${application._id}`}
               state={{ applicationData: application }}
             >
-              <Button
-                className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
-                tabIndex={0}
-              >
-                {application.status}
-              </Button>
+              <Button className="w-full mt-2">View Tasks</Button>
             </Link>
           </div>
         </CardContent>
@@ -555,28 +549,28 @@ const HomePage = () => {
 
   const DUMMY_HISTORY_EVENTS: HistoryEventType[] = [
     {
-      _id: 'hist1',
-      name: 'Community Cleanup Drive',
-      location: 'City Park',
-      startDate: new Date('2024-01-15'),
-      endDate: new Date('2024-01-16'),
-      dateRange: '15/01/24 to 16/01/24',
-      volunteeringDomains: [{ name: 'Environmental' }],
-      description: 'A community event to clean up local park areas',
+      _id: "hist1",
+      name: "Community Cleanup Drive",
+      location: "City Park",
+      startDate: new Date("2024-01-15"),
+      endDate: new Date("2024-01-16"),
+      dateRange: "15/01/24 to 16/01/24",
+      volunteeringDomains: [{ name: "Environmental" }],
+      description: "A community event to clean up local park areas",
       availability: [Availabitity.WEEKENDS],
-      feedbackSubmitted: false
+      feedbackSubmitted: false,
     },
     {
-      _id: 'hist2',
-      name: 'Teaching Underprivileged Children',
-      location: 'XYZ School',
-      startDate: new Date('2024-02-01'),
-      endDate: new Date('2024-02-28'),
-      dateRange: '01/02/24 to 28/02/24',
-      volunteeringDomains: [{ name: 'Education' }],
-      description: 'Teaching basic skills to underprivileged children',
+      _id: "hist2",
+      name: "Teaching Underprivileged Children",
+      location: "XYZ School",
+      startDate: new Date("2024-02-01"),
+      endDate: new Date("2024-02-28"),
+      dateRange: "01/02/24 to 28/02/24",
+      volunteeringDomains: [{ name: "Education" }],
+      description: "Teaching basic skills to underprivileged children",
       availability: [Availabitity.WEEKDAYS],
-      feedbackSubmitted: true
+      feedbackSubmitted: true,
     },
   ];
 
@@ -1112,8 +1106,8 @@ const HomePage = () => {
             hidden={activeTab !== "history"}
             tabIndex={0}
           >
-            {activeTab === "history" && (
-              isLoading ? (
+            {activeTab === "history" &&
+              (isLoading ? (
                 <div className="flex justify-center">
                   <Loader />
                 </div>
@@ -1125,9 +1119,7 @@ const HomePage = () => {
                 <>
                   <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
                     Showing {DUMMY_HISTORY_EVENTS.length}{" "}
-                    {DUMMY_HISTORY_EVENTS.length === 1
-                      ? "event"
-                      : "events"}
+                    {DUMMY_HISTORY_EVENTS.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
                     {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
@@ -1155,8 +1147,7 @@ const HomePage = () => {
                     Clear filters and try again
                   </Button>
                 </div>
-              )
-            )}
+              ))}
           </div>
         </div>
       </div>

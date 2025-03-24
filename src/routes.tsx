@@ -19,6 +19,7 @@ import LoadingPage from "./utils/loading-page";
 import ChangeUserRole from "./pages/admin/ChangeUserRole";
 
 import FeedbackPage from "@/pages/FeedbackPage";
+import VolunteerEventPage from "@/pages/VolunteerEventPage";
 
 const ProtectedRoute = () => {
   const [user, loading] = useAuthState(auth);
@@ -106,30 +107,38 @@ export default function AppRoutes() {
           </Layout>
         }
       />
-<Route
-  path="/donate"
-  element={
-    <Layout>
-      <DonatePage />
-    </Layout>
-  }
-/>
-<Route
-  path="/admin/changeroles"
-  element={
-    <Layout>
-      <ChangeUserRole />
-    </Layout>
-  }
-/>
-<Route
-  path="/feedback/:eventId"
-  element={
-    <Layout>
-      <FeedbackPage />
-    </Layout>
-  }
-/>
+      <Route
+        path="/donate"
+        element={
+          <Layout>
+            <DonatePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/admin/changeroles"
+        element={
+          <Layout>
+            <ChangeUserRole />
+          </Layout>
+        }
+      />
+      <Route
+        path="/feedback/:eventId"
+        element={
+          <Layout>
+            <FeedbackPage />
+          </Layout>
+        }
+      />
+    <Route 
+      path="/volunteer/event/:eventId"
+      element={
+        <Layout>
+          <VolunteerEventPage />
+        </Layout>
+      }
+    />
     </Routes>
   );
 }
