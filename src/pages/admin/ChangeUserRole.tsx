@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Table, TableHead, TableRow, TableCell, TableHeaderCell } from "@/components/ui/table";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import axios from "axios";
+import { ArrowLeft } from "lucide-react";
 
 interface User {
   _id: string;
@@ -44,6 +46,12 @@ const ChangeUserRole: React.FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
+      <Link to="/admin" className="text-primary-600">
+        <Button variant="outline" className="mb-4">
+          <ArrowLeft size={16} />
+          Back to Dashboard
+        </Button>
+      </Link>
       {/* Page Header */}
       <Card className="border-none">
         <CardHeader>
