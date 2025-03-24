@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Availabitity } from "@/lib/constants/server-constants";
 import { auth } from "@/lib/firebaseConfig";
-import { useInfiniteEvents } from "@/services/event";
+import { useGetVolunteerDomains, useInfiniteEvents } from "@/services/event";
 import { useGetMyApplications } from "@/services/user";
 import { formatDateFromDate } from "@/utils/formattedDate";
 import Loader from "@/utils/loader";
@@ -153,7 +153,7 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFiltersApplied, setIsFiltersApplied] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-
+  const { data: volunteerArray } = useGetVolunteerDomains({ isEnabled: true });
   // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
   const [activeTab, setActiveTab] = useState("active");
@@ -172,7 +172,6 @@ const HomePage = () => {
     isEnabled: activeTab === "myApplications",
   });
 
-  // const events = React.useMemo<EventType[]>(
   //   () => [
   //     {
   //       id: 1,
@@ -216,19 +215,31 @@ const HomePage = () => {
     if (!isFiltersApplied) {
       // Only include the search query if filters are not applied
       return {
-        searchQuery: debouncedSearchQuery || undefined
+        searchQuery: debouncedSearchQuery || undefined,
       };
     }
-    
+    // refetch();
+
     return {
       city: city && city !== "all_cities" ? city : undefined,
       domain: domain && domain !== "all_domains" ? domain : undefined,
-      availability: availability && availability !== "all_availability" ? availability : undefined,
+      availability:
+        availability && availability !== "all_availability"
+          ? availability
+          : undefined,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
-      searchQuery: debouncedSearchQuery || undefined
+      searchQuery: debouncedSearchQuery || undefined,
     };
-  }, [isFiltersApplied, city, domain, availability, startDate, endDate, debouncedSearchQuery]);
+  }, [
+    isFiltersApplied,
+    city,
+    domain,
+    availability,
+    startDate,
+    endDate,
+    debouncedSearchQuery,
+  ]);
   const {
     data,
     fetchNextPage,
@@ -251,69 +262,8 @@ const HomePage = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
-  // const parseDate = (dateString: string): Date | null => {
-  //   if (!dateString) return null;
-  //   return new Date(dateString);
-  // };
 
-  // useEffect(() => {
-  //   const filtered = events.filter((event) => {
-  //     const matchesSearch =
-  //       !searchQuery ||
-  //       event.organization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       event.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       (event.description &&
-  //         event.description.toLowerCase().includes(searchQuery.toLowerCase()));
-
-  //     const matchesCity =
-  //       !city ||
-  //       city === "" ||
-  //       city === "all_cities" ||
-  //       event.location === city;
-
-  //     const matchesDomain =
-  //       !domain ||
-  //       domain === "" ||
-  //       domain === "all_domains" ||
-  //       event.domain === domain;
-
-  //     const matchesAvailability =
-  //       !availability ||
-  //       availability === "" ||
-  //       availability === "all_availability" ||
-  //       event.availability === availability ||
-  //       (event.availability === "Both" && availability !== "");
-
-  //     let matchesDate = true;
-  //     const filterStartDate = parseDate(startDate);
-  //     const filterEndDate = parseDate(endDate);
-
-  //     if (filterStartDate) {
-  //       matchesDate = matchesDate && event.endDate >= filterStartDate;
-  //     }
-
-  //     if (filterEndDate) {
-  //       matchesDate = matchesDate && event.startDate <= filterEndDate;
-  //     }
-
-  //     return (
-  //       matchesSearch &&
-  //       matchesCity &&
-  //       matchesDomain &&
-  //       matchesAvailability &&
-  //       matchesDate
-  //     );
-  //   });
-
-  //   setFilteredEvents(filtered);
-  // }, [searchQuery, city, domain, availability, startDate, endDate, events]);
-
-  // useEffect(() => {
-  //   setFilteredEvents(events);
-  // }, [events]);
-  
   useEffect(() => {
-    // Only trigger refetch if the debounced value has changed
     refetch();
   }, [debouncedSearchQuery, refetch]);
 
@@ -387,12 +337,14 @@ const HomePage = () => {
             <div>
               <CardTitle className="text-lg font-semibold">{ev.name}</CardTitle>
               <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
-                <Badge
-                  variant="outline"
-                  className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-                >
-                  {ev.volunteeringDomains[0].name}
-                </Badge>
+                {ev.volunteeringDomains.length > 0 && (
+                  <Badge
+                    variant="outline"
+                    className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                  >
+                    {ev.volunteeringDomains[0].name}
+                  </Badge>
+                )}
                 {ev.location && (
                   <Badge
                     variant="secondary"
@@ -484,7 +436,8 @@ const HomePage = () => {
                   variant="outline"
                   className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
                 >
-                  {application.volunteeringDomain.name}
+                  {application.volunteeringDomain &&
+                    application.volunteeringDomain.name}
                 </Badge>
 
                 {application.availability && (
@@ -546,7 +499,7 @@ const HomePage = () => {
       </a>
 
       {/*Filters */}
-      <div className="sticky  self-start top-[10px]">
+      <div className="stickyt top-[10px]">
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Find events</CardTitle>
@@ -614,14 +567,20 @@ const HomePage = () => {
                     <SelectValue placeholder="Select domain" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all_domains">All Domains</SelectItem>
+                    {/* <SelectItem value="all_domains">All Domains</SelectItem>
                     <SelectItem value="Rehabilitation">
                       Rehabilitation
                     </SelectItem>
                     <SelectItem value="Education">Education</SelectItem>
                     <SelectItem value="Community Support">
                       Community Support
-                    </SelectItem>
+                    </SelectItem> */}
+                    {volunteerArray &&
+                      volunteerArray.map((v: { name: string; _id: string }) => (
+                        <SelectItem key={v._id} value={v._id}>
+                          {v.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -695,7 +654,7 @@ const HomePage = () => {
                 <Button
                   variant="default"
                   className="w-full focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-                   // onClick={() => {
+                  // onClick={() => {
                   //   if (
                   //     !city &&
                   //     !domain &&
@@ -726,7 +685,7 @@ const HomePage = () => {
           </CardContent>
         </Card>
         {/*filter badges */}
-        {(city ||
+        {/* {(city ||
           domain ||
           availability ||
           startDate ||
@@ -738,8 +697,7 @@ const HomePage = () => {
                 Active Filters:
               </p>
               <div className="flex flex-wrap gap-2">
-                {/* Here the filter badges will be rendered - same as original code */}
-                {/* Search query badge */}
+     
                 {searchQuery && (
                   <Badge
                     variant="secondary"
@@ -755,8 +713,7 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
-                
-                {/* City badge */}
+
                 {city && (
                   <Badge
                     variant="secondary"
@@ -780,8 +737,7 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
-                
-                {/* Domain badge */}
+
                 {domain && (
                   <Badge
                     variant="secondary"
@@ -805,8 +761,7 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
-                
-                {/* Availability badge */}
+
                 {availability && (
                   <Badge
                     variant="secondary"
@@ -835,8 +790,7 @@ const HomePage = () => {
                     </button>
                   </Badge>
                 )}
-                
-                {/* Date range badge */}
+
                 {(startDate || endDate) && (
                   <Badge
                     variant="secondary"
@@ -862,7 +816,7 @@ const HomePage = () => {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
       </div>
 
       <div id="main-content">

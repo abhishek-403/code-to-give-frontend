@@ -1,3 +1,4 @@
+import { UserRole } from "@/lib/constants/server-constants";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserState {
@@ -5,6 +6,7 @@ export interface UserState {
   profileImage: string | null;
   email: string | null;
   uid: string | null;
+  role: UserRole | UserRole.USER;
   _id: string | null;
 }
 
@@ -12,6 +14,7 @@ const initialState: UserState = {
   displayName: null,
   profileImage: null,
   email: null,
+  role: UserRole.USER,
   uid: null,
   _id: null,
 };
@@ -32,6 +35,7 @@ export const userSlice = createSlice({
     },
     resetUserDetails: (_) => {
       return {
+        role: UserRole.USER,
         profileImage: null,
         displayName: null,
         email: null,

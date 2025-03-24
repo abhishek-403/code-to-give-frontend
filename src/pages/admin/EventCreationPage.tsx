@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/mulit-select";
 import {
   Popover,
   PopoverContent,
@@ -40,15 +42,27 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { Availabitity } from "@/lib/constants/server-constants";
 import { cn } from "@/lib/utils";
+import {
+  useCreateEventMutation,
+  useCreateNewVolunteeringDomainMutation,
+  useGetEventTemplates,
+} from "@/services/event";
+import { useAppSelector } from "@/store";
 import { format } from "date-fns";
-import { AlertCircle, ArrowLeft, BookMarked, LayoutTemplate } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  BookMarked,
+  LayoutTemplate,
+} from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Link } from "react-router";
 
 // Define types for our form
-type FormField = {
+type FormFieldType = {
   label: string;
   type: string;
   required: boolean;
@@ -56,100 +70,104 @@ type FormField = {
 };
 
 type EventFormValues = {
-  title: string;
+  name: string;
   description: string;
   location: string;
   startDate: Date;
   endDate: Date;
-  category: string;
+  volunteeringDomains: string[];
   capacity: number;
-  formFields: FormField[];
+  availability: string[];
+  formFields: FormFieldType[];
+  saveFormFieldsAsTemplate?: boolean;
 };
 
 type FormTemplate = {
   id: string;
   name: string;
-  category: string;
-  formFields: FormField[];
+  fields: FormFieldType[];
 };
 
 const EventCreationPage = () => {
-  // Mock templates - this would come from API in the real implementation
-  const [templates, setTemplates] = useState<FormTemplate[]>([
-    {
-      id: "1",
-      name: "Basic Volunteer Info",
-      category: "general",
-      formFields: [
-        {
-          label: "Full Name",
-          type: "text",
-          required: true,
-          placeholder: "Enter your full name",
-        },
-        {
-          label: "Email",
-          type: "email",
-          required: true,
-          placeholder: "Enter your email address",
-        },
-        {
-          label: "Phone Number",
-          type: "phone",
-          required: true,
-          placeholder: "Enter your phone number",
-        },
-      ],
-    },
-    {
-      id: "2",
-      name: "Education Program",
-      category: "education",
-      formFields: [
-        {
-          label: "Full Name",
-          type: "text",
-          required: true,
-          placeholder: "Enter your full name",
-        },
-        {
-          label: "Email",
-          type: "email",
-          required: true,
-          placeholder: "Enter your email address",
-        },
-        {
-          label: "Teaching Experience",
-          type: "textarea",
-          required: false,
-          placeholder: "Describe your teaching experience",
-        },
-        {
-          label: "Preferred Age Group",
-          type: "select",
-          required: true,
-          placeholder: "Select age group",
-        },
-      ],
-    },
-  ]);
+  // const [templates, setTemplates] = useState<FormTemplate[]>([
+  //   {
+  //     id: "1",
+  //     name: "Basic Volunteer Info",
+  //     category: "general",
+  //     formFields: [
+  //       {
+  //         label: "Full Name",
+  //         type: "text",
+  //         required: true,
+  //         placeholder: "Enter your full name",
+  //       },
+  //       {
+  //         label: "Email",
+  //         type: "email",
+  //         required: true,
+  //         placeholder: "Enter your email address",
+  //       },
+  //       {
+  //         label: "Phone Number",
+  //         type: "phone",
+  //         required: true,
+  //         placeholder: "Enter your phone number",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Education Program",
+  //     category: "education",
+  //     formFields: [
+  //       {
+  //         label: "Full Name",
+  //         type: "text",
+  //         required: true,
+  //         placeholder: "Enter your full name",
+  //       },
+  //       {
+  //         label: "Email",
+  //         type: "email",
+  //         required: true,
+  //         placeholder: "Enter your email address",
+  //       },
+  //       {
+  //         label: "Teaching Experience",
+  //         type: "textarea",
+  //         required: false,
+  //         placeholder: "Describe your teaching experience",
+  //       },
+  //       {
+  //         label: "Preferred Age Group",
+  //         type: "select",
+  //         required: true,
+  //         placeholder: "Select age group",
+  //       },
+  //     ],
+  //   },
+  // ]);
 
-  // States for template management
-  const [showSaveTemplateDialog, setShowSaveTemplateDialog] = useState(false);
+  const { mutate, isPending } = useCreateEventMutation();
+  const [showNewDomainDialog, setShowNewDomainDialog] = useState(false);
   const [templateName, setTemplateName] = useState("");
+  const [newDomainName, setNewDomainName] = useState("");
   const [showLoadTemplateDialog, setShowLoadTemplateDialog] = useState(false);
+  const { data: templates, isLoading } = useGetEventTemplates();
+  console.log(templates);
 
-  // Initialize form with default values
   const form = useForm<EventFormValues>({
     defaultValues: {
-      title: "",
+      name: "",
       description: "",
       location: "",
       startDate: new Date(),
       endDate: new Date(),
-      category: "",
+      volunteeringDomains: [],
       capacity: 0,
+      availability: [Availabitity.BOTH],
       formFields: [],
+      saveFormFieldsAsTemplate: false,
     },
   });
 
@@ -157,7 +175,6 @@ const EventCreationPage = () => {
     control,
     handleSubmit,
     formState: { errors },
-    getValues,
     setValue,
     watch,
   } = form;
@@ -167,14 +184,30 @@ const EventCreationPage = () => {
     name: "formFields",
   });
 
-  const watchCategory = watch("category");
-
   const onSubmit = (data: EventFormValues) => {
-    console.log(data);
-    // Send data to backend API
+    // Transform data to match schema
+    if (data.saveFormFieldsAsTemplate && !templateName.trim()) {
+      setTemplateNameError("Template name required");
+      return;
+    }
+    const transformedData = {
+      name: data.name,
+      description: data.description,
+      location: data.location,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      volunteeringDomains: Array.isArray(data.volunteeringDomains)
+        ? data.volunteeringDomains
+        : [data.volunteeringDomains],
+      availability: data.availability,
+      formFields: data.formFields,
+      capacity: data.capacity,
+      saveAsTemplate: data.saveFormFieldsAsTemplate,
+      templateName,
+    };
+    mutate(transformedData);
   };
 
-  // Function to add a new form field with default values
   const addNewField = () => {
     append({
       label: "",
@@ -184,50 +217,21 @@ const EventCreationPage = () => {
     });
   };
 
-  // Function to save current form fields as a template
-  const saveAsTemplate = () => {
-    const formFields = getValues("formFields");
-    const category = getValues("category");
-    
-    if (formFields.length === 0) {
-      alert("Please add at least one form field to save as template");
-      return;
-    }
+  const { mutate: createDomain } = useCreateNewVolunteeringDomainMutation();
 
-    // This would be an API call in the real implementation
-    const newTemplate: FormTemplate = {
-      id: Date.now().toString(), // temporary ID generation
-      name: templateName,
-      category: category,
-      formFields: formFields,
-    };
-
-    setTemplates([...templates, newTemplate]);
-    setShowSaveTemplateDialog(false);
-    setTemplateName("");
-    
-    // In a real implementation, this would be:
-    // const response = await fetch('/api/templates', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ name: templateName, category, formFields })
-    // });
-    // if (response.ok) {
-    //   // Show success message
-    // }
-  };
+  const [templateNameError, setTemplateNameError] = useState<string | null>(
+    null
+  );
 
   // Function to load a template's form fields
-  const loadTemplate = (template: FormTemplate) => {
-    replace(template.formFields);
-    
-    // If the template is specific to a category, set that category
-    if (template.category && template.category !== "general") {
-      setValue("category", template.category);
-    }
-    
+  const loadTemplate = (temp: FormTemplate) => {
+    replace(temp.fields);
+
     setShowLoadTemplateDialog(false);
   };
+  const volDomains: any = useAppSelector(
+    (state: any) => state.eventDetails.voluneeringDomain
+  );
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
@@ -249,27 +253,27 @@ const EventCreationPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Event Title */}
+              {/* Event Name (formerly Title) */}
               <FormField
                 control={control}
-                name="title"
-                rules={{ required: "Event title is required" }}
+                name="name"
+                rules={{ required: "Event name is required" }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="title">Event Title</FormLabel>
+                    <FormLabel htmlFor="name">Event Name</FormLabel>
                     <FormControl>
                       <Input
-                        id="title"
-                        placeholder="Enter event title"
-                        aria-describedby="title-error"
+                        id="name"
+                        placeholder="Enter event name"
+                        aria-describedby="name-error"
                         {...field}
                       />
                     </FormControl>
-                    {errors.title && (
+                    {errors.name && (
                       <FormMessage>
                         <span className="flex items-center gap-2 text-red-500">
                           <AlertCircle size={16} />
-                          {errors.title.message}
+                          {errors.name.message}
                         </span>
                       </FormMessage>
                     )}
@@ -442,23 +446,24 @@ const EventCreationPage = () => {
                 )}
               />
 
-              {/* Category */}
-              <FormField
+              {/* Volunteering Domains (formerly Category) */}
+              {/* <FormField
                 control={control}
-                name="category"
-                rules={{ required: "Domain is required" }}
+                name="volunteeringDomains"
+                rules={{ required: "Volunteering domain is required" }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="category">Event Domain</FormLabel>
+                    <FormLabel htmlFor="volunteeringDomains">
+                      Volunteering Domain
+                    </FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      value={field.value}
+                      onValueChange={(value) => field.onChange([value])} // Store as array for schema compatibility
+                      value={field.value?.length ? field.value[0] : ""}
                     >
                       <FormControl>
                         <SelectTrigger
-                          id="category"
-                          aria-describedby="category-error"
+                          id="volunteeringDomains"
+                          aria-describedby="volunteeringDomains-error"
                         >
                           <SelectValue placeholder="Select a domain" />
                         </SelectTrigger>
@@ -486,11 +491,199 @@ const EventCreationPage = () => {
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
-                    {errors.category && (
+                    {errors.volunteeringDomains && (
                       <FormMessage>
                         <span className="flex items-center gap-2 text-red-500">
                           <AlertCircle size={16} />
-                          {errors.category.message}
+                          {errors.volunteeringDomains.message}
+                        </span>
+                      </FormMessage>
+                    )}
+                  </FormItem>
+                )}
+              /> */}
+              <FormField
+                control={control}
+                name="volunteeringDomains"
+                rules={{ required: "Volunteering domain is required" }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="volunteeringDomains">
+                      Volunteering Domains
+                    </FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        options={volDomains ?? []}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value || []}
+                        placeholder="Select volunteering domains"
+                        maxCount={3}
+                        className="w-full "
+                        id="volunteeringDomains"
+                        aria-describedby="volunteeringDomains-error"
+                      />
+                    </FormControl>
+                    {errors.volunteeringDomains && (
+                      <FormMessage>
+                        <span className="flex items-center gap-2 text-red-500">
+                          <AlertCircle size={16} />
+                          {errors.volunteeringDomains.message}
+                        </span>
+                      </FormMessage>
+                    )}
+                  </FormItem>
+                )}
+              />
+              <div>
+                <Dialog
+                  open={showNewDomainDialog}
+                  onOpenChange={setShowNewDomainDialog}
+                >
+                  <DialogTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
+                      <BookMarked size={16} />
+                      Add new domain
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Volunteering domain</DialogTitle>
+                      <DialogDescription>
+                        Add a new volunteering domain.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <FormItem>
+                        <FormLabel htmlFor="newdomainName">
+                          Volunteering Domain Name :
+                        </FormLabel>
+                        <Input
+                          id="newdomainName"
+                          placeholder="Enter a name for this domain"
+                          value={newDomainName}
+                          required
+                          onChange={(e) => setNewDomainName(e.target.value)}
+                        />
+                      </FormItem>
+                      {/* <FormItem>
+                        <FormLabel htmlFor="newdomainDesc">
+                          Volunteering Domain description :
+                        </FormLabel>
+                        <Input
+                          id="newdomainDesc"
+                          placeholder="Enter a description for domain"
+                          value={templateName}
+                          onChange={(e) => setTemplateName(e.target.value)}
+                        />
+                      </FormItem> */}
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowNewDomainDialog(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          createDomain(
+                            { name: newDomainName },
+                            {
+                              onSuccess: () => setShowNewDomainDialog(false),
+                            }
+                          );
+                        }}
+                        disabled={!newDomainName.trim()}
+                      >
+                        Save
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              {/* Availability - New field based on schema */}
+              {/* <FormField
+                control={control}
+                name="availability"
+                rules={{ required: "Availability is required" }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="availability">Availability</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          id="availability"
+                          aria-describedby="availability-error"
+                        >
+                          <SelectValue placeholder="Select availability" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value={Availabitity.WEEKENDS}>
+                          Weekends
+                        </SelectItem>
+                        <SelectItem value={Availabitity.WEEKDAYS}>
+                          Weekdays
+                        </SelectItem>
+                        <SelectItem value={Availabitity.BOTH}>Both</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.availability && (
+                      <FormMessage>
+                        <span className="flex items-center gap-2 text-red-500">
+                          <AlertCircle size={16} />
+                          {errors.availability.message}
+                        </span>
+                      </FormMessage>
+                    )}
+                  </FormItem>
+                )}
+              /> */}
+
+              <FormField
+                control={control}
+                name="availability"
+                rules={{ required: "Availability is required" }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="availability">Availability</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        options={[
+                          { label: "Week ends", value: Availabitity.WEEKENDS },
+                          { label: "Week days", value: Availabitity.WEEKDAYS },
+                          { label: "Both", value: Availabitity.BOTH },
+                        ]}
+                        onValueChange={field.onChange}
+                        // defaultValue={field.value || []}
+                        defaultValue={
+                          Array.isArray(field.value)
+                            ? field.value
+                            : field.value
+                            ? [field.value]
+                            : []
+                        }
+                        placeholder="Select availability"
+                        maxCount={3}
+                        className="w-full"
+                        id="availability"
+                        aria-describedby="availability-error"
+                      />
+                    </FormControl>
+                    {errors.availability && (
+                      <FormMessage>
+                        <span className="flex items-center gap-2 text-red-500">
+                          <AlertCircle size={16} />
+                          {errors.availability.message}
                         </span>
                       </FormMessage>
                     )}
@@ -522,6 +715,10 @@ const EventCreationPage = () => {
                         }
                       />
                     </FormControl>
+                    <FormDescription>
+                      Note: Capacity will be stored separately as it's not part
+                      of the main event schema.
+                    </FormDescription>
                     {errors.capacity && (
                       <FormMessage>
                         <span className="flex items-center gap-2 text-red-500">
@@ -542,14 +739,20 @@ const EventCreationPage = () => {
               <div>
                 <CardTitle>Volunteer Registration Form Fields</CardTitle>
                 <CardDescription>
-                  Define the fields volunteers must fill out to register for this
-                  event.
+                  Define the fields volunteers must fill out to register for
+                  this event.
                 </CardDescription>
               </div>
               <div className="flex gap-2">
-                <Dialog open={showLoadTemplateDialog} onOpenChange={setShowLoadTemplateDialog}>
+                <Dialog
+                  open={showLoadTemplateDialog}
+                  onOpenChange={setShowLoadTemplateDialog}
+                >
                   <DialogTrigger asChild>
-                    <Button variant="outline" className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
                       <LayoutTemplate size={16} />
                       Load Template
                     </Button>
@@ -562,47 +765,41 @@ const EventCreationPage = () => {
                       </DialogDescription>
                     </DialogHeader>
                     <div className="max-h-[400px] overflow-y-auto">
-                      {templates.length === 0 ? (
+                      {isLoading ? (
+                        <div>Loading</div>
+                      ) : templates && templates.length === 0 ? (
                         <p className="text-center py-4">No templates found.</p>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {templates.map((template) => {
-                            const isMatchingCategory = !watchCategory || 
-                              watchCategory === template.category || 
-                              template.category === "general";
-                            
-                            return (
-                              <div 
-                                key={template.id} 
-                                className={`border rounded-md p-4 cursor-pointer transition hover:border-primary ${
-                                  !isMatchingCategory ? "opacity-50" : ""
-                                }`}
-                                onClick={() => isMatchingCategory && loadTemplate(template)}
-                              >
-                                <div className="flex justify-between items-center">
-                                  <h3 className="font-medium">{template.name}</h3>
-                                  <span className="text-sm bg-gray-100 px-2 py-1 rounded">
-                                    {template.category === "general" 
-                                      ? "All Domains" 
-                                      : template.category.charAt(0).toUpperCase() + template.category.slice(1)}
-                                  </span>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-2">
-                                  {template.formFields.length} field(s)
-                                </p>
-                                {!isMatchingCategory && watchCategory && (
-                                  <p className="text-xs text-amber-600 mt-2">
-                                    This template is for a different domain than currently selected.
-                                  </p>
-                                )}
-                              </div>
-                            );
-                          })}
+                          {templates &&
+                            templates.map(
+                              (template: FormTemplate, index: any) => {
+                                return (
+                                  <div
+                                    key={index}
+                                    className={`border rounded-md p-4 cursor-pointer transition hover:border-primary`}
+                                    onClick={() => loadTemplate(template)}
+                                  >
+                                    <div className="flex justify-between items-center">
+                                      <h3 className="font-medium">
+                                        {template.name}
+                                      </h3>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mt-2">
+                                      {template.fields.length} field(s)
+                                    </p>
+                                  </div>
+                                );
+                              }
+                            )}
                         </div>
                       )}
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setShowLoadTemplateDialog(false)}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowLoadTemplateDialog(false)}
+                      >
                         Cancel
                       </Button>
                     </DialogFooter>
@@ -683,13 +880,11 @@ const EventCreationPage = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="text">Text</SelectItem>
-                              <SelectItem value="email">Email</SelectItem>
-                              <SelectItem value="phone">Phone</SelectItem>
-                              <SelectItem value="date">Date</SelectItem>
-                              <SelectItem value="textarea">Textarea</SelectItem>
-                              <SelectItem value="select">Dropdown</SelectItem>
-                              <SelectItem value="number">Number</SelectItem>
+                              {["Text"].map((v) => (
+                                <SelectItem value={v} key={v}>
+                                  {v}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           {errors.formFields?.[index]?.type && (
@@ -747,6 +942,109 @@ const EventCreationPage = () => {
                   </div>
                 </div>
               ))}
+              {fields.length > 0 && (
+                // <Dialog
+                //   open={showSaveTemplateDialog}
+                //   onOpenChange={setShowSaveTemplateDialog}
+                // >
+                //   <DialogTrigger asChild>
+                //     <Button
+                //       type="button"
+                //       variant="outline"
+                //       className="flex items-center gap-2"
+                //     >
+                //       <BookMarked size={16} />
+                //       Save as Template
+                //     </Button>
+                //   </DialogTrigger>
+                //   <DialogContent>
+                //     <DialogHeader>
+                //       <DialogTitle>Save as Template</DialogTitle>
+                //       <DialogDescription>
+                //         Save this form configuration as a template for future
+                //         events.
+                //       </DialogDescription>
+                //     </DialogHeader>
+                //     <div className="py-4">
+                //       <FormItem>
+                //         <FormLabel htmlFor="templateName">
+                //           Template Name
+                //         </FormLabel>
+                //         <Input
+                //           id="templateName"
+                //           placeholder="Enter a name for this template"
+                //           value={templateName}
+                //           onChange={(e) => setTemplateName(e.target.value)}
+                //         />
+                //         <FormDescription>
+                //           Choose a descriptive name that helps you identify
+                //           this template
+                //         </FormDescription>
+                //       </FormItem>
+                //     </div>
+                //     <DialogFooter>
+                //       <Button
+                //         variant="outline"
+                //         onClick={() => setShowSaveTemplateDialog(false)}
+                //       >
+                //         Cancel
+                //       </Button>
+                //       <Button
+                //         onClick={saveAsTemplate}
+                //         disabled={!templateName.trim()}
+                //       >
+                //         Save Template
+                //       </Button>
+                //     </DialogFooter>
+                //   </DialogContent>
+                // </Dialog>
+                <>
+                  <FormField
+                    control={control}
+                    name="saveFormFieldsAsTemplate"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row  space-x-3 space-y-0 rounded-md p-2">
+                        <div className="flex gap-2  md:flex-row flex-col ">
+                          <div className="flex items-center">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                id="saveAsTemplate"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 ml-2 md:min-w-[120px] center flex items-center leading-none">
+                              <FormLabel htmlFor="saveAsTemplate">
+                                Save as template
+                              </FormLabel>
+                            </div>
+                          </div>
+                          <div>
+                            {field.value && (
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  placeholder="Enter template name"
+                                  value={templateName}
+                                  onChange={(e) =>
+                                    setTemplateName(e.target.value)
+                                  }
+                                />
+                              </FormControl>
+                            )}
+                          </div>
+                          {templateNameError && (
+                            <div className="text-red-500 text-sm ">
+                              {templateNameError}
+                            </div>
+                          )}
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  {/* <Input type="text" placeholder="Template Name" /> */}
+                </>
+              )}
 
               <div className="flex gap-2 mt-2">
                 <Button
@@ -757,50 +1055,6 @@ const EventCreationPage = () => {
                 >
                   Add Field
                 </Button>
-                
-                {fields.length > 0 && (
-                  <Dialog open={showSaveTemplateDialog} onOpenChange={setShowSaveTemplateDialog}>
-                    <DialogTrigger asChild>
-                      <Button type="button" variant="outline" className="flex items-center gap-2">
-                        <BookMarked size={16} />
-                        Save as Template
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Save as Template</DialogTitle>
-                        <DialogDescription>
-                          Save this form configuration as a template for future events.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="py-4">
-                        <FormItem>
-                          <FormLabel htmlFor="templateName">Template Name</FormLabel>
-                          <Input 
-                            id="templateName"
-                            placeholder="Enter a name for this template"
-                            value={templateName}
-                            onChange={(e) => setTemplateName(e.target.value)}
-                          />
-                          <FormDescription>
-                            Choose a descriptive name that helps you identify this template
-                          </FormDescription>
-                        </FormItem>
-                      </div>
-                      <DialogFooter>
-                        <Button variant="outline" onClick={() => setShowSaveTemplateDialog(false)}>
-                          Cancel
-                        </Button>
-                        <Button 
-                          onClick={saveAsTemplate} 
-                          disabled={!templateName.trim()}
-                        >
-                          Save Template
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                )}
               </div>
             </CardContent>
           </Card>
@@ -809,7 +1063,9 @@ const EventCreationPage = () => {
             <Link to="/admin">
               <Button variant="outline">Cancel</Button>
             </Link>
-            <Button type="submit">Create Event</Button>
+            <Button disabled={isPending} type="submit">
+              Create Event
+            </Button>
           </div>
         </form>
       </Form>

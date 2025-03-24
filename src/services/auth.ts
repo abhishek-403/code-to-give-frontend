@@ -4,15 +4,15 @@ import {
   ResponseStatusType,
 } from "@/lib/constants/response-types";
 import { auth, googleAuthProvider } from "@/lib/firebaseConfig";
+import { useAppDispatch } from "@/store";
 import { resetUserDetails } from "@/store/slices/user-slice";
 import { formatFirebaseError } from "@/utils/formattedError";
 import { useMutation } from "@tanstack/react-query";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 
 export const useSignUpWithGoogleMutation = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return useMutation<any, void>({
     mutationFn: async () => {
       const { user } = await signInWithPopup(auth, googleAuthProvider);
@@ -43,7 +43,7 @@ export const useSignUpWithGoogleMutation = () => {
 };
 
 export const useSignUpWithEmailPasswordMutation = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return useMutation<
     void,
     Error,

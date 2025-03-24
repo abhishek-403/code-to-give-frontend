@@ -23,15 +23,15 @@ import { Link } from "react-router-dom";
 
 import { auth } from "@/lib/firebaseConfig";
 import { useGetUserProfile } from "@/services/user";
+import { useAppDispatch } from "@/store";
 import { resetUserDetails } from "@/store/slices/user-slice";
 import Loader from "@/utils/loader";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useDispatch } from "react-redux";
 import ThemeSwitcher from "./ThemeSwitcher";
 
 const Header = () => {
   const { fontSize, setFontSize } = useFontSize();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [u, loading] = useAuthState(auth);
   const { data: user, isLoading } = useGetUserProfile({
     isEnabled: !!u && !loading,

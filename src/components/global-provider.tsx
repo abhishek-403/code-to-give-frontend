@@ -1,13 +1,13 @@
 type Props = { children: React.ReactNode };
 import { FontSizeContext } from "@/contexts/FontSizeContext";
-import { store } from "@/store";
+import { persistor, store } from "@/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
 import toast, { Toaster, useToasterStore } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router";
-
+import { PersistGate } from "redux-persist/integration/react";
 export function ToastProvider() {
   const { toasts } = useToasterStore();
   const limit = 3;
@@ -39,14 +39,16 @@ export default function GlobalProvider({ children }: Props) {
   return (
     <BrowserRouter>
       <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class">
-            <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
-              <ToastProvider />
-              {children}
-            </FontSizeContext.Provider>
-          </ThemeProvider>
-        </QueryClientProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider attribute="class">
+              <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
+                <ToastProvider />
+                {children}
+              </FontSizeContext.Provider>
+            </ThemeProvider>
+          </QueryClientProvider>
+        </PersistGate>
       </Provider>
     </BrowserRouter>
   );
