@@ -126,14 +126,17 @@ const Header = () => {
 
         <ThemeSwitcher />
 
-
         <span className="text-gray-400">|</span>
 
-         <Link to="/donate" className="hover:underline">
-              <Button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" variant="outline" size="sm">
-                Donate Now
-              </Button>
-            </Link>
+        <Link to="/donate" className="hover:underline">
+          <Button
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+            variant="outline"
+            size="sm"
+          >
+            Donate Now
+          </Button>
+        </Link>
 
         <span className="text-gray-400">|</span>
 
@@ -199,10 +202,21 @@ const Header = () => {
 
       <div className="md:hidden">
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Menu className="h-4 w-4" />
+          <Link to="/donate" className="hover:underline">
+            <Button
+              className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+              variant="outline"
+              size="sm"
+            >
+              Donate Now
             </Button>
+          </Link>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="icon">
+                <Menu className="h-4 w-4" />
+              </Button>
+            </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-56"
