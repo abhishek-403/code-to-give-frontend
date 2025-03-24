@@ -30,6 +30,8 @@ import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import HistoryEventCard from '@/components/HistoryEventCard';
+
 interface EventType {
   _id: string;
   name: string;
@@ -54,6 +56,10 @@ interface MyApplicationType {
   volunteeringDomain: any;
   willingEndDate: Date;
   willingStartDate: Date;
+}
+interface HistoryEventType extends EventType {
+  // Additional fields specific to history events if needed
+  feedbackSubmitted?: boolean;
 }
 
 interface FilterParams {
@@ -156,6 +162,8 @@ const HomePage = () => {
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const { data: volunteerArray } = useGetVolunteerDomains({ isEnabled: true });
 
+  // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
+
   const [activeTab, setActiveTab] = useState("active");
   const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
@@ -172,6 +180,46 @@ const HomePage = () => {
     isEnabled: activeTab === "myApplications",
   });
 
+  // const events = React.useMemo<EventType[]>(
+  //   () => [
+  //     {
+  //       id: 1,
+  //       organization: "XYZ Event",
+  //       domain: "Rehabilitation",
+  //       dateRange: "20/02/25 to 20/03/25",
+  //       startDate: new Date(2025, 1, 20),
+  //       endDate: new Date(2025, 2, 20),
+  //       description:
+  //         "Help with rehabilitation activities for people with disabilities",
+  //       location: "Delhi",
+  //       availability: "Weekdays",
+  //     },
+  //     {
+  //       id: 2,
+  //       organization: "ABC Event",
+  //       domain: "Community Support",
+  //       dateRange: "15/03/25 to 30/03/25",
+  //       startDate: new Date(2025, 2, 15),
+  //       endDate: new Date(2025, 2, 30),
+  //       description:
+  //         "Provide community support services to underprivileged families",
+  //       location: "Mumbai",
+  //       availability: "Both",
+  //     },
+  //     {
+  //       id: 3,
+  //       organization: "PQR Event",
+  //       domain: "Education",
+  //       dateRange: "01/04/25 to 15/04/25",
+  //       startDate: new Date(2025, 3, 1),
+  //       endDate: new Date(2025, 3, 15),
+  //       description: "Teach basic skills to children with special needs",
+  //       location: "Bangalore",
+  //       availability: "Weekends",
+  //     },
+  //   ],
+  //   []
+  // );
   const filterParams = React.useMemo<FilterParams>(() => {
     if (!isFiltersApplied) {
       // Only include the search query if filters are not applied
@@ -179,7 +227,6 @@ const HomePage = () => {
         searchQuery: debouncedSearchQuery || undefined,
       };
     }
-    // refetch();
 
     return {
       city: city && city !== "all_cities" ? city : undefined,
@@ -223,8 +270,69 @@ const HomePage = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
+  // const parseDate = (dateString: string): Date | null => {
+  //   if (!dateString) return null;
+  //   return new Date(dateString);
+  // };
+
+  // useEffect(() => {
+  //   const filtered = events.filter((event) => {
+  //     const matchesSearch =
+  //       !searchQuery ||
+  //       event.organization.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       event.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       (event.description &&
+  //         event.description.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  //     const matchesCity =
+  //       !city ||
+  //       city === "" ||
+  //       city === "all_cities" ||
+  //       event.location === city;
+
+  //     const matchesDomain =
+  //       !domain ||
+  //       domain === "" ||
+  //       domain === "all_domains" ||
+  //       event.domain === domain;
+
+  //     const matchesAvailability =
+  //       !availability ||
+  //       availability === "" ||
+  //       availability === "all_availability" ||
+  //       event.availability === availability ||
+  //       (event.availability === "Both" && availability !== "");
+
+  //     let matchesDate = true;
+  //     const filterStartDate = parseDate(startDate);
+  //     const filterEndDate = parseDate(endDate);
+
+  //     if (filterStartDate) {
+  //       matchesDate = matchesDate && event.endDate >= filterStartDate;
+  //     }
+
+  //     if (filterEndDate) {
+  //       matchesDate = matchesDate && event.startDate <= filterEndDate;
+  //     }
+
+  //     return (
+  //       matchesSearch &&
+  //       matchesCity &&
+  //       matchesDomain &&
+  //       matchesAvailability &&
+  //       matchesDate
+  //     );
+  //   });
+
+  //   setFilteredEvents(filtered);
+  // }, [searchQuery, city, domain, availability, startDate, endDate, events]);
+
+  // useEffect(() => {
+  //   setFilteredEvents(events);
+  // }, [events]);
 
   useEffect(() => {
+    // Only trigger refetch if the debounced value has changed
     refetch();
   }, [debouncedSearchQuery, refetch]);
 
@@ -298,15 +406,12 @@ const HomePage = () => {
             <div>
               <CardTitle className="text-lg font-semibold">{ev.name}</CardTitle>
               <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
-                {ev.volunteeringDomains &&
-                  ev.volunteeringDomains.length > 0 && (
-                    <Badge
-                      variant="outline"
-                      className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-                    >
-                      {ev.volunteeringDomains[0].name}
-                    </Badge>
-                  )}
+                <Badge
+                  variant="outline"
+                  className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                >
+                  {ev.volunteeringDomains[0].name}
+                </Badge>
                 {ev.location && (
                   <Badge
                     variant="secondary"
@@ -398,8 +503,7 @@ const HomePage = () => {
                   variant="outline"
                   className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
                 >
-                  {application.volunteeringDomain &&
-                    application.volunteeringDomain.name}
+                  {application.volunteeringDomain.name}
                 </Badge>
 
                 {application.availability && (
@@ -450,6 +554,33 @@ const HomePage = () => {
     );
   };
 
+  const DUMMY_HISTORY_EVENTS: HistoryEventType[] = [
+    {
+      _id: 'hist1',
+      name: 'Community Cleanup Drive',
+      location: 'City Park',
+      startDate: new Date('2024-01-15'),
+      endDate: new Date('2024-01-16'),
+      dateRange: '15/01/24 to 16/01/24',
+      volunteeringDomains: [{ name: 'Environmental' }],
+      description: 'A community event to clean up local park areas',
+      availability: [Availabitity.WEEKENDS],
+      feedbackSubmitted: false
+    },
+    {
+      _id: 'hist2',
+      name: 'Teaching Underprivileged Children',
+      location: 'XYZ School',
+      startDate: new Date('2024-02-01'),
+      endDate: new Date('2024-02-28'),
+      dateRange: '01/02/24 to 28/02/24',
+      volunteeringDomains: [{ name: 'Education' }],
+      description: 'Teaching basic skills to underprivileged children',
+      availability: [Availabitity.WEEKDAYS],
+      feedbackSubmitted: true
+    },
+  ];
+
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
       <style>{customStyles}</style>
@@ -460,7 +591,7 @@ const HomePage = () => {
       </a>
 
       {/*Filters */}
-      <div className="stickyt top-[10px]">
+      <div className="sticky  self-start top-[10px]">
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Find events</CardTitle>
@@ -528,20 +659,14 @@ const HomePage = () => {
                     <SelectValue placeholder="Select domain" />
                   </SelectTrigger>
                   <SelectContent>
-                    {/* <SelectItem value="all_domains">All Domains</SelectItem>
+                    <SelectItem value="all_domains">All Domains</SelectItem>
                     <SelectItem value="Rehabilitation">
                       Rehabilitation
                     </SelectItem>
                     <SelectItem value="Education">Education</SelectItem>
                     <SelectItem value="Community Support">
                       Community Support
-                    </SelectItem> */}
-                    {volunteerArray &&
-                      volunteerArray.map((v: { name: string; _id: string }) => (
-                        <SelectItem key={v._id} value={v._id}>
-                          {v.name}
-                        </SelectItem>
-                      ))}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -646,7 +771,7 @@ const HomePage = () => {
           </CardContent>
         </Card>
         {/*filter badges */}
-        {/* {(city ||
+        {(city ||
           domain ||
           availability ||
           startDate ||
@@ -658,7 +783,8 @@ const HomePage = () => {
                 Active Filters:
               </p>
               <div className="flex flex-wrap gap-2">
-     
+                {/* Here the filter badges will be rendered - same as original code */}
+                {/* Search query badge */}
                 {searchQuery && (
                   <Badge
                     variant="secondary"
@@ -675,6 +801,7 @@ const HomePage = () => {
                   </Badge>
                 )}
 
+                {/* City badge */}
                 {city && (
                   <Badge
                     variant="secondary"
@@ -699,6 +826,7 @@ const HomePage = () => {
                   </Badge>
                 )}
 
+                {/* Domain badge */}
                 {domain && (
                   <Badge
                     variant="secondary"
@@ -723,6 +851,7 @@ const HomePage = () => {
                   </Badge>
                 )}
 
+                {/* Availability badge */}
                 {availability && (
                   <Badge
                     variant="secondary"
@@ -752,6 +881,7 @@ const HomePage = () => {
                   </Badge>
                 )}
 
+                {/* Date range badge */}
                 {(startDate || endDate) && (
                   <Badge
                     variant="secondary"
@@ -777,7 +907,7 @@ const HomePage = () => {
               </div>
             </CardContent>
           </Card>
-        )} */}
+        )}
       </div>
 
       <div id="main-content">
@@ -984,11 +1114,49 @@ const HomePage = () => {
             tabIndex={0}
           >
             {activeTab === "history" && (
-              <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                  Your volunteer history will appear here.
+              isLoading ? (
+                <div className="flex justify-center">
+                  <Loader />
+                </div>
+              ) : isError ? (
+                <p className="text-red-400">
+                  Error loading programs. Please try again.
                 </p>
-              </div>
+              ) : DUMMY_HISTORY_EVENTS.length > 0 ? (
+                <>
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    Showing {DUMMY_HISTORY_EVENTS.length}{" "}
+                    {DUMMY_HISTORY_EVENTS.length === 1
+                      ? "event"
+                      : "events"}
+                  </div>
+                  <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
+                    {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
+                      <HistoryEventCard key={eachEvent._id} event={eachEvent} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div
+                  className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  role="alert"
+                >
+                  <Info
+                    className="h-12 w-12 text-gray-500 dark:text-gray-400 mx-auto mb-4"
+                    aria-hidden="true"
+                  />
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                    No events found matching your criteria.
+                  </p>
+                  <Button
+                    variant="link"
+                    onClick={clearAllFilters}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 rounded-md"
+                  >
+                    Clear filters and try again
+                  </Button>
+                </div>
+              )
             )}
           </div>
         </div>

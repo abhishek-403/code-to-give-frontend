@@ -470,6 +470,24 @@ const AdminDashboardPage = () => {
         <h2 className="text-2xl font-semibold">Admin Dashboard</h2>
         <div className="flex space-x-2">
           {/* Export Data Dropdown */}
+
+            {/* <Link to="/changeroles" className="hover:underline">
+              <Button  className="flex items-center" 
+            variant="outline" size="sm">
+                Change Roles
+              </Button>
+          </Link> */}
+
+          <Link to="/admin/changeroles">
+            <Button 
+            className="flex items-center" 
+            variant="outline" 
+            >
+              Manage Roles
+          </Button>
+          </Link>
+          
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={exportLoading}>
