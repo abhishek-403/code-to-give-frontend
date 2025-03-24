@@ -3,12 +3,24 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Mail } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { PlusCircle, Mail, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 
 const EventManagementPage = () => {
@@ -23,13 +35,27 @@ const EventManagementPage = () => {
       endDate: new Date(2025, 3, 30),
       location: "Community Center",
       volunteers: [
-        { id: 101, name: "John Doe", email: "john@example.com", assigned: true },
-        { id: 102, name: "Jane Smith", email: "jane@example.com", assigned: false }
+        {
+          id: 101,
+          name: "John Doe",
+          email: "john@example.com",
+          assigned: true,
+        },
+        {
+          id: 102,
+          name: "Jane Smith",
+          email: "jane@example.com",
+          assigned: false,
+        },
       ],
       tasks: [
         { id: 201, title: "Set up donation boxes", assignedTo: 101 },
-        { id: 202, title: "Coordinate with local businesses", assignedTo: null }
-      ]
+        {
+          id: 202,
+          title: "Coordinate with local businesses",
+          assignedTo: null,
+        },
+      ],
     },
     {
       id: 2,
@@ -40,13 +66,23 @@ const EventManagementPage = () => {
       endDate: new Date(2025, 4, 15),
       location: "City Park",
       volunteers: [
-        { id: 103, name: "Mike Johnson", email: "mike@example.com", assigned: true },
-        { id: 104, name: "Sarah Williams", email: "sarah@example.com", assigned: false }
+        {
+          id: 103,
+          name: "Mike Johnson",
+          email: "mike@example.com",
+          assigned: true,
+        },
+        {
+          id: 104,
+          name: "Sarah Williams",
+          email: "sarah@example.com",
+          assigned: false,
+        },
       ],
       tasks: [
         { id: 203, title: "Set up water stations", assignedTo: 103 },
-        { id: 204, title: "Register participants", assignedTo: null }
-      ]
+        { id: 204, title: "Register participants", assignedTo: null },
+      ],
     },
     {
       id: 3,
@@ -57,7 +93,7 @@ const EventManagementPage = () => {
       endDate: new Date(2025, 4, 7),
       location: "Hotel Conference Room",
       volunteers: [],
-      tasks: []
+      tasks: [],
     },
     {
       id: 4,
@@ -68,18 +104,23 @@ const EventManagementPage = () => {
       endDate: new Date(2025, 2, 20),
       location: "Multiple Locations",
       volunteers: [
-        { id: 105, name: "Alex Thompson", email: "alex@example.com", assigned: true }
+        {
+          id: 105,
+          name: "Alex Thompson",
+          email: "alex@example.com",
+          assigned: true,
+        },
       ],
       tasks: [
         { id: 205, title: "Distribute flyers", assignedTo: 105 },
-        { id: 206, title: "Social media updates", assignedTo: 105 }
-      ]
+        { id: 206, title: "Social media updates", assignedTo: 105 },
+      ],
     },
   ]);
 
   // State for the currently selected event (for detailed view)
   const [selectedEvent, setSelectedEvent] = useState(null);
-  
+
   // State for new event form
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [newEvent, setNewEvent] = useState({
@@ -88,30 +129,30 @@ const EventManagementPage = () => {
     startDate: new Date(),
     endDate: new Date(),
     location: "",
-    status: "underReview"
+    status: "underReview",
   });
-  
+
   // State for new task form
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
-    assignedTo: "none" // Changed from empty string to "none"
+    assignedTo: "none", // Changed from empty string to "none"
   });
-  
+
   // State for email update form
   const [isEmailOpen, setIsEmailOpen] = useState(false);
   const [emailUpdate, setEmailUpdate] = useState({
     subject: "",
-    message: ""
+    message: "",
   });
 
   const handleEdit = (id) => {
-    const eventToEdit = events.find(event => event.id === id);
+    const eventToEdit = events.find((event) => event.id === id);
     setSelectedEvent(eventToEdit);
   };
 
   const handleDelete = (id) => {
-    const updatedEvents = events.filter(event => event.id !== id);
+    const updatedEvents = events.filter((event) => event.id !== id);
     setEvents(updatedEvents);
   };
 
@@ -120,9 +161,9 @@ const EventManagementPage = () => {
       ...newEvent,
       id: events.length + 1,
       volunteers: [],
-      tasks: []
+      tasks: [],
     };
-    
+
     setEvents([...events, eventToAdd]);
     setIsAddEventOpen(false);
     setNewEvent({
@@ -131,14 +172,14 @@ const EventManagementPage = () => {
       startDate: new Date(),
       endDate: new Date(),
       location: "",
-      status: "underReview"
+      status: "underReview",
     });
   };
 
   const handleAddTask = () => {
     if (!selectedEvent) return;
-    
-    const updatedEvents = events.map(event => {
+
+    const updatedEvents = events.map((event) => {
       if (event.id === selectedEvent.id) {
         return {
           ...event,
@@ -147,41 +188,46 @@ const EventManagementPage = () => {
             {
               id: Date.now(),
               title: newTask.title,
-              assignedTo: newTask.assignedTo === "none" ? null : parseInt(newTask.assignedTo) // Handle "none" value
-            }
-          ]
+              assignedTo:
+                newTask.assignedTo === "none"
+                  ? null
+                  : parseInt(newTask.assignedTo), // Handle "none" value
+            },
+          ],
         };
       }
       return event;
     });
-    
+
     setEvents(updatedEvents);
     setIsAddTaskOpen(false);
     setNewTask({ title: "", assignedTo: "none" }); // Reset with "none" instead of empty string
-    
+
     // Update selected event
-    setSelectedEvent(updatedEvents.find(event => event.id === selectedEvent.id));
+    setSelectedEvent(
+      updatedEvents.find((event) => event.id === selectedEvent.id)
+    );
   };
 
   const handleAssignVolunteer = (eventId, volunteerId) => {
-    const updatedEvents = events.map(event => {
+    const updatedEvents = events.map((event) => {
       if (event.id === eventId) {
         return {
           ...event,
-          volunteers: event.volunteers.map(volunteer => {
+          volunteers: event.volunteers.map((volunteer) => {
             if (volunteer.id === volunteerId) {
               return { ...volunteer, assigned: !volunteer.assigned };
             }
             return volunteer;
-          })
+          }),
         };
       }
       return event;
     });
-    
+
     setEvents(updatedEvents);
     if (selectedEvent && selectedEvent.id === eventId) {
-      setSelectedEvent(updatedEvents.find(event => event.id === eventId));
+      setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
     }
   };
 
@@ -190,7 +236,7 @@ const EventManagementPage = () => {
     console.log(`Sending update to volunteers of event ${selectedEvent.id}`);
     console.log(`Subject: ${emailUpdate.subject}`);
     console.log(`Message: ${emailUpdate.message}`);
-    
+
     setIsEmailOpen(false);
     setEmailUpdate({ subject: "", message: "" });
   };
@@ -200,7 +246,10 @@ const EventManagementPage = () => {
       <h3 className="font-semibold text-lg">{event.title}</h3>
       <p className="text-sm text-gray-500 mb-2">{event.description}</p>
       <div className="text-sm mb-2">
-        <div>📅 {format(event.startDate, "MMM dd, yyyy")} - {format(event.endDate, "MMM dd, yyyy")}</div>
+        <div>
+          📅 {format(event.startDate, "MMM dd, yyyy")} -{" "}
+          {format(event.endDate, "MMM dd, yyyy")}
+        </div>
         <div>📍 {event.location}</div>
       </div>
       <div className="flex space-x-2 mt-2">
@@ -220,22 +269,32 @@ const EventManagementPage = () => {
 
   return (
     <div className="p-4">
+      <Link to="/admin" className="text-primary-600">
+        <Button variant="outline" className="mb-4">
+          <ArrowLeft size={16} />
+          Back to Dashboard
+        </Button>
+      </Link>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">Event Management</h2>
         <Link to="/admin/events/create">
-        <Button>
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Add Event
-            </Button>
+          <Button>
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add Event
+          </Button>
         </Link>
       </div>
 
       {selectedEvent ? (
         <div>
-          <Button variant="outline" className="mb-4" onClick={() => setSelectedEvent(null)}>
+          <Button
+            variant="outline"
+            className="mb-4"
+            onClick={() => setSelectedEvent(null)}
+          >
             Back to Events
           </Button>
-          
+
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
@@ -259,7 +318,12 @@ const EventManagementPage = () => {
                         <Input
                           id="subject"
                           value={emailUpdate.subject}
-                          onChange={(e) => setEmailUpdate({...emailUpdate, subject: e.target.value})}
+                          onChange={(e) =>
+                            setEmailUpdate({
+                              ...emailUpdate,
+                              subject: e.target.value,
+                            })
+                          }
                           className="col-span-3"
                         />
                       </div>
@@ -270,14 +334,21 @@ const EventManagementPage = () => {
                         <Textarea
                           id="message"
                           value={emailUpdate.message}
-                          onChange={(e) => setEmailUpdate({...emailUpdate, message: e.target.value})}
+                          onChange={(e) =>
+                            setEmailUpdate({
+                              ...emailUpdate,
+                              message: e.target.value,
+                            })
+                          }
                           className="col-span-3"
                           rows={5}
                         />
                       </div>
                     </div>
                     <div className="flex justify-end">
-                      <Button onClick={handleSendUpdate}>Send to All Volunteers</Button>
+                      <Button onClick={handleSendUpdate}>
+                        Send to All Volunteers
+                      </Button>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -288,17 +359,30 @@ const EventManagementPage = () => {
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Event Details</h3>
                   <div className="space-y-2">
-                    <p><strong>Description:</strong> {selectedEvent.description}</p>
-                    <p><strong>Status:</strong> {selectedEvent.status}</p>
-                    <p><strong>Dates:</strong> {format(selectedEvent.startDate, "MMM dd, yyyy")} - {format(selectedEvent.endDate, "MMM dd, yyyy")}</p>
-                    <p><strong>Location:</strong> {selectedEvent.location}</p>
+                    <p>
+                      <strong>Description:</strong> {selectedEvent.description}
+                    </p>
+                    <p>
+                      <strong>Status:</strong> {selectedEvent.status}
+                    </p>
+                    <p>
+                      <strong>Dates:</strong>{" "}
+                      {format(selectedEvent.startDate, "MMM dd, yyyy")} -{" "}
+                      {format(selectedEvent.endDate, "MMM dd, yyyy")}
+                    </p>
+                    <p>
+                      <strong>Location:</strong> {selectedEvent.location}
+                    </p>
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="text-lg font-semibold">Tasks</h3>
-                    <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
+                    <Dialog
+                      open={isAddTaskOpen}
+                      onOpenChange={setIsAddTaskOpen}
+                    >
                       <DialogTrigger asChild>
                         <Button size="sm">
                           <PlusCircle className="h-4 w-4 mr-2" />
@@ -317,7 +401,12 @@ const EventManagementPage = () => {
                             <Input
                               id="taskTitle"
                               value={newTask.title}
-                              onChange={(e) => setNewTask({...newTask, title: e.target.value})}
+                              onChange={(e) =>
+                                setNewTask({
+                                  ...newTask,
+                                  title: e.target.value,
+                                })
+                              }
                               className="col-span-3"
                             />
                           </div>
@@ -325,9 +414,11 @@ const EventManagementPage = () => {
                             <Label htmlFor="assignTo" className="text-right">
                               Assign To
                             </Label>
-                            <Select 
-                              value={newTask.assignedTo} 
-                              onValueChange={(value) => setNewTask({...newTask, assignedTo: value})}
+                            <Select
+                              value={newTask.assignedTo}
+                              onValueChange={(value) =>
+                                setNewTask({ ...newTask, assignedTo: value })
+                              }
                             >
                               <SelectTrigger className="col-span-3">
                                 <SelectValue placeholder="Select volunteer" />
@@ -336,7 +427,10 @@ const EventManagementPage = () => {
                                 {/* Changed from empty string to "none" */}
                                 <SelectItem value="none">Unassigned</SelectItem>
                                 {selectedEvent.volunteers.map((volunteer) => (
-                                  <SelectItem key={volunteer.id} value={volunteer.id.toString()}>
+                                  <SelectItem
+                                    key={volunteer.id}
+                                    value={volunteer.id.toString()}
+                                  >
                                     {volunteer.name}
                                   </SelectItem>
                                 ))}
@@ -350,40 +444,50 @@ const EventManagementPage = () => {
                       </DialogContent>
                     </Dialog>
                   </div>
-                  
+
                   <div className="space-y-2">
                     {selectedEvent.tasks.length > 0 ? (
-                      selectedEvent.tasks.map(task => (
+                      selectedEvent.tasks.map((task) => (
                         <div key={task.id} className="border p-2 rounded-md">
                           <p className="font-medium">{task.title}</p>
                           <p className="text-sm">
-                            Assigned to: {task.assignedTo 
-                              ? selectedEvent.volunteers.find(v => v.id === task.assignedTo)?.name || 'Unknown'
-                              : 'Unassigned'}
+                            Assigned to:{" "}
+                            {task.assignedTo
+                              ? selectedEvent.volunteers.find(
+                                  (v) => v.id === task.assignedTo
+                                )?.name || "Unknown"
+                              : "Unassigned"}
                           </p>
                         </div>
                       ))
                     ) : (
-                      <p className="text-sm text-gray-500">No tasks created yet</p>
+                      <p className="text-sm text-gray-500">
+                        No tasks created yet
+                      </p>
                     )}
                   </div>
                 </div>
               </div>
-              
+
               <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-2">Volunteers</h3>
-                
+
                 {selectedEvent.volunteers.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {selectedEvent.volunteers.map(volunteer => (
+                    {selectedEvent.volunteers.map((volunteer) => (
                       <div key={volunteer.id} className="border p-3 rounded-md">
                         <p className="font-medium">{volunteer.name}</p>
                         <p className="text-sm">{volunteer.email}</p>
                         <div className="mt-2">
-                          <Button 
+                          <Button
                             size="sm"
                             variant={volunteer.assigned ? "default" : "outline"}
-                            onClick={() => handleAssignVolunteer(selectedEvent.id, volunteer.id)}
+                            onClick={() =>
+                              handleAssignVolunteer(
+                                selectedEvent.id,
+                                volunteer.id
+                              )
+                            }
                           >
                             {volunteer.assigned ? "Assigned" : "Unassigned"}
                           </Button>
@@ -392,7 +496,9 @@ const EventManagementPage = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500">No volunteers registered for this event</p>
+                  <p className="text-sm text-gray-500">
+                    No volunteers registered for this event
+                  </p>
                 )}
               </div>
             </CardContent>
