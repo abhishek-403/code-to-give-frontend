@@ -1113,19 +1113,49 @@ const HomePage = () => {
             tabIndex={0}
           >
             {activeTab === "history" && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* TODO: Replace with actual backend data */}
-                {DUMMY_HISTORY_EVENTS.map((event) => (
-                  <HistoryEventCard key={event._id} event={event} />
-                ))}
-                {DUMMY_HISTORY_EVENTS.length === 0 && (
-                  <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg col-span-full">
-                    <p className="text-lg text-gray-700 dark:text-gray-300">
-                      Your volunteer history will appear here.
-                    </p>
+              isLoading ? (
+                <div className="flex justify-center">
+                  <Loader />
+                </div>
+              ) : isError ? (
+                <p className="text-red-400">
+                  Error loading programs. Please try again.
+                </p>
+              ) : DUMMY_HISTORY_EVENTS.length > 0 ? (
+                <>
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    Showing {DUMMY_HISTORY_EVENTS.length}{" "}
+                    {DUMMY_HISTORY_EVENTS.length === 1
+                      ? "event"
+                      : "events"}
                   </div>
-                )}
-              </div>
+                  <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
+                    {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
+                      <HistoryEventCard key={eachEvent._id} event={eachEvent} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div
+                  className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  role="alert"
+                >
+                  <Info
+                    className="h-12 w-12 text-gray-500 dark:text-gray-400 mx-auto mb-4"
+                    aria-hidden="true"
+                  />
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                    No events found matching your criteria.
+                  </p>
+                  <Button
+                    variant="link"
+                    onClick={clearAllFilters}
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 rounded-md"
+                  >
+                    Clear filters and try again
+                  </Button>
+                </div>
+              )
             )}
           </div>
         </div>
