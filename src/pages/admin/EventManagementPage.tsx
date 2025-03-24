@@ -241,8 +241,35 @@ const EventManagementPage = () => {
     subject: "",
     message: "",
   });
+  const [isVolunteerEmailOpen, setIsVolunteerEmailOpen] = useState(false);
+  const [volunteerEmailData, setVolunteerEmailData] = useState({
+    volunteerId: null,
+    volunteerName: "",
+    volunteerEmail: "",
+    subject: "",
+    message: "",
+  });
 
   const [activeTab, setActiveTab] = useState("active");
+
+  // load data from the backend integration when available
+  useEffect(() => {
+    // fetch data here
+    const fetchEvents = async () => {
+      try {
+        // const response = await fetch('/api/events');
+        // const data = await response.json();
+        // setEvents(ensureVolunteerTaskConsistency(data));
+
+        // For now, using mock data:
+        setEvents((prevEvents) => ensureVolunteerTaskConsistency(prevEvents));
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []); // Run once on component mount
 
   // Calculate task completion percentage for an event
   const calculateTaskCompletion = (event) => {
@@ -421,14 +448,24 @@ const EventManagementPage = () => {
     setEvents(updatedEvents);
   };
 
-  const handleAddEvent = () => {
+  const handleAddEvent = async () => {
     const eventToAdd = {
       ...newEvent,
-      id: events.length + 1,
+      id: events.length + 1, // In production, this ID would come from the server
       volunteers: [],
       tasks: [],
     };
 
+    // In production, you would add API call here, for example:
+    // const response = await fetch('/api/events', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(eventToAdd)
+    // });
+    // const savedEvent = await response.json();
+    // setEvents([...events, savedEvent]);
+
+    // For now, using local state:
     setEvents([...events, eventToAdd]);
     setIsAddEventOpen(false);
     setNewEvent({
@@ -441,26 +478,31 @@ const EventManagementPage = () => {
     });
   };
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (!selectedEvent) return;
+
+    const newTaskData = {
+      id: Date.now(), // In production, this ID would come from the server
+      title: newTask.title,
+      description: newTask.description,
+      assignedTo:
+        newTask.assignedTo === "none" ? null : parseInt(newTask.assignedTo),
+      completed: newTask.completed,
+    };
+
+    // In production, you would add API call here, for example:
+    // const response = await fetch(`/api/events/${selectedEvent.id}/tasks`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(newTaskData)
+    // });
+    // const savedTask = await response.json();
 
     const updatedEvents = events.map((event) => {
       if (event.id === selectedEvent.id) {
         return {
           ...event,
-          tasks: [
-            ...event.tasks,
-            {
-              id: Date.now(),
-              title: newTask.title,
-              description: newTask.description,
-              assignedTo:
-                newTask.assignedTo === "none"
-                  ? null
-                  : parseInt(newTask.assignedTo),
-              completed: newTask.completed,
-            },
-          ],
+          tasks: [...event.tasks, newTaskData],
         };
       }
       return event;
@@ -518,13 +560,55 @@ const EventManagementPage = () => {
   };
 
   const handleSendUpdate = () => {
-    // Here you would implement actual email sending logic (INTEGRATE BACKEND)
     console.log(`Sending update to volunteers of event ${selectedEvent.id}`);
     console.log(`Subject: ${emailUpdate.subject}`);
     console.log(`Message: ${emailUpdate.message}`);
 
+    // actual email sending logic (INTEGRATE BACKEND)
+    // In production, you would call your API here, for example:
+    // const response = await fetch('/api/send-mass-email', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     eventId: selectedEvent.id,
+    //     subject: emailUpdate.subject,
+    //     message: emailUpdate.message
+    //   })
+    // });
+
     setIsEmailOpen(false);
     setEmailUpdate({ subject: "", message: "" });
+  };
+
+  const handleSendVolunteerEmail = () => {
+    console.log(
+      `Sending email to volunteer ${volunteerEmailData.volunteerName}`
+    );
+    console.log(`Email: ${volunteerEmailData.volunteerEmail}`);
+    console.log(`Subject: ${volunteerEmailData.subject}`);
+    console.log(`Message: ${volunteerEmailData.message}`);
+
+    // actual email sending logic (INTEGRATE BACKEND)
+    // In production, you would call your API here, for example:
+    // const response = await fetch('/api/send-volunteer-email', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     eventId: selectedEvent.id,
+    //     volunteerId: volunteerEmailData.volunteerId,
+    //     subject: volunteerEmailData.subject,
+    //     message: volunteerEmailData.message
+    //   })
+    // });
+
+    setIsVolunteerEmailOpen(false);
+    setVolunteerEmailData({
+      volunteerId: null,
+      volunteerName: "",
+      volunteerEmail: "",
+      subject: "",
+      message: "",
+    });
   };
 
   const renderEventCard = (event) => {
@@ -1066,27 +1150,6 @@ const EventManagementPage = () => {
                             </p>
                           </div>
                           <div className="flex items-center space-x-2">
-                            {/* <Badge
-                              variant={
-                                volunteer.assigned ? "success" : "secondary"
-                              }
-                              className={`cursor-pointer ${
-                                hasAssignedTasks
-                                  ? "opacity-50"
-                                  : "hover:bg-gray-100"
-                              }`}
-                              onClick={() => {
-                                if (!hasAssignedTasks) {
-                                  handleAssignVolunteer(
-                                    selectedEvent.id,
-                                    volunteer.id
-                                  );
-                                }
-                              }}
-                            >
-                              {volunteer.assigned ? "Active" : "Waitlisted"}
-                            </Badge> */}
-                            {/* implement above using button instead of badge. If active, have green bg else, have yellow bg */}
                             <Button
                               variant="outline"
                               className={`${
@@ -1111,6 +1174,25 @@ const EventManagementPage = () => {
                                 Has assigned tasks
                               </Badge>
                             )}
+
+                            {/* Add this new email button */}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setVolunteerEmailData({
+                                  volunteerId: volunteer.id,
+                                  volunteerName: volunteer.name,
+                                  volunteerEmail: volunteer.email,
+                                  subject: `Update regarding ${selectedEvent.title}`,
+                                  message: "",
+                                });
+                                setIsVolunteerEmailOpen(true);
+                              }}
+                            >
+                              <Mail className="h-3 w-3 mr-1" />
+                              Email
+                            </Button>
                           </div>
                         </div>
                       );
@@ -1418,6 +1500,61 @@ const EventManagementPage = () => {
           </Dialog>
         </div>
       )}
+      {/* Add the individual volunteer email dialog */}
+      <Dialog
+        open={isVolunteerEmailOpen}
+        onOpenChange={setIsVolunteerEmailOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Send Email to {volunteerEmailData.volunteerName}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="text-sm mb-2">
+              <p>Recipient: {volunteerEmailData.volunteerName}</p>
+              <p>Email: {volunteerEmailData.volunteerEmail}</p>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="volunteer-subject" className="text-right">
+                Subject
+              </Label>
+              <Input
+                id="volunteer-subject"
+                value={volunteerEmailData.subject}
+                onChange={(e) =>
+                  setVolunteerEmailData({
+                    ...volunteerEmailData,
+                    subject: e.target.value,
+                  })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="volunteer-message" className="text-right">
+                Message
+              </Label>
+              <Textarea
+                id="volunteer-message"
+                value={volunteerEmailData.message}
+                onChange={(e) =>
+                  setVolunteerEmailData({
+                    ...volunteerEmailData,
+                    message: e.target.value,
+                  })
+                }
+                className="col-span-3"
+                rows={5}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={handleSendVolunteerEmail}>Send Email</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
