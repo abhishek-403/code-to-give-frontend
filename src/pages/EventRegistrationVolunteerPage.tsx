@@ -37,6 +37,7 @@ interface FormData {
   startDate: Date;
   endDate: Date;
   comments?: string;
+  templateResponses?: Record<string, string>;
 }
 
 interface EventType {
@@ -49,6 +50,7 @@ interface EventType {
   description?: string;
   location: string;
   availability: [Availabitity];
+  template: { fields?: { label: string }[] };
 }
 
 const EventRegistrationVolunteerPage = () => {
@@ -86,6 +88,13 @@ const EventRegistrationVolunteerPage = () => {
 
   useEffect(() => {
     if (eventData) {
+      if (eventData.template?.fields) {
+        const updatedTemplateResponses: Record<string, string> = ({} = {});
+        eventData.template.fields.forEach((field) => {
+          updatedTemplateResponses[field.label] = "";
+        });
+        setValue("templateResponses", updatedTemplateResponses);
+      }
       setValue("startDate", eventData.startDate);
       setValue("endDate", eventData.endDate);
 
@@ -116,6 +125,7 @@ const EventRegistrationVolunteerPage = () => {
       willingEndDate: data.endDate,
       availability: data.availabilityOption,
       notes: data.comments,
+      templateResponses: data.templateResponses,
     });
   };
 
@@ -644,7 +654,44 @@ const EventRegistrationVolunteerPage = () => {
             </div>
           </div>
         </fieldset>
+        {eventData.template?.fields && (
+          <fieldset className="space-y-4 border border-gray-200 rounded p-4">
+            <legend className="text-xl font-semibold px-2">
+              Required Fields
+            </legend>
 
+            {eventData.template?.fields?.map((field: any) => (
+              <div key={field._id} className="space-y-2">
+                <Label htmlFor={field._id}>{field.label}</Label>
+                <Controller
+                  name={field.label}
+                  control={control}
+                  rules={{
+                    required: field.required ? `Required field` : false,
+                  }}
+                  render={({ field: inputField }) => (
+                    <Input
+                      id={field._id}
+                      placeholder={field.placeholder}
+                      {...inputField}
+                    />
+                  )}
+                />
+                {errors.templateResponses?.[field.label] && (
+                  <p
+                    className="text-sm text-red-500"
+                    id={`${field.label}-error`}
+                    aria-live="assertive"
+                  >
+                    {errors.templateResponses?.[
+                      field.label
+                    ]?.message?.toString()}
+                  </p>
+                )}
+              </div>
+            ))}
+          </fieldset>
+        )}
         {/* Additional Information */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
           <legend className="text-xl font-semibold px-2">

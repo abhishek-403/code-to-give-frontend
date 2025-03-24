@@ -16,9 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Availabitity } from "@/lib/constants/server-constants";
+import { ApplicationStatus, Availabitity } from "@/lib/constants/server-constants";
 import { auth } from "@/lib/firebaseConfig";
-import { useInfiniteEvents } from "@/services/event";
+import { useGetVolunteerDomains, useInfiniteEvents } from "@/services/event";
 import { useGetMyApplications } from "@/services/user";
 import { formatDateFromDate } from "@/utils/formattedDate";
 import Loader from "@/utils/loader";
@@ -29,7 +29,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import HistoryEventCard from "@/components/HistoryEventCard";
+=======
+import { cn } from "@/lib/utils";
+import HistoryEventCard from '@/components/HistoryEventCard';
+>>>>>>> 2ac39c6b3e3783b95eb4a4dced2051ade5b1ef53
 
 interface EventType {
   _id: string;
@@ -159,11 +164,12 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFiltersApplied, setIsFiltersApplied] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const { data: volunteerArray } = useGetVolunteerDomains({ isEnabled: true });
 
   // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
   const [activeTab, setActiveTab] = useState("active");
-  const [user, _] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
@@ -423,7 +429,7 @@ const HomePage = () => {
                     variant="outline"
                     className=" bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
                   >
-                    {ev.availability}
+                    {ev.availability[0]}
                   </Badge>
                 )}
               </CardDescription>
@@ -456,7 +462,7 @@ const HomePage = () => {
                 tabIndex={0}
                 onClick={() => navigate("/login")}
               >
-                Login To apply
+                {loading ? <Loader /> : "Login To apply"}
               </Button>
             ) : (
               <Link
@@ -515,11 +521,10 @@ const HomePage = () => {
               </CardDescription>
             </div>
           </div>
-          {application.notes && (
-            <p className="text-sm text-gray-800 dark:text-gray-200">
-              {application.eventId.description}
-            </p>
-          )}
+
+          <p className="text-sm text-gray-800 dark:text-gray-200">
+            {application.eventId.description}
+          </p>
         </CardHeader>
         <CardContent>
           <div className="space-y-3 ">
@@ -539,7 +544,16 @@ const HomePage = () => {
               to={`/volunteer/event/${application._id}`}
               state={{ applicationData: application }}
             >
+<<<<<<< HEAD
               <Button className="w-full mt-2">View Tasks</Button>
+=======
+              <Button
+                className={cn("w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400",application.status===ApplicationStatus.PENDING ? "bg-zinc-200 text-black hover:bg-zinc-200": application.status===ApplicationStatus.APPROVED && "bg-green-700 hover:bg-green-700 ")}
+                tabIndex={0}
+              >
+                {application.status}
+              </Button>
+>>>>>>> 2ac39c6b3e3783b95eb4a4dced2051ade5b1ef53
             </Link>
           </div>
         </CardContent>
@@ -687,8 +701,8 @@ const HomePage = () => {
                     <SelectItem value="Both">
                       Both Weekdays & Weekends
                     </SelectItem>
-                    <SelectItem value="Weekdays">Weekdays Only</SelectItem>
-                    <SelectItem value="Weekends">Weekends Only</SelectItem>
+                    <SelectItem value="Week days">Weekdays</SelectItem>
+                    <SelectItem value="Week ends">Weekends</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -927,46 +941,46 @@ const HomePage = () => {
             >
               Active
             </button>
-            <button
-              ref={tabRefs.myApplications}
-              role="tab"
-              id="myApplications-tab-trigger"
-              aria-controls="myApplications-tab"
-              aria-selected={activeTab === "myApplications"}
-              className={`tab-trigger ${
-                activeTab === "myApplications"
-                  ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-              onClick={() => {
-                if (!user) {
-                  navigate("/login");
-                  return;
-                }
-                setActiveTab("myApplications");
-              }}
-              onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
-              tabIndex={0}
-            >
-              My Applications
-            </button>
-            <button
-              ref={tabRefs.history}
-              role="tab"
-              id="history-tab-trigger"
-              aria-controls="history-tab"
-              aria-selected={activeTab === "history"}
-              className={`tab-trigger ${
-                activeTab === "history"
-                  ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-              onClick={() => setActiveTab("history")}
-              onKeyDown={(e) => handleTabKeyDown(e, "history")}
-              tabIndex={0}
-            >
-              History
-            </button>
+            {user && (
+              <button
+                ref={tabRefs.myApplications}
+                role="tab"
+                id="myApplications-tab-trigger"
+                aria-controls="myApplications-tab"
+                aria-selected={activeTab === "myApplications"}
+                className={`tab-trigger ${
+                  activeTab === "myApplications"
+                    ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
+                    : "text-gray-600 dark:text-gray-300"
+                }`}
+                onClick={() => {
+                  setActiveTab("myApplications");
+                }}
+                onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
+                tabIndex={0}
+              >
+                My Applications
+              </button>
+            )}
+            {user && (
+              <button
+                ref={tabRefs.history}
+                role="tab"
+                id="history-tab-trigger"
+                aria-controls="history-tab"
+                aria-selected={activeTab === "history"}
+                className={`tab-trigger ${
+                  activeTab === "history"
+                    ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
+                    : "text-gray-600 dark:text-gray-300"
+                }`}
+                onClick={() => setActiveTab("history")}
+                onKeyDown={(e) => handleTabKeyDown(e, "history")}
+                tabIndex={0}
+              >
+                History
+              </button>
+            )}
           </div>
 
           <div

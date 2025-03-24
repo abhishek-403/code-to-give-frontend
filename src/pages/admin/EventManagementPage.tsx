@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import ApplicationCard from "@/components/ApplicationDetailsCard";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -20,201 +20,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { EventStatus, TaskStatus } from "@/lib/constants/server-constants";
 import {
-  PlusCircle,
-  Mail,
+  useAddTaskToEventMutation,
+  useInfiniteEventsForAdmin,
+} from "@/services/event";
+import { RootState, useAppSelector } from "@/store";
+import Loader from "@/utils/loader";
+import { format } from "date-fns";
+import {
   ArrowLeft,
+  ArrowRight,
+  ArrowRightLeft,
   CheckCircle2,
   Circle,
   Clock,
-  ArrowRightLeft,
-  ArrowRight,
+  Mail,
+  PlusCircle,
   RotateCcw,
 } from "lucide-react";
-import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { Link } from "react-router-dom";
 
+export interface AdminEventsDataType {
+  _id: string;
+  name: string;
+  description: string;
+  status: EventStatus;
+  endData: Date;
+  startDate: Date;
+  location: string;
+  applications: any[];
+  volunteeers: any[];
+}
 const EventManagementPage = () => {
   // Enhanced mock data for existing events - now with task completion status
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Donation Drive",
-      description: "Collect donations for the needy.",
-      status: "active",
-      startDate: new Date(2025, 3, 28),
-      endDate: new Date(2025, 3, 30),
-      location: "Community Center",
-      volunteers: [
-        {
-          id: 101,
-          name: "John Doe",
-          email: "john@example.com",
-          assigned: true,
-        },
-        {
-          id: 102,
-          name: "Jane Smith",
-          email: "jane@example.com",
-          assigned: true, // Changed from false to true since she has assigned tasks
-        },
-      ],
-      tasks: [
-        {
-          id: 201,
-          title: "Set up donation boxes",
-          description: "Place donation boxes at all entrances and common areas",
-          assignedTo: 101,
-          completed: true,
-        },
-        {
-          id: 202,
-          title: "Sort and pack donations",
-          description: "Organize and pack donated items for distribution",
-          assignedTo: 101,
-          completed: true,
-        },
-        {
-          id: 211,
-          title: "Coordinate with local shelters",
-          description: "Arrange for donation drop-offs at local shelters",
-          assignedTo: 101,
-          completed: false,
-        },
-        {
-          id: 212,
-          title: "Thank you notes",
-          description: "Write thank you notes for all donors",
-          assignedTo: 102,
-          completed: false,
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "Walk-a-thon",
-      description: "A charity walk to raise awareness.",
-      status: "active",
-      startDate: new Date(2025, 4, 15),
-      endDate: new Date(2025, 4, 15),
-      location: "City Park",
-      volunteers: [
-        {
-          id: 103,
-          name: "Mike Johnson",
-          email: "mike@example.com",
-          assigned: true,
-        },
-        {
-          id: 104,
-          name: "Sarah Williams",
-          email: "sarah@example.com",
-          assigned: false,
-        },
-      ],
-      tasks: [
-        {
-          id: 203,
-          title: "Set up registration booth",
-          description: "Prepare registration booth for participants",
-          assignedTo: 103,
-          completed: true,
-        },
-        {
-          id: 204,
-          title: "Distribute t-shirts and bibs",
-          description: "Hand out t-shirts and bibs to registered participants",
-          assignedTo: 103,
-          completed: true,
-        },
-        {
-          id: 205,
-          title: "Prepare route maps",
-          description: "Print and distribute route maps for participants",
-          assignedTo: 103,
-          completed: true,
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "Fundraiser",
-      description: "Raise funds for the organization.",
-      status: "underReview",
-      startDate: new Date(2025, 4, 5),
-      endDate: new Date(2025, 4, 7),
-      location: "Hotel Conference Room",
-      volunteers: [],
-      tasks: [
-        {
-          id: 206,
-          title: "Send out invites",
-          description: "Email invites to potential donors",
-          assignedTo: null,
-          completed: false,
-        },
-        {
-          id: 207,
-          title: "Prepare presentation",
-          description: "Create a presentation for the fundraiser event",
-          assignedTo: null,
-          completed: false,
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: "Awareness Campaign",
-      description: "Promote awareness about our cause.",
-      status: "history",
-      startDate: new Date(2025, 2, 10),
-      endDate: new Date(2025, 2, 20),
-      location: "Multiple Locations",
-      volunteers: [
-        {
-          id: 105,
-          name: "Alex Thompson",
-          email: "alex@example.com",
-          assigned: true,
-        },
-      ],
-      tasks: [
-        {
-          id: 208,
-          title: "Distribute flyers",
-          description: "Hand out flyers at local events and gatherings",
-          assignedTo: 105,
-          completed: true,
-        },
-        {
-          id: 209,
-          title: "Social media campaign",
-          description: "Create social media posts to raise awareness",
-          assignedTo: 105,
-          completed: true,
-        },
-        {
-          id: 210,
-          title: "Local radio ads",
-          description: "Coordinate with local radio stations for ads",
-          assignedTo: 105,
-          completed: true,
-        },
-      ],
-    },
-  ]);
 
-  // State for the currently selected event (for detailed view)
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [activeTab, setActiveTab] = useState<any>("active");
 
-  // State for task filtering in detail view
-  const [taskFilter, setTaskFilter] = useState("all");
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
-  // State for new event form
-  const [isAddEventOpen, setIsAddEventOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState({
+  const [taskFilter, setTaskFilter] = useState<any>("all");
+
+  const [isAddEventOpen, setIsAddEventOpen] = useState<any>(false);
+  const [newEvent, setNewEvent] = useState<any>({
     title: "",
     description: "",
     startDate: new Date(),
@@ -223,26 +75,48 @@ const EventManagementPage = () => {
     status: "underReview",
   });
 
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    // refetch,
+  } = useInfiniteEventsForAdmin({
+    // activeTab,
+    // ...filterParams,
+  });
+
+  const { ref: loadMoreRef, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+  const events = data?.pages.flatMap((page) => page.events) || [];
+
   // State for new task form
-  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState<any>(false);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
-    assignedTo: "none",
+    assignedTo: "",
     completed: false,
   });
 
-  const [isTaskAssignOpen, setIsTaskAssignOpen] = useState(false);
-  const [taskToAssign, setTaskToAssign] = useState(null);
+  const [isTaskAssignOpen, setIsTaskAssignOpen] = useState<any>(false);
+  const [taskToAssign, setTaskToAssign] = useState<any>(null);
 
   // State for email update form
-  const [isEmailOpen, setIsEmailOpen] = useState(false);
-  const [emailUpdate, setEmailUpdate] = useState({
+  const [isEmailOpen, setIsEmailOpen] = useState<any>(false);
+  const [emailUpdate, setEmailUpdate] = useState<any>({
     subject: "",
     message: "",
   });
-  const [isVolunteerEmailOpen, setIsVolunteerEmailOpen] = useState(false);
-  const [volunteerEmailData, setVolunteerEmailData] = useState({
+  const [isVolunteerEmailOpen, setIsVolunteerEmailOpen] = useState<any>(false);
+  const [volunteerEmailData, setVolunteerEmailData] = useState<any>({
     volunteerId: null,
     volunteerName: "",
     volunteerEmail: "",
@@ -250,44 +124,43 @@ const EventManagementPage = () => {
     message: "",
   });
 
-  const [activeTab, setActiveTab] = useState("active");
-
   // load data from the backend integration when available
-  useEffect(() => {
-    // fetch data here
-    const fetchEvents = async () => {
-      try {
-        // const response = await fetch('/api/events');
-        // const data = await response.json();
-        // setEvents(ensureVolunteerTaskConsistency(data));
+  // useEffect(() => {
+  //   // fetch data here
+  //   const fetchEvents = async () => {
+  //     try {
+  //       // const response = await fetch('/api/events');
+  //       // const data = await response.json();
+  //       // setEvents(ensureVolunteerTaskConsistency(data));
+  //       // For now, using mock data:
+  //       // setEvents((prevEvents) => ensureVolunteerTaskConsistency(prevEvents));
+  //     } catch (error) {
+  //       console.error("Error fetching events:", error);
+  //     }
+  //   };
 
-        // For now, using mock data:
-        setEvents((prevEvents) => ensureVolunteerTaskConsistency(prevEvents));
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
-
-    fetchEvents();
-  }, []); // Run once on component mount
+  //   fetchEvents();
+  // }, []); // Run once on component mount
 
   // Calculate task completion percentage for an event
-  const calculateTaskCompletion = (event) => {
+  const calculateTaskCompletion = (event: any) => {
     if (event.tasks.length === 0) return 0;
-    const completedTasks = event.tasks.filter((task) => task.completed).length;
+    const completedTasks = event.tasks.filter(
+      (task: any) => task.completed
+    ).length;
     return Math.round((completedTasks / event.tasks.length) * 100);
   };
 
   // Enhanced task assignment handler to manage all task states
   // Replace the handleTaskAssignment function with this improved version
-  const handleTaskAssignment = (newAssigneeId) => {
+  const handleTaskAssignment = (newAssigneeId: any) => {
     if (!selectedEvent || !taskToAssign) return;
 
     const updatedEvents = events.map((event) => {
       if (event.id === selectedEvent.id) {
         // Find if the volunteer is waitlisted
         const assigneeVolunteer = event.volunteers.find(
-          (v) => v.id === parseInt(newAssigneeId)
+          (v: any) => v.id === parseInt(newAssigneeId)
         );
 
         // First update volunteer status if needed
@@ -298,7 +171,7 @@ const EventManagementPage = () => {
           !assigneeVolunteer.assigned
         ) {
           // Auto-activate waitlisted volunteer when assigned a task
-          updatedVolunteers = event.volunteers.map((volunteer) => {
+          updatedVolunteers = event.volunteers.map((volunteer: any) => {
             if (volunteer.id === parseInt(newAssigneeId)) {
               return { ...volunteer, assigned: true };
             }
@@ -310,7 +183,7 @@ const EventManagementPage = () => {
         return {
           ...event,
           volunteers: updatedVolunteers,
-          tasks: event.tasks.map((task) => {
+          tasks: event.tasks.map((task: any) => {
             if (task.id === taskToAssign.id) {
               // Determine the new task state based on action type and current state
               const action = taskToAssign.actionType || "reassign";
@@ -344,7 +217,7 @@ const EventManagementPage = () => {
       return event;
     });
 
-    setEvents(updatedEvents);
+    // setEvents(updatedEvents);
     if (selectedEvent) {
       setSelectedEvent(
         updatedEvents.find((event) => event.id === selectedEvent.id)
@@ -356,12 +229,12 @@ const EventManagementPage = () => {
   };
 
   // New function to handle task completion directly
-  const handleMarkTaskComplete = (eventId, taskId) => {
+  const handleMarkTaskComplete = (eventId: any, taskId: any) => {
     const updatedEvents = events.map((event) => {
       if (event.id === eventId) {
         return {
           ...event,
-          tasks: event.tasks.map((task) => {
+          tasks: event.tasks.map((task: any) => {
             if (task.id === taskId) {
               return { ...task, completed: true };
             }
@@ -372,19 +245,19 @@ const EventManagementPage = () => {
       return event;
     });
 
-    setEvents(updatedEvents);
+    // setEvents(updatedEvents);
     if (selectedEvent && selectedEvent.id === eventId) {
       setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
     }
   };
 
   // New function to reopen a completed task
-  const handleReopenTask = (eventId, taskId) => {
+  const handleReopenTask = (eventId: any, taskId: any) => {
     const updatedEvents = events.map((event) => {
       if (event.id === eventId) {
         return {
           ...event,
-          tasks: event.tasks.map((task) => {
+          tasks: event.tasks.map((task: any) => {
             if (task.id === taskId) {
               return { ...task, completed: false };
             }
@@ -395,19 +268,19 @@ const EventManagementPage = () => {
       return event;
     });
 
-    setEvents(updatedEvents);
+    // setEvents(updatedEvents);
     if (selectedEvent && selectedEvent.id === eventId) {
       setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
     }
   };
 
   // Calculate task statistics for the selected event
-  const getTaskStats = (event) => {
+  const getTaskStats = (event: any) => {
     if (!event) return { completed: 0, pending: 0, unassigned: 0, total: 0 };
 
-    const completed = event.tasks.filter((task) => task.completed).length;
+    const completed = event.tasks.filter((task: any) => task.completed).length;
     const unassigned = event.tasks.filter(
-      (task) => task.assignedTo === null
+      (task: any) => task.assignedTo === null
     ).length;
     const pending = event.tasks.length - completed - unassigned;
 
@@ -420,32 +293,32 @@ const EventManagementPage = () => {
   };
 
   // Filter tasks based on their status
-  const getFilteredTasks = (event, filter) => {
+  const getFilteredTasks = (event: any, filter: any) => {
     if (!event) return [];
 
     switch (filter) {
       case "completed":
-        return event.tasks.filter((task) => task.completed);
+        return event.tasks.filter((task: any) => task.completed);
       case "pending":
         return event.tasks.filter(
-          (task) => !task.completed && task.assignedTo !== null
+          (task: any) => !task.completed && task.assignedTo !== null
         );
       case "unassigned":
-        return event.tasks.filter((task) => task.assignedTo === null);
+        return event.tasks.filter((task: any) => task.assignedTo === null);
       default:
         return event.tasks;
     }
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = (id: any) => {
     const eventToEdit = events.find((event) => event.id === id);
     setSelectedEvent(eventToEdit);
     setTaskFilter("all"); // Reset filter when selecting a new event
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: any) => {
     const updatedEvents = events.filter((event) => event.id !== id);
-    setEvents(updatedEvents);
+    // setEvents(updatedEvents);
   };
 
   const handleAddEvent = async () => {
@@ -466,29 +339,39 @@ const EventManagementPage = () => {
     // setEvents([...events, savedEvent]);
 
     // For now, using local state:
-    setEvents([...events, eventToAdd]);
+    // setEvents([...events, eventToAdd]);
     setIsAddEventOpen(false);
-    setNewEvent({
-      title: "",
-      description: "",
-      startDate: new Date(),
-      endDate: new Date(),
-      location: "",
-      status: "underReview",
-    });
+    // setNewEvent({
+    //   title: "",
+    //   description: "",
+    //   startDate: new Date(),
+    //   endDate: new Date(),
+    //   location: "",
+    //   status: "underReview",
+    // });
   };
+  const userId = useAppSelector((u: RootState) => u.user._id);
 
+  const { mutate: addTaskAPI, isPending } = useAddTaskToEventMutation();
   const handleAddTask = async () => {
     if (!selectedEvent) return;
-
-    const newTaskData = {
-      id: Date.now(), // In production, this ID would come from the server
-      title: newTask.title,
+    addTaskAPI({
+      name: newTask.title,
       description: newTask.description,
-      assignedTo:
-        newTask.assignedTo === "none" ? null : parseInt(newTask.assignedTo),
-      completed: newTask.completed,
-    };
+      assignedTo: newTask.assignedTo,
+      assignedBy: userId || "",
+      status: TaskStatus.ASSIGNED,
+      eventId: selectedEvent._id,
+    });
+
+    // const newTaskData = {
+    //   id: Date.now(), // In production, this ID would come from the server
+    //   title: newTask.title,
+    //   description: newTask.description,
+    //   assignedTo:
+    //     newTask.assignedTo === "none" ? null : parseInt(newTask.assignedTo),
+    //   completed: newTask.completed,
+    // };
 
     // In production, you would add API call here, for example:
     // const response = await fetch(`/api/events/${selectedEvent.id}/tasks`, {
@@ -498,39 +381,39 @@ const EventManagementPage = () => {
     // });
     // const savedTask = await response.json();
 
-    const updatedEvents = events.map((event) => {
-      if (event.id === selectedEvent.id) {
-        return {
-          ...event,
-          tasks: [...event.tasks, newTaskData],
-        };
-      }
-      return event;
-    });
+    // const updatedEvents = events.map((event) => {
+    //   if (event.id === selectedEvent.id) {
+    //     return {
+    //       ...event,
+    //       tasks: [...event.tasks, newTaskData],
+    //     };
+    //   }
+    //   return event;
+    // });
 
-    setEvents(updatedEvents);
+    // setEvents(updatedEvents);
     setIsAddTaskOpen(false);
-    setNewTask({
-      title: "",
-      description: "",
-      assignedTo: "none",
-      completed: false,
-    });
+    // setNewTask({
+    //   title: "",
+    //   description: "",
+    //   assignedTo: "none",
+    //   completed: false,
+    // });
 
     // Update selected event
-    setSelectedEvent(
-      updatedEvents.find((event) => event.id === selectedEvent.id)
-    );
+    // setSelectedEvent(
+    //   updatedEvents.find((event) => event.id === selectedEvent.id)
+    // );
   };
 
   // Replace the handleAssignVolunteer function with this version
-  const handleAssignVolunteer = (eventId, volunteerId) => {
+  const handleAssignVolunteer = (eventId: any, volunteerId: any) => {
     const event = events.find((e) => e.id === eventId);
-    const volunteer = event?.volunteers.find((v) => v.id === volunteerId);
+    const volunteer = event?.volunteers.find((v: any) => v.id === volunteerId);
 
     // Check if volunteer has any tasks assigned
     const hasAssignedTasks = event?.tasks.some(
-      (task) => task.assignedTo === volunteerId
+      (task: any) => task.assignedTo === volunteerId
     );
 
     // Don't allow active volunteers with tasks to be changed to waitlisted
@@ -542,7 +425,7 @@ const EventManagementPage = () => {
       if (event.id === eventId) {
         return {
           ...event,
-          volunteers: event.volunteers.map((volunteer) => {
+          volunteers: event.volunteers.map((volunteer: any) => {
             if (volunteer.id === volunteerId) {
               return { ...volunteer, assigned: !volunteer.assigned };
             }
@@ -553,7 +436,7 @@ const EventManagementPage = () => {
       return event;
     });
 
-    setEvents(updatedEvents);
+    // setEvents(updatedEvents);
     if (selectedEvent && selectedEvent.id === eventId) {
       setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
     }
@@ -611,7 +494,7 @@ const EventManagementPage = () => {
     });
   };
 
-  const renderEventCard = (event) => {
+  const renderEventCard = (event: any) => {
     const completionPercentage = calculateTaskCompletion(event);
     const taskStats = getTaskStats(event);
 
@@ -640,7 +523,7 @@ const EventManagementPage = () => {
               {taskStats.completed > 0 && (
                 <Badge
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:border-green-800"
+                  className="bg-green-50 text-green-700 border-green-200"
                 >
                   <CheckCircle2 className="h-3 w-3 mr-1" />{" "}
                   {taskStats.completed}
@@ -649,7 +532,7 @@ const EventManagementPage = () => {
               {taskStats.pending > 0 && (
                 <Badge
                   variant="outline"
-                  className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:border-yellow-800"
+                  className="bg-yellow-50 text-yellow-700 border-yellow-200"
                 >
                   <Clock className="h-3 w-3 mr-1" /> {taskStats.pending}
                 </Badge>
@@ -684,18 +567,18 @@ const EventManagementPage = () => {
   };
 
   // Add this function to your component
-  const ensureVolunteerTaskConsistency = (eventsList) => {
-    return eventsList.map((event) => {
+  const ensureVolunteerTaskConsistency = (eventsList: any) => {
+    return eventsList.map((event: any) => {
       // Find all volunteers with assigned tasks
       const volunteersWithTasks = new Set();
-      event.tasks.forEach((task) => {
+      event.tasks.forEach((task: any) => {
         if (task.assignedTo !== null) {
           volunteersWithTasks.add(task.assignedTo);
         }
       });
 
       // Ensure these volunteers are marked as assigned
-      const updatedVolunteers = event.volunteers.map((volunteer) => {
+      const updatedVolunteers = event.volunteers.map((volunteer: any) => {
         if (volunteersWithTasks.has(volunteer.id) && !volunteer.assigned) {
           return { ...volunteer, assigned: true };
         }
@@ -709,7 +592,7 @@ const EventManagementPage = () => {
   // Use this function when setting initial events and after any event update
   // For example, in useEffect:
   useEffect(() => {
-    setEvents((prevEvents) => ensureVolunteerTaskConsistency(prevEvents));
+    // setEvents((prevEvents) => ensureVolunteerTaskConsistency(prevEvents));
   }, []); // Run once on component mount
 
   return (
@@ -744,7 +627,7 @@ const EventManagementPage = () => {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>{selectedEvent.title}</CardTitle>
+                  <CardTitle>{selectedEvent.name}</CardTitle>
                   {selectedEvent.tasks.length > 0 && (
                     <div className="mt-2">
                       <Progress
@@ -815,23 +698,117 @@ const EventManagementPage = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Event Details</h3>
-                  <div className="space-y-2">
-                    <p>
-                      <strong>Description:</strong> {selectedEvent.description}
-                    </p>
-                    <p>
-                      <strong>Status:</strong> {selectedEvent.status}
-                    </p>
-                    <p>
-                      <strong>Dates:</strong>{" "}
-                      {format(selectedEvent.startDate, "MMM dd, yyyy")} -{" "}
-                      {format(selectedEvent.endDate, "MMM dd, yyyy")}
-                    </p>
-                    <p>
-                      <strong>Location:</strong> {selectedEvent.location}
-                    </p>
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Event Details
+                    </h3>
+                    <div className="space-y-2">
+                      <p>
+                        <strong>Description:</strong>{" "}
+                        {selectedEvent.description}
+                      </p>
+                      <p>
+                        <strong>Status:</strong> {selectedEvent.status}
+                      </p>
+                      <p>
+                        <strong>Dates:</strong>{" "}
+                        {format(selectedEvent.startDate, "MMM dd, yyyy")} -{" "}
+                        {format(selectedEvent.endDate, "MMM dd, yyyy")}
+                      </p>
+                      <p>
+                        <strong>Location:</strong> {selectedEvent.location}
+                      </p>
+                    </div>
                   </div>
+                  {selectedEvent.applications.length > 0 && (
+                    <div className="mt-8 ">
+                      <h3 className="text-lg font-semibold mb-4 ">
+                        Applications
+                      </h3>
+
+                      <div className="space-y-2 ">
+                        {selectedEvent.applications.map((application: any) => {
+                          return <ApplicationCard application={application} />;
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {selectedEvent.volunteers.length > 0 && (
+                    <div className="mt-8">
+                      <h3 className="text-lg font-semibold mb-4">Volunteers</h3>
+
+                      <div className="space-y-2">
+                        {selectedEvent.volunteers.map((volunteer: any) => {
+                          // Check if volunteer has any tasks assigned
+                          const hasAssignedTasks = selectedEvent.tasks.some(
+                            (task: any) => task.assignedTo === volunteer._id
+                          );
+                          console.log(volunteer);
+
+                          return (
+                            <div
+                              key={volunteer._id}
+                              className="flex items-center justify-between border p-3 rounded-md"
+                            >
+                              <div>
+                                <p className="font-medium">
+                                  {volunteer.displayName}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {volunteer.email}
+                                </p>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Button
+                                  variant="outline"
+                                  className={`${
+                                    volunteer.assigned
+                                      ? "bg-green-50 text-green-700"
+                                      : "bg-yellow-50 text-yellow-700"
+                                  }`}
+                                  onClick={() => {
+                                    handleAssignVolunteer(
+                                      selectedEvent.id,
+                                      volunteer.id
+                                    );
+                                  }}
+                                >
+                                  {volunteer.assigned ? "Active" : "Waitlisted"}
+                                </Button>
+                                {hasAssignedTasks && !volunteer.assigned && (
+                                  <Badge
+                                    variant="outline"
+                                    className="bg-yellow-50 text-yellow-700"
+                                  >
+                                    Has assigned tasks
+                                  </Badge>
+                                )}
+
+                                {/* Add this new email button */}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setVolunteerEmailData({
+                                      volunteerId: volunteer.id,
+                                      volunteerName: volunteer.name,
+                                      volunteerEmail: volunteer.email,
+                                      subject: `Update regarding ${selectedEvent.title}`,
+                                      message: "",
+                                    });
+                                    setIsVolunteerEmailOpen(true);
+                                  }}
+                                >
+                                  <Mail className="h-3 w-3 mr-1" />
+                                  Email
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -905,14 +882,16 @@ const EventManagementPage = () => {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="none">Unassigned</SelectItem>
-                                {selectedEvent.volunteers.map((volunteer) => (
-                                  <SelectItem
-                                    key={volunteer.id}
-                                    value={volunteer.id.toString()}
-                                  >
-                                    {volunteer.name}
-                                  </SelectItem>
-                                ))}
+                                {selectedEvent.volunteers.map(
+                                  (volunteer: any) => (
+                                    <SelectItem
+                                      key={volunteer._id}
+                                      value={volunteer._id}
+                                    >
+                                      {volunteer.displayName}
+                                    </SelectItem>
+                                  )
+                                )}
                               </SelectContent>
                             </Select>
                           </div>
@@ -924,7 +903,7 @@ const EventManagementPage = () => {
                               <Checkbox
                                 id="completed"
                                 checked={newTask.completed}
-                                onCheckedChange={(checked) =>
+                                onCheckedChange={(checked: any) =>
                                   setNewTask({
                                     ...newTask,
                                     completed: checked,
@@ -941,7 +920,9 @@ const EventManagementPage = () => {
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          <Button onClick={handleAddTask}>Save Task</Button>
+                          <Button onClick={handleAddTask} disabled={isPending}>
+                            Save Task
+                          </Button>
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -994,24 +975,24 @@ const EventManagementPage = () => {
                   <div className="space-y-2">
                     {selectedEvent.tasks.length > 0 ? (
                       getFilteredTasks(selectedEvent, taskFilter).map(
-                        (task) => (
+                        (task: any) => (
                           <div
                             key={task.id}
                             className={`border p-3 rounded-md ${
                               task.completed
-                                ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800"
+                                ? "bg-green-50 border-green-200"
                                 : task.assignedTo === null
-                                ? "bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700"
-                                : "bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800"
+                                ? "bg-gray-50 border-gray-200"
+                                : "bg-yellow-50 border-yellow-200"
                             }`}
                           >
                             <div className="flex items-center justify-between mb-1">
                               <p
                                 className={`font-medium ${
-                                  task.completed ? "text-gray-500 dark:text-gray-400" : ""
+                                  task.completed ? "text-gray-500" : ""
                                 }`}
                               >
-                                {task.title}
+                                {task.name}
                               </p>
                               <div className="flex gap-1">
                                 {/* Dynamic button based on task state */}
@@ -1084,7 +1065,7 @@ const EventManagementPage = () => {
 
                             {/* Task description - will only show if description exists */}
                             {task.description && (
-                              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+                              <p className="text-sm text-gray-600 mb-2">
                                 {task.description}
                               </p>
                             )}
@@ -1094,8 +1075,8 @@ const EventManagementPage = () => {
                                 {task.assignedTo
                                   ? `Assigned to: ${
                                       selectedEvent.volunteers.find(
-                                        (v) => v.id === task.assignedTo
-                                      )?.name || "Unknown"
+                                        (v: any) => v._id === task.assignedTo
+                                      )?.displayName || "Unknown"
                                     }`
                                   : "Unassigned"}
                               </p>
@@ -1103,10 +1084,10 @@ const EventManagementPage = () => {
                                 variant="outline"
                                 className={`${
                                   task.completed
-                                  ? "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
-                                  : task.assignedTo === null
-                                  ? "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
-                                  : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300"
+                                    ? "bg-green-100 text-green-800"
+                                    : task.assignedTo === null
+                                    ? "bg-gray-100 text-gray-800"
+                                    : "bg-yellow-100 text-yellow-800"
                                 }`}
                               >
                                 {task.completed
@@ -1120,7 +1101,7 @@ const EventManagementPage = () => {
                         )
                       )
                     ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-sm">
+                      <p className="text-gray-500 text-sm">
                         No tasks added for this event yet.
                       </p>
                     )}
@@ -1128,82 +1109,6 @@ const EventManagementPage = () => {
                 </div>
               </div>
 
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-4">Volunteers</h3>
-                {selectedEvent.volunteers.length > 0 ? (
-                  <div className="space-y-2">
-                    {selectedEvent.volunteers.map((volunteer) => {
-                      // Check if volunteer has any tasks assigned
-                      const hasAssignedTasks = selectedEvent.tasks.some(
-                        (task) => task.assignedTo === volunteer.id
-                      );
-
-                      return (
-                        <div
-                          key={volunteer.id}
-                          className="flex items-center justify-between border p-3 rounded-md dark:border-gray-700"
-                        >
-                          <div>
-                            <p className="font-medium">{volunteer.name}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {volunteer.email}
-                            </p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              className={`${
-                                volunteer.assigned
-                                  ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                                  : "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"
-                              }`}
-                              onClick={() => {
-                                handleAssignVolunteer(
-                                  selectedEvent.id,
-                                  volunteer.id
-                                );
-                              }}
-                            >
-                              {volunteer.assigned ? "Active" : "Waitlisted"}
-                            </Button>
-                            {hasAssignedTasks && !volunteer.assigned && (
-                              <Badge
-                                variant="outline"
-                                className="bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"
-                                >
-                                Has assigned tasks
-                              </Badge>
-                            )}
-
-                            {/* Add this new email button */}
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setVolunteerEmailData({
-                                  volunteerId: volunteer.id,
-                                  volunteerName: volunteer.name,
-                                  volunteerEmail: volunteer.email,
-                                  subject: `Update regarding ${selectedEvent.title}`,
-                                  message: "",
-                                });
-                                setIsVolunteerEmailOpen(true);
-                              }}
-                            >
-                              <Mail className="h-3 w-3 mr-1" />
-                              Email
-                            </Button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">
-                    No volunteers assigned to this event yet.
-                  </p>
-                )}
-              </div>
             </CardContent>
           </Card>
 
@@ -1226,21 +1131,21 @@ const EventManagementPage = () => {
                   <div className="mb-4">
                     <p className="font-medium">{taskToAssign.title}</p>
                     {taskToAssign.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                      <p className="text-sm text-gray-600 mt-1">
                         {taskToAssign.description}
                       </p>
                     )}
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-500">
                         Current status:{" "}
                         <Badge
                           variant="outline"
                           className={`${
                             taskToAssign.completed
-                              ? "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
+                              ? "bg-green-100 text-green-800"
                               : taskToAssign.assignedTo === null
-                              ? "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
-                              : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300"
+                              ? "bg-gray-100 text-gray-800"
+                              : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
                           {taskToAssign.completed
@@ -1254,7 +1159,7 @@ const EventManagementPage = () => {
                         <p className="text-sm text-gray-500 mt-1">
                           Currently assigned to:{" "}
                           {selectedEvent.volunteers.find(
-                            (v) => v.id === taskToAssign.assignedTo
+                            (v: any) => v.id === taskToAssign.assignedTo
                           )?.name || "Unknown"}
                         </p>
                       )}
@@ -1280,7 +1185,7 @@ const EventManagementPage = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="none">Unassigned</SelectItem>
-                        {selectedEvent?.volunteers.map((volunteer) => (
+                        {selectedEvent?.volunteers.map((volunteer: any) => (
                           <SelectItem
                             key={volunteer.id}
                             value={volunteer.id.toString()}
@@ -1358,17 +1263,17 @@ const EventManagementPage = () => {
                   (tab) => tab === document.activeElement
                 );
 
-                if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-                  e.preventDefault();
-                  const nextIndex = (currentIndex + 1) % tabTriggers.length;
-                  tabTriggers[nextIndex].focus();
-                } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-                  e.preventDefault();
-                  const prevIndex =
-                    (currentIndex - 1 + tabTriggers.length) %
-                    tabTriggers.length;
-                  tabTriggers[prevIndex].focus();
-                }
+                // if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                //   e.preventDefault();
+                //   const nextIndex = (currentIndex + 1) % tabTriggers.length;
+                //   tabTriggers[nextIndex].focus();
+                // } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                //   e.preventDefault();
+                //   const prevIndex =
+                //     (currentIndex - 1 + tabTriggers.length) %
+                //     tabTriggers.length;
+                //   tabTriggers[prevIndex].focus();
+                // }
               }}
             >
               <TabsTrigger
@@ -1407,13 +1312,49 @@ const EventManagementPage = () => {
               role="tabpanel"
               tabIndex={0}
               aria-labelledby="tab-active"
-              className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="mt-4"
             >
-              {events
+              {/* {events
                 .filter((event) => event.status === "active")
                 .map((event) => renderEventCard(event))}
               {events.filter((event) => event.status === "active").length ===
-                0 && <p className="text-gray-500 dark:text-gray-400">No active events.</p>}
+                0 && <p>No active events.</p>} */}
+
+              {isLoading ? (
+                <div className="flex justify-center">
+                  <Loader />
+                </div>
+              ) : isError ? (
+                <p className="text-red-400">
+                  Error loading programs. Please try again.
+                </p>
+              ) : events.length > 0 ? (
+                <>
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    Showing {events.length}{" "}
+                    {events.length === 1 ? "event" : "events"}
+                  </div>
+                  <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
+                    {events.map((eachEvent) => renderEventCard(eachEvent))}
+                  </div>
+
+                  <div ref={loadMoreRef} className="py-4 flex justify-center">
+                    {isFetchingNextPage ? (
+                      <Loader />
+                    ) : (
+                      hasNextPage && (
+                        <span className="text-customNeutral-40 w-full center dark:text-contrast-30">
+                          <Loader />
+                        </span>
+                      )
+                    )}
+                  </div>
+                </>
+              ) : (
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                  No events found matching your criteria.
+                </p>
+              )}
             </TabsContent>
             <TabsContent
               value="underReview"
