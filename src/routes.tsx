@@ -106,7 +106,6 @@ export default function AppRoutes() {
           </Layout>
         }
       />
- donate_and_changerole
 <Route
   path="/donate"
   element={
