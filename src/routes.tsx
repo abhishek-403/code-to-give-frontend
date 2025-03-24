@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 
+import DonatePage from "./pages/DonatePage";
+
 import EventRegistrationVolunteerPage from "./pages/EventRegistrationVolunteerPage";
 import UserProfilePage from "./pages/UserProfilePage";
 
@@ -14,6 +16,7 @@ import EventManagementPage from "./pages/admin/EventManagementPage";
 
 import { auth } from "./lib/firebaseConfig";
 import LoadingPage from "./utils/loading-page";
+import ChangeUserRole from "./pages/admin/ChangeUserRole";
 
 import FeedbackPage from "@/pages/FeedbackPage";
 
@@ -103,12 +106,28 @@ export default function AppRoutes() {
           </Layout>
         }
       />
+ donate_and_changerole
+      <Route
+        path="/donate"
+        element={
+          <Layout>
+            <DonatePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/admin/changeroles"
+        element={
+          <Layout>
+            <ChangeUserRole />
+
 
       <Route
         path="/feedback/:eventId"
         element={
           <Layout>
             <FeedbackPage />
+ main
           </Layout>
         }
       />
