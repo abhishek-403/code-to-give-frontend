@@ -26,7 +26,7 @@ import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 interface FormData {
   name: string;
@@ -159,14 +159,12 @@ const EventRegistrationVolunteerPage = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 mb-4"
-        >
-          <ArrowLeft size={16} />
-          Back to Events
-        </Button>
+        <Link to="/" className="text-primary-600">
+          <Button variant="outline" className="mb-4">
+            <ArrowLeft size={16} />
+            Back to Home
+          </Button>
+        </Link>
 
         {eventData && (
           <div className="mb-4">
