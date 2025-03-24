@@ -18,6 +18,8 @@ import { auth } from "./lib/firebaseConfig";
 import LoadingPage from "./utils/loading-page";
 import ChangeUserRole from "./pages/admin/ChangeUserRole";
 
+import FeedbackPage from "@/pages/FeedbackPage";
+
 const ProtectedRoute = () => {
   const [user, loading] = useAuthState(auth);
   if (loading) return <LoadingPage />;
@@ -104,6 +106,7 @@ export default function AppRoutes() {
           </Layout>
         }
       />
+ donate_and_changerole
       <Route
         path="/donate"
         element={
@@ -117,6 +120,14 @@ export default function AppRoutes() {
         element={
           <Layout>
             <ChangeUserRole />
+
+
+      <Route
+        path="/feedback/:eventId"
+        element={
+          <Layout>
+            <FeedbackPage />
+ main
           </Layout>
         }
       />
