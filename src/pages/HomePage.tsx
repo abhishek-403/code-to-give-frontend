@@ -337,14 +337,15 @@ const HomePage = () => {
             <div>
               <CardTitle className="text-lg font-semibold">{ev.name}</CardTitle>
               <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
-                {ev.volunteeringDomains.length > 0 && (
-                  <Badge
-                    variant="outline"
-                    className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-                  >
-                    {ev.volunteeringDomains[0].name}
-                  </Badge>
-                )}
+                {ev.volunteeringDomains &&
+                  ev.volunteeringDomains.length > 0 && (
+                    <Badge
+                      variant="outline"
+                      className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    >
+                      {ev.volunteeringDomains[0].name}
+                    </Badge>
+                  )}
                 {ev.location && (
                   <Badge
                     variant="secondary"
