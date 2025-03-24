@@ -391,7 +391,9 @@ const HomePage = () => {
                   variant="outline"
                   className=" border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
                 >
-                  {ev.volunteeringDomains[0].name}
+                  {/* {ev.volunteeringDomains[0].name}
+                  add null check for above */}
+                  {ev.volunteeringDomains[0]?.name}
                 </Badge>
                 {ev.location && (
                   <Badge
