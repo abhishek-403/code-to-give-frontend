@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 
+import DonatePage from "./pages/DonatePage";
+
 import EventRegistrationVolunteerPage from "./pages/EventRegistrationVolunteerPage";
 import UserProfilePage from "./pages/UserProfilePage";
 
@@ -14,6 +16,7 @@ import EventManagementPage from "./pages/admin/EventManagementPage";
 
 import { auth } from "./lib/firebaseConfig";
 import LoadingPage from "./utils/loading-page";
+import ChangeUserRole from "./pages/admin/ChangeUserRole";
 
 const ProtectedRoute = () => {
   const [user, loading] = useAuthState(auth);
@@ -98,6 +101,22 @@ export default function AppRoutes() {
         element={
           <Layout>
             <EventManagementPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/donate"
+        element={
+          <Layout>
+            <DonatePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/admin/changeroles"
+        element={
+          <Layout>
+            <ChangeUserRole />
           </Layout>
         }
       />

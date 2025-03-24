@@ -64,7 +64,7 @@ const Header = () => {
 
       {/* Desktop Menu */}
       <div className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full">
-        <div className="flex items-center border rounded-lg p-1 h-9 mr-16">
+        <div className="flex items-center border rounded-lg p-1 h-8 mr-16">
           <Input
             placeholder="Search..."
             className="border-none shadow-none focus-visible:ring-0 h-5 w-25"
@@ -96,13 +96,13 @@ const Header = () => {
 
         <span className="text-gray-400">|</span>
 
-        <Button variant="outline" size="icon" onClick={decreaseFontSize}>
+        <Button variant="outline" size="sm" onClick={decreaseFontSize}>
           <AArrowDown className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon" onClick={resetFontSize}>
+        <Button variant="outline" size="sm" onClick={resetFontSize}>
           <Baseline className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon" onClick={increaseFontSize}>
+        <Button variant="outline" size="sm" onClick={increaseFontSize}>
           <AArrowUp className="h-4 w-4" />
         </Button>
 
@@ -125,6 +125,15 @@ const Header = () => {
         <span className="text-gray-400">|</span>
 
         <ThemeSwitcher />
+
+
+        <span className="text-gray-400">|</span>
+
+         <Link to="/donate" className="hover:underline">
+              <Button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" variant="outline" size="sm">
+                Donate Now
+              </Button>
+            </Link>
 
         <span className="text-gray-400">|</span>
 
