@@ -15,6 +15,8 @@ import EventManagementPage from "./pages/admin/EventManagementPage";
 import { auth } from "./lib/firebaseConfig";
 import LoadingPage from "./utils/loading-page";
 
+import FeedbackPage from "@/pages/FeedbackPage";
+
 const ProtectedRoute = () => {
   const [user, loading] = useAuthState(auth);
   if (loading) return <LoadingPage />;
@@ -98,6 +100,15 @@ export default function AppRoutes() {
         element={
           <Layout>
             <EventManagementPage />
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/feedback/:eventId"
+        element={
+          <Layout>
+            <FeedbackPage />
           </Layout>
         }
       />
