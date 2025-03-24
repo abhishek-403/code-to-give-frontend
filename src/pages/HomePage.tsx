@@ -29,12 +29,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import HistoryEventCard from "@/components/HistoryEventCard";
-=======
 import { cn } from "@/lib/utils";
-import HistoryEventCard from '@/components/HistoryEventCard';
->>>>>>> 2ac39c6b3e3783b95eb4a4dced2051ade5b1ef53
 
 interface EventType {
   _id: string;
@@ -544,16 +540,13 @@ const HomePage = () => {
               to={`/volunteer/event/${application._id}`}
               state={{ applicationData: application }}
             >
-<<<<<<< HEAD
               <Button className="w-full mt-2">View Tasks</Button>
-=======
               <Button
                 className={cn("w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400",application.status===ApplicationStatus.PENDING ? "bg-zinc-200 text-black hover:bg-zinc-200": application.status===ApplicationStatus.APPROVED && "bg-green-700 hover:bg-green-700 ")}
                 tabIndex={0}
               >
                 {application.status}
               </Button>
->>>>>>> 2ac39c6b3e3783b95eb4a4dced2051ade5b1ef53
             </Link>
           </div>
         </CardContent>
