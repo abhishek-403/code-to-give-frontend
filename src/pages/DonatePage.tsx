@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router";
+import { ArrowLeft } from "lucide-react";
 
 interface DonateNowFormData {
   name: string;
@@ -34,7 +36,14 @@ const DonateNowForm: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex-column justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+      <Link to="/" className="text-primary-600">
+        <Button variant="outline" className="p-4 mb-4">
+          <ArrowLeft size={16} />
+          Back to Home
+        </Button>
+      </Link>
+
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-2 max-w-lg mx-auto my-auto"

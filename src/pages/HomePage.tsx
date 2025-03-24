@@ -586,7 +586,7 @@ const HomePage = () => {
       </a>
 
       {/*Filters */}
-      <div className="sticky  self-start top-[10px]">
+      <div className="md:sticky self-start top-[10px] z-10">
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Find events</CardTitle>
