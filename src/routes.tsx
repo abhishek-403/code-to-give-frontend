@@ -107,30 +107,30 @@ export default function AppRoutes() {
         }
       />
  donate_and_changerole
-      <Route
-        path="/donate"
-        element={
-          <Layout>
-            <DonatePage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/admin/changeroles"
-        element={
-          <Layout>
-            <ChangeUserRole />
-
-
-      <Route
-        path="/feedback/:eventId"
-        element={
-          <Layout>
-            <FeedbackPage />
- main
-          </Layout>
-        }
-      />
+<Route
+  path="/donate"
+  element={
+    <Layout>
+      <DonatePage />
+    </Layout>
+  }
+/>
+<Route
+  path="/admin/changeroles"
+  element={
+    <Layout>
+      <ChangeUserRole />
+    </Layout>
+  }
+/>
+<Route
+  path="/feedback/:eventId"
+  element={
+    <Layout>
+      <FeedbackPage />
+    </Layout>
+  }
+/>
     </Routes>
   );
 }
