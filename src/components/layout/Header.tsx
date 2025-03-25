@@ -170,6 +170,26 @@ const Header = () => {
         className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full"
         aria-label="Desktop Navigation Menu"
       >
+        
+        {/* contact us button linking to /contact */}
+        <Link
+          to="/contact"
+          className="hover:underline"
+          aria-label="View Contact Details"
+        >
+          <Button
+            variant="outline"
+            size="sm"
+            aria-label="Contact Us"
+          >
+            Contact Us
+          </Button>
+        </Link>
+
+        <span className="text-gray-400" aria-hidden="true">
+          |
+        </span>
+        
         {/* Font Size Controls */}
         <div
           role="group"
@@ -204,6 +224,7 @@ const Header = () => {
             <span className="sr-only">Increase Text Size</span>
           </Button>
         </div>
+        
 
         <span className="text-gray-400" aria-hidden="true">
           |
@@ -316,23 +337,14 @@ const Header = () => {
             alignOffset={0}
           >
             {/* Mobile Menu Items with Improved Accessibility */}
-            <DropdownMenuItem>
-              <Link
-                to="/contact-form"
-                className="w-full flex items-center"
-                aria-label="Go to Contact Form"
-              >
-                <Contact2 className="h-4 w-4 mr-2" /> Contact Form
-              </Link>
-            </DropdownMenuItem>
 
             <DropdownMenuItem>
               <Link
-                to="/contact-details"
+                to="/contact"
                 className="w-full flex items-center"
                 aria-label="View Contact Details"
               >
-                <Contact2 className="h-4 w-4 mr-2" /> Contact Details
+                <Contact2 className="h-4 w-4 mr-2" /> Contact Us
               </Link>
             </DropdownMenuItem>
 
