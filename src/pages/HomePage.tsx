@@ -51,7 +51,7 @@ interface MyApplicationType {
   applicantId: string;
   applicantName: string;
   applicantPhone: string;
-  eventId: { name: string; description: string };
+  eventId: { _id: string; name: string; description: string };
   availability: Availabitity;
   notes?: string;
   status: string;
@@ -178,7 +178,12 @@ const HomePage = () => {
 
 
 
-  const [user, _, loading] = useAuthState(auth);
+
+  const [user, _] = useAuthState(auth);
+  // const [user, loading] = useAuthState(auth);
+
+<!--   const [user, _, loading] = useAuthState(auth); -->
+
 
   const navigate = useNavigate();
   const tabRefs = {
@@ -465,7 +470,56 @@ const HomePage = () => {
                 {formatDateFromDate(ev.endDate)}
               </span>
             </p>
+            {/* <div className="flex w-full gap-0">
+                <Link to="/participant/register"
+                      className="hover:underline"
+                      aria-label="Make a Donation"
+                    >
+                      <Button
+                        className="bg-red-500  hover:bg-red-600 text-white py-2 px-4 rounded"
+                        variant="outline"
+                        size="sm"
+                      >
+                        Participant
+                      </Button>
+                    </Link>
+            <Link to="/spectator/register"
+                      className="hover:underline"
+                      aria-label="Make a Donation"
+                    >
+                      <Button
+                        className="bg-red-500  hover:bg-red-600 text-white py-2 px-4 rounded "
+                        variant="outline"
+                        size="sm"
+                      >
+                        Spectator
+                      </Button>
+                    </Link>
+            </div> */}
+            <div className="flex gap-2 w-full">
+              <Link to="/participant/register" className="w-1/2">
+                <Button
+                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
+                  variant="outline"
+                  size="sm"
+                >
+                  Participant
+                </Button>
+              </Link>
+              <Link to="/spectator/register" className="w-1/2">
+                <Button
+                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
+                  variant="outline"
+                  size="sm"
+                >
+                  Spectator
+                </Button>
+              </Link>
+            </div>
+
+          
             {!user ? (
+              
               <Button
                 className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
                 aria-label={`Apply to volunteer with ${ev.name}`}
@@ -487,7 +541,9 @@ const HomePage = () => {
                 >
                   Apply Now
                 </Button>
-              </Link>
+                </Link>
+                
+                
             )}
           </div>
         </CardContent>
@@ -560,7 +616,7 @@ const HomePage = () => {
             </p>
             {application.status === ApplicationStatus.APPROVED ? (
               <Link
-                to={`/volunteer/event/${application._id}`}
+                to={`/volunteer/event/${application.eventId?._id}`}
                 state={{ applicationData: application }}
               >
                 <Button className="w-full mt-2">View Tasks</Button>

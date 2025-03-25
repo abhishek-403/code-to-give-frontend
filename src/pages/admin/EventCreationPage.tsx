@@ -154,7 +154,6 @@ const EventCreationPage = () => {
   const [newDomainName, setNewDomainName] = useState("");
   const [showLoadTemplateDialog, setShowLoadTemplateDialog] = useState(false);
   const { data: templates, isLoading } = useGetEventTemplates();
-  console.log(templates);
 
   const form = useForm<EventFormValues>({
     defaultValues: {

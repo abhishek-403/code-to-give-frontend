@@ -281,11 +281,28 @@ const Header = () => {
           aria-label="Make a Donation"
         >
           <Button
-            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded dark:!border-neutral-50"
+
+            className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded"
+
+<!--             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded dark:!border-neutral-50" -->
+
             variant="outline"
             size="sm"
           >
             Donate Now
+          </Button>
+        </Link>
+        <Link
+          to="/contactus"
+          className="hover:underline"
+          aria-label="Make a Donation"
+        >
+          <Button
+            className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded"
+            variant="outline"
+            size="sm"
+          >
+            Contact Us
           </Button>
         </Link>
 

@@ -20,6 +20,9 @@ import ChangeUserRole from "./pages/admin/ChangeUserRole";
 
 import FeedbackPage from "@/pages/FeedbackPage";
 import VolunteerEventPage from "@/pages/VolunteerEventPage";
+import ParticipantRegistration from "./pages/ParticipantRegistration";
+import SpectatorRegistration from "./pages/SpectatorRegistration";
+import ContactUsPage from "./pages/ConactUsPage";
 
 const ProtectedRoute = () => {
   const [user, loading] = useAuthState(auth);
@@ -112,6 +115,30 @@ export default function AppRoutes() {
         element={
           <Layout>
             <DonatePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/contactus"
+        element={
+          <Layout>
+            <ContactUsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/participant/register"
+        element={
+          <Layout>
+            <ParticipantRegistration />
+          </Layout>
+        }
+      />
+      <Route
+        path="/spectator/register"
+        element={
+          <Layout>
+            <SpectatorRegistration />
           </Layout>
         }
       />
