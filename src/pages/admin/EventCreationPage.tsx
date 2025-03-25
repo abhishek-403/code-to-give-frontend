@@ -41,8 +41,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Table, TableCell, TableHead, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { Availabitity } from "@/lib/constants/server-constants";
+import { auth } from "@/lib/firebaseConfig";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 import useLanguage from "@/lib/hooks/useLang";
 import { cn } from "@/lib/utils";
 import {
@@ -50,7 +53,9 @@ import {
   useCreateNewVolunteeringDomainMutation,
   useGetEventTemplates,
 } from "@/services/event";
+import { useInfiniteUsers } from "@/services/user";
 import { useAppSelector } from "@/store";
+import Loader from "@/utils/loader";
 import { format } from "date-fns";
 import {
   AlertCircle,
@@ -58,8 +63,11 @@ import {
   BookMarked,
   LayoutTemplate,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useFieldArray, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useInView } from "react-intersection-observer";
 import { Link } from "react-router";
 
 // Define types for our form
@@ -175,6 +183,7 @@ const EventCreationPage = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = form;
 
   const { t } = useLanguage();
@@ -206,6 +215,7 @@ const EventCreationPage = () => {
       templateName,
     };
     mutate(transformedData);
+    reset();
   };
 
   const addNewField = () => {
@@ -232,6 +242,26 @@ const EventCreationPage = () => {
   const volDomains: any = useAppSelector(
     (state: any) => state.eventDetails.voluneeringDomain
   );
+
+  const [search, setSearch] = useState<string>("");
+  const debouncedSearchQuery = useDebounce(search, 500);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    isLoading: userSearchLoading,
+  } = useInfiniteUsers({ searchQuery: debouncedSearchQuery });
+  const { ref } = useInView({
+    threshold: 1,
+    onChange: (inView) => inView && hasNextPage && fetchNextPage(),
+  });
+  const [user] = useAuthState(auth);
+
+  const users = data?.pages.flatMap((page) => page.users) || [];
+  useEffect(() => {
+    refetch();
+  }, [debouncedSearchQuery, refetch, user]);
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
@@ -510,7 +540,6 @@ const EventCreationPage = () => {
                 name="volunteeringDomains"
                 rules={{ required: "Volunteering domain is required" }}
                 render={({ field }) => {
-                  
                   return (
                     <FormItem>
                       <FormLabel htmlFor="volunteeringDomains">
@@ -1076,6 +1105,83 @@ const EventCreationPage = () => {
                   {t("add_field")}
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="  my-2 pt-2">
+            <CardHeader>
+              <CardTitle>{t("notify_users")}</CardTitle>
+            </CardHeader>
+            <CardContent className=" backdrop-blur-xl flex justify-center items-center space-x-3">
+              <Input
+                type="text"
+                placeholder="Search by name "
+                value={search}
+                autoComplete="off"
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full text-neutral-80"
+              />
+              <Button
+                // onClick={() => handleRoleChange(user._id, user.role)}
+                className="bg-gray-800 hover:bg-black text-white"
+              >
+                {t("find")}
+              </Button>
+            </CardContent>
+            <CardContent className="overflow-auto scrollbar-hide max-h-[300px]">
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {/* <TableHeaderCell>{t("name")}</TableHeaderCell>
+                    <TableHeaderCell>{t("email")}</TableHeaderCell>
+                    <TableHeaderCell>{t("current_role")}</TableHeaderCell>
+                    <TableHeaderCell>{t("change_role")}</TableHeaderCell> */}
+                  </TableRow>
+                </TableHead>
+                <tbody className="w-full ">
+                  {userSearchLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center">
+                        {t("loading_")}
+                      </TableCell>
+                    </TableRow>
+                  ) : users && users.length > 0 ? (
+                    users.map((user) => (
+                      <TableRow key={user._id}>
+                        <TableCell>{user.displayName}</TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>
+                          <span className="badge">{user.role}</span>
+                        </TableCell>
+
+                        <TableCell>
+                          <Button
+                            type="button"
+                            onClick={() => toast.success("User notified!")}
+                          >
+                            Email
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center">
+                        {t("no_users_found_")}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {hasNextPage && (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center p-4">
+                        <div ref={ref} className="flex justify-center">
+                          <Loader />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </tbody>
+              </Table>
             </CardContent>
           </Card>
 

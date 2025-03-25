@@ -55,7 +55,7 @@ export const useVolunteerEventTasks = (
     queryKey: ["volunteerEventTasks", eventId],
     queryFn: async function fetchData(): Promise<Task[]> {
       const response: ApiResponseFormat = await axiosClient.get(
-        `/volunteer/event/${eventId}`
+        `/volunteer/event-details/${eventId}`
       );
       if (response.status === ResponseStatusType.Success) {
         return response.result;

@@ -518,10 +518,10 @@ const HomePage = () => {
         {t("skip_to_main_content")}
       </a>
       {/*Filters */}
-      <div className="md:sticky self-start top-[10px] z-10">
+      <div className="hidden md:block self-start top-[10px] z-10">
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">{t("find_events")}</CardTitle>
+            <CardTitle className="text-lg">{t("Find_Events")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="relative">
@@ -577,7 +577,8 @@ const HomePage = () => {
                   htmlFor="domain-select"
                   className="text-sm font-medium text-gray-800 dark:text-gray-200"
                 >
-                  {t("volunteering_domain")}
+                  {/* {t("volunteering_domain")} */}
+                  {t("Volunteering_Domain")}
                 </Label>
                 <Select value={domain} onValueChange={setDomain}>
                   <SelectTrigger
@@ -624,14 +625,18 @@ const HomePage = () => {
                     <SelectValue placeholder="Select availability" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all_availability">
+                    {/* <SelectItem value="all_availability">
                       {t("any_availability")}
-                    </SelectItem>
-                    <SelectItem value="Both">
+                    </SelectItem> */}
+                    <SelectItem value={Availabitity.BOTH}>
                       {t("both_weekdays_weekends")}
                     </SelectItem>
-                    <SelectItem value="Week days">{t("weekdays")}</SelectItem>
-                    <SelectItem value="Week ends">{t("weekends")}</SelectItem>
+                    <SelectItem value={Availabitity.WEEKDAYS}>
+                      {t("weekdays")}
+                    </SelectItem>
+                    <SelectItem value={Availabitity.WEEKENDS}>
+                      {t("weekends")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -916,13 +921,21 @@ const HomePage = () => {
                     </div>
                     <div>
                       {u && u.role === UserRole.ADMIN ? (
-                        <Button variant={"default"} onClick={()=>navigate("/admin")} className="ml-auto">
+                        <Button
+                          variant={"default"}
+                          onClick={() => navigate("/admin")}
+                          className="ml-auto"
+                        >
                           Edit as Admin
                         </Button>
                       ) : (
                         u &&
                         u.role === UserRole.WEBMASTER && (
-                          <Button variant={"default"}  onClick={()=>navigate("/admin")} className="ml-auto">
+                          <Button
+                            variant={"default"}
+                            onClick={() => navigate("/admin")}
+                            className="ml-auto"
+                          >
                             Edit as webmaster
                           </Button>
                         )

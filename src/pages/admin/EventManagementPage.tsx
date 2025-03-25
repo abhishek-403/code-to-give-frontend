@@ -52,6 +52,7 @@ import {
   Mail,
   PlusCircle,
   RotateCcw,
+  MessageCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -80,7 +81,7 @@ const EventEditDialog = ({
   onOpenChange: (open: boolean) => void;
   onSave: (updatedDetails: any) => void;
 }) => {
-  const { t } = useLanguage();
+  const { t } = useLanguage()
   const [editedEvent, setEditedEvent] = useState({
     title: event?.name || "", // Use empty string as fallback
     description: event?.description || "",
@@ -102,7 +103,7 @@ const EventEditDialog = ({
       });
     }
   }, [isOpen, event]);
-  const { mutate } = useEditEventMutation();
+  const { mutate, isPending } = useEditEventMutation();
 
   const handleSave = async () => {
     // try {
@@ -121,11 +122,11 @@ const EventEditDialog = ({
         startDate: new Date(editedEvent.startDate),
         endDate: new Date(editedEvent.endDate),
         location: editedEvent.location,
-        status: editedEvent.status,
+        status: editedEvent.status ,
       },
     });
     onSave({
-      title: editedEvent.title,
+      name: editedEvent.title,
       description: editedEvent.description,
       startDate: editedEvent.startDate,
       endDate: editedEvent.endDate,
@@ -141,6 +142,7 @@ const EventEditDialog = ({
     setOpen(false);
   };
 
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[625px]">
@@ -150,9 +152,7 @@ const EventEditDialog = ({
         <div className="overflow-y-auto max-h-[500px] pr-16 pt-5 pb-5">
           <div className="space-y-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="title" className="text-right">
-                {t("event_title")}
-              </Label>
+              <Label htmlFor="title" className="text-right">{t("event_title")}</Label>
               <Input
                 id="title"
                 value={editedEvent.title}
@@ -163,9 +163,7 @@ const EventEditDialog = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                {t("description")}
-              </Label>
+              <Label htmlFor="description" className="text-right">{t("description")}</Label>
               <Textarea
                 id="description"
                 value={editedEvent.description}
@@ -179,9 +177,7 @@ const EventEditDialog = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                {t("status")}
-              </Label>
+              <Label htmlFor="description" className="text-right">{t("status")}</Label>
               <div className="relative">
                 <Button variant="outline" onClick={() => setOpen(!open)}>
                   {editedEvent.status
@@ -238,9 +234,7 @@ const EventEditDialog = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="location" className="text-right">
-                {t("location")}
-              </Label>
+              <Label htmlFor="location" className="text-right">{t("location")}</Label>
               <Input
                 id="location"
                 value={editedEvent.location}
@@ -257,12 +251,8 @@ const EventEditDialog = ({
             type="button"
             variant="outline"
             onClick={() => onOpenChange(false)}
-          >
-            {t("cancel")}
-          </Button>
-          <Button type="submit" onClick={handleSave}>
-            {t("save_changes")}
-          </Button>
+          >{t("cancel")}</Button>
+          <Button type="submit" onClick={handleSave}>{t("save_changes")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -271,6 +261,8 @@ const EventEditDialog = ({
 
 const EventManagementPage = () => {
   // Enhanced mock data for existing events - now with task completion status
+  const [isHistoryView, setIsHistoryView] = useState(false);
+  const [activeTab, setActiveTab] = useState<EventStatus>(EventStatus.ACTIVE);
   const {
     data,
     fetchNextPage,
@@ -280,7 +272,7 @@ const EventManagementPage = () => {
     isError,
     // refetch,
   } = useInfiniteEventsForAdmin({
-    // activeTab,
+    status: activeTab,
     // ...filterParams,
   });
 
@@ -291,8 +283,9 @@ const EventManagementPage = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
+  
   const events = data?.pages.flatMap((page) => page.events) || [];
-  const [activeTab, setActiveTab] = useState<any>("active");
+  // const [activeTab, setActiveTab] = useState<any>("active");
 
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isEditEventOpen, setIsEditEventOpen] = useState(false);
@@ -346,6 +339,239 @@ const EventManagementPage = () => {
     subject: "",
     message: "",
   });
+
+  // Add this near your other state declarations
+  const [dummyCompletedEvents, setDummyCompletedEvents] = useState([
+    {
+      _id: "completed-event-1",
+      name: "Annual Beach Cleanup 2023",
+      description:
+        "Our successful beach cleanup event that removed over 500 pounds of trash from the shoreline.",
+      location: "Coastal Park Beach",
+      startDate: new Date(2023, 9, 15), // October 15, 2023
+      endDate: new Date(2023, 9, 15),
+      status: EventStatus.COMPLETED,
+      applications: [],
+      tasks: [
+        {
+          _id: "c-task-1",
+          name: "Volunteer Registration",
+          description: "Register and assign volunteers",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c-task-2",
+          name: "Equipment Distribution",
+          description: "Hand out gloves and bags",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c-task-3",
+          name: "Area Assignment",
+          description: "Assign beach areas to teams",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c-task-4",
+          name: "Waste Collection",
+          description: "Collect and sort waste",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+      ],
+      volunteers: [
+        {
+          _id: "c-vol-1",
+          displayName: "Anna Johnson",
+          email: "anna@example.com",
+          assigned: true,
+        },
+        {
+          _id: "c-vol-2",
+          displayName: "Michael Chen",
+          email: "mchen@example.com",
+          assigned: true,
+        },
+        {
+          _id: "c-vol-3",
+          displayName: "Sarah Williams",
+          email: "swilliams@example.com",
+          assigned: true,
+        },
+      ],
+      feedbacks: [
+        {
+          _id: "feedback-1",
+          title: "Great Experience",
+          content:
+            "This was so well organized! I'll definitely join the next one.",
+          rating: 5,
+          user: { displayName: "Anna Johnson" },
+          date: new Date(2023, 9, 16),
+        },
+        {
+          _id: "feedback-2",
+          title: "Good but tiring",
+          content:
+            "The event was well organized but could have used more rest breaks.",
+          rating: 4,
+          user: { displayName: "Michael Chen" },
+          date: new Date(2023, 9, 17),
+        },
+      ],
+    },
+    {
+      _id: "completed-event-2",
+      name: "Community Garden Planting",
+      description:
+        "We successfully planted 200 native plants in the community garden.",
+      location: "Downtown Community Garden",
+      startDate: new Date(2023, 7, 10), // August 10, 2023
+      endDate: new Date(2023, 7, 10),
+      status: EventStatus.COMPLETED,
+      applications: [],
+      tasks: [
+        {
+          _id: "c2-task-1",
+          name: "Site Preparation",
+          description: "Prepare planting sites",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c2-task-2",
+          name: "Plant Distribution",
+          description: "Hand out plants to volunteers",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c2-task-3",
+          name: "Planting Guidance",
+          description: "Guide volunteers on planting techniques",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+      ],
+      volunteers: [
+        {
+          _id: "c2-vol-1",
+          displayName: "Robert Garcia",
+          email: "rgarcia@example.com",
+          assigned: true,
+        },
+        {
+          _id: "c2-vol-2",
+          displayName: "Emma Wilson",
+          email: "ewilson@example.com",
+          assigned: true,
+        },
+      ],
+      feedbacks: [
+        {
+          _id: "c2-feedback-1",
+          title: "Educational and Fun",
+          content:
+            "I learned so much about native plants. The instructors were very knowledgeable.",
+          rating: 5,
+          user: { displayName: "Emma Wilson" },
+          date: new Date(2023, 7, 11),
+        },
+      ],
+    },
+    {
+      _id: "completed-event-3",
+      name: "Youth Mentorship Workshop",
+      description: "A successful workshop connecting mentors with local youth.",
+      location: "Community Center",
+      startDate: new Date(2023, 5, 25), // June 25, 2023
+      endDate: new Date(2023, 5, 25),
+      status: EventStatus.COMPLETED,
+      applications: [],
+      tasks: [
+        {
+          _id: "c3-task-1",
+          name: "Registration",
+          description: "Register attendees",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c3-task-2",
+          name: "Workshop Setup",
+          description: "Prepare workshop materials",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c3-task-3",
+          name: "Session Facilitation",
+          description: "Facilitate workshop sessions",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+        {
+          _id: "c3-task-4",
+          name: "Networking Session",
+          description: "Organize networking break",
+          status: TaskStatus.COMPLETED,
+          assignedTo: null,
+        },
+      ],
+      volunteers: [
+        {
+          _id: "c3-vol-1",
+          displayName: "David Kumar",
+          email: "dkumar@example.com",
+          assigned: true,
+        },
+        {
+          _id: "c3-vol-2",
+          displayName: "Jessica Patel",
+          email: "jpatel@example.com",
+          assigned: true,
+        },
+        {
+          _id: "c3-vol-3",
+          displayName: "Marcus Johnson",
+          email: "mjohnson@example.com",
+          assigned: true,
+        },
+      ],
+      feedbacks: [
+        {
+          _id: "c3-feedback-1",
+          title: "Life-Changing",
+          content:
+            "The connection I made with my mentee has been incredible. Thank you for organizing this!",
+          rating: 5,
+          user: { displayName: "Jessica Patel" },
+          date: new Date(2023, 5, 26),
+        },
+        {
+          _id: "c3-feedback-2",
+          title: "Well Organized",
+          content:
+            "The workshop was structured perfectly. Great job to the organizers.",
+          rating: 4,
+          user: { displayName: "David Kumar" },
+          date: new Date(2023, 5, 27),
+        },
+        {
+          _id: "c3-feedback-3",
+          title: "Needs More Time",
+          content:
+            "Great concept but would be better if it was a full-day workshop rather than half-day.",
+          rating: 3,
+          user: { displayName: "Marcus Johnson" },
+          date: new Date(2023, 5, 28),
+        },
+      ],
+    },
+  ]);
 
   // load data from the backend integration when available
   // useEffect(() => {
@@ -452,54 +678,56 @@ const EventManagementPage = () => {
   };
 
   // New function to handle task completion directly
-  // const handleMarkTaskComplete = (eventId: any, taskId: any) => {
-  //   const updatedEvents = events.map((event) => {
-  //     if (event.id === eventId) {
-  //       return {
-  //         ...event,
-  //         tasks: event.tasks.map((task: any) => {
-  //           if (task.id === taskId) {
-  //             return { ...task, completed: true };
-  //           }
-  //           return task;
-  //         }),
-  //       };
-  //     }
-  //     return event;
-  //   });
+  const handleMarkTaskComplete = (eventId: any, taskId: any) => {
+    const updatedEvents = events.map((event) => {
+      if (event.id === eventId) {
+        return {
+          ...event,
+          tasks: event.tasks.map((task: any) => {
+            if (task.id === taskId) {
+              return { ...task, completed: true };
+            }
+            return task;
+          }),
+        };
+      }
+      return event;
+    });
 
-  //   // setEvents(updatedEvents);
-  //   if (selectedEvent && selectedEvent.id === eventId) {
-  //     setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
-  //   }
-  // };
+    // setEvents(updatedEvents);
+    if (selectedEvent && selectedEvent.id === eventId) {
+      setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
+    }
+  };
 
   // New function to reopen a completed task
-  // const handleReopenTask = (eventId: any, taskId: any) => {
-  //   const updatedEvents = events.map((event) => {
-  //     if (event.id === eventId) {
-  //       return {
-  //         ...event,
-  //         tasks: event.tasks.map((task: any) => {
-  //           if (task.id === taskId) {
-  //             return { ...task, completed: false };
-  //           }
-  //           return task;
-  //         }),
-  //       };
-  //     }
-  //     return event;
-  //   });
+  // New function to reopen a completed task
+  const handleReopenTask = (eventId: any, taskId: any) => {
+    const updatedEvents = events.map((event) => {
+      if (event.id === eventId) {
+        return {
+          ...event,
+          tasks: event.tasks.map((task: any) => {
+            if (task.id === taskId) {
+              return { ...task, completed: false };
+            }
+            return task;
+          }),
+        };
+      }
+      return event;
+    });
 
-  //   // setEvents(updatedEvents);
-  //   if (selectedEvent && selectedEvent.id === eventId) {
-  //     setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
-  //   }
-  // };
+    // setEvents(updatedEvents);
+    if (selectedEvent && selectedEvent.id === eventId) {
+      setSelectedEvent(updatedEvents.find((event) => event.id === eventId));
+    }
+  };
 
   // Calculate task statistics for the selected event
   const getTaskStats = (event: any) => {
-    if (!event) return { completed: 0, pending: 0, unassigned: 0, total: 0 };
+    if (!event || !event.tasks)
+      return { completed: 0, pending: 0, unassigned: 0, total: 0 };
 
     const completed = event.tasks.filter(
       (task: any) => task.status === TaskStatus.COMPLETED
@@ -520,6 +748,7 @@ const EventManagementPage = () => {
   // Filter tasks based on their status
   const getFilteredTasks = (event: any, filter: any) => {
     if (!event) return [];
+    console.log(event);
 
     switch (filter) {
       case "completed":
@@ -538,22 +767,33 @@ const EventManagementPage = () => {
   };
 
   const handleEdit = (id: any) => {
-    const eventToEdit = events.find((event) => event._id === id);
-    setSelectedEvent(eventToEdit);
-    setTaskFilter("all"); // Reset filter when selecting a new event
+    // First check in the API events
+    let eventToEdit = events.find((event) => event._id === id);
+
+    // If not found and we're in the history tab, check in dummy completed events
+    if (!eventToEdit && activeTab === EventStatus.COMPLETED) {
+      eventToEdit = dummyCompletedEvents.find((event) => event._id === id);
+    }
+
+    if (eventToEdit) {
+      console.log("Editing event:", eventToEdit);
+      setSelectedEvent(eventToEdit);
+      setIsHistoryView(eventToEdit.status === EventStatus.COMPLETED);
+    }
   };
 
-  const handleDelete = (_: any) => {
+  const handleDelete = (id: any) => {
+    const updatedEvents = events.filter((event) => event.id !== id);
     // setEvents(updatedEvents);
   };
 
   const handleAddEvent = async () => {
-    // const eventToAdd = {
-    //   ...newEvent,
-    //   id: events.length + 1, // In production, this ID would come from the server
-    //   volunteers: [],
-    //   tasks: [],
-    // };
+    const eventToAdd = {
+      ...newEvent,
+      id: events.length + 1, // In production, this ID would come from the server
+      volunteers: [],
+      tasks: [],
+    };
 
     // In production, you would add API call here, for example:
     // const response = await fetch('/api/events', {
@@ -669,6 +909,9 @@ const EventManagementPage = () => {
   };
 
   const handleSendUpdate = () => {
+    console.log(`Sending update to volunteers of event ${selectedEvent.id}`);
+    console.log(`Subject: ${emailUpdate.subject}`);
+    console.log(`Message: ${emailUpdate.message}`);
 
     // actual email sending logic (INTEGRATE BACKEND)
     // In production, you would call your API here, for example:
@@ -687,6 +930,12 @@ const EventManagementPage = () => {
   };
 
   const handleSendVolunteerEmail = () => {
+    console.log(
+      `Sending email to volunteer ${volunteerEmailData.volunteerName}`
+    );
+    console.log(`Email: ${volunteerEmailData.volunteerEmail}`);
+    console.log(`Subject: ${volunteerEmailData.subject}`);
+    console.log(`Message: ${volunteerEmailData.message}`);
 
     // actual email sending logic (INTEGRATE BACKEND)
     // In production, you would call your API here, for example:
@@ -715,30 +964,22 @@ const EventManagementPage = () => {
     const completionPercentage = calculateTaskCompletion(event);
     const taskStats = getTaskStats(event);
 
+
     return (
       <div key={event.id} className="border p-4 rounded-md mb-4">
         <h3 className="font-semibold text-lg">{event.name}</h3>
         <p className="text-sm text-gray-500 mb-2">{event.description}</p>
         <div className="text-sm mb-2">
-          <div>
-            {t("_")}
-            {format(event.startDate, "MMM dd, yyyy")}
+          <div>📅 {t("_")}{format(event.startDate, "MMM dd, yyyy")} - {" "}{format(event.endDate, "MMM dd, yyyy")}
           </div>
-          <div>{format(event.endDate, "MMM dd, yyyy")}</div>
-          <div>
-            {t("_")}
-            {event.location}
-          </div>
+          <div>{t("_")}📍 {event.location}</div>
         </div>
         {/* Task completion indicator */}
         {event.tasks.length > 0 && (
           <div className="mt-3 mb-2">
             <div className="flex justify-between items-center text-xs mb-1">
               <span>{t("task_completion")}</span>
-              <span>
-                {completionPercentage}
-                {t("_")}
-              </span>
+              <span>{completionPercentage}{t("_")}</span>
             </div>
             <Progress value={completionPercentage} className="h-2" />
 
@@ -772,44 +1013,292 @@ const EventManagementPage = () => {
           </div>
         )}
         <div className="flex space-x-2 mt-2">
-          <Button size="sm" onClick={() => handleEdit(event._id)} tabIndex={0}>
-            {t("details")}
-          </Button>
+          <Button size="sm" onClick={() => handleEdit(event._id)} tabIndex={0}>{t("details")}</Button>
           <Button
             size="sm"
             variant="destructive"
             onClick={() => handleDelete(event.id)}
             tabIndex={0}
-          >
-            {t("delete")}
+          >{t("delete")}</Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderHistoryEventCard = (event: any) => {
+    const completionPercentage =
+      event.tasks && event.tasks.length > 0
+        ? calculateTaskCompletion(event)
+        : 0;
+    const taskStats = getTaskStats(event);
+
+    return (
+      <div
+        key={event._id}
+        className="border p-4 rounded-md mb-4 bg-gray-50 dark:bg-gray-800"
+      >
+        <h3 className="font-semibold text-lg">{event.name}</h3>
+        <p className="text-sm text-gray-500 mb-2">
+          {event.description || "No description"}
+        </p>
+        <div className="text-sm mb-2">
+          <div>
+            📅 {format(new Date(event.startDate), "MMM dd, yyyy")} -{" "}
+            {format(new Date(event.endDate), "MMM dd, yyyy")}
+          </div>
+          <div>📍 {event.location || "No location specified"}</div>
+        </div>
+
+        {/* Task completion indicator */}
+        {event.tasks && event.tasks.length > 0 && (
+          <div className="mt-3 mb-2">
+            <div className="flex justify-between items-center text-xs mb-1">
+              <span>Tasks Completed</span>
+              <span>{completionPercentage}%</span>
+            </div>
+            <Progress value={completionPercentage} className="h-2" />
+          </div>
+        )}
+
+        {/* Feedback indicator */}
+        {event.feedbacks && event.feedbacks.length > 0 && (
+          <div className="mt-3 mb-2">
+            <Badge
+              variant="outline"
+              className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-300 dark:text-black"
+            >
+              <MessageCircle className="h-3 w-3 mr-1" />{" "}
+              {event.feedbacks.length} Feedbacks
+            </Badge>
+          </div>
+        )}
+
+        <div className="flex space-x-2 mt-2">
+          <Button size="sm" onClick={() => handleEdit(event._id)} tabIndex={0}>
+            View Details
           </Button>
         </div>
       </div>
     );
   };
 
+  const CompletedEventDetailView = ({
+    event,
+    onBack,
+  }: {
+    event: any;
+    onBack: () => void;
+  }) => {
+    return (
+      <div>
+        <Button variant="outline" className="mb-4" onClick={onBack}>
+          Back to Events
+        </Button>
+
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle>
+                  {event.name}{" "}
+                  <Badge variant="outline" className="ml-2 bg-green-300 dark:bg-green-500 dark:text-black">
+                    Completed
+                  </Badge>
+                </CardTitle>
+                <div className="mt-2 text-black dark:text-white">
+                  Completed on{" "}
+                  {format(new Date(event.endDate), "MMMM dd, yyyy")}
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Event Details</h3>
+                <div className="space-y-2">
+                  <p>
+                    <strong>Description:</strong> {event.description}
+                  </p>
+                  <p>
+                    <strong>Dates:</strong>{" "}
+                    {format(new Date(event.startDate), "MMM dd, yyyy")} -{" "}
+                    {format(new Date(event.endDate), "MMM dd, yyyy")}
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {event.location}
+                  </p>
+                </div>
+
+                {/* Volunteer Summary */}
+                {event.volunteers && event.volunteers.length > 0 && (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Volunteer Summary
+                    </h3>
+                    <p className="text-sm">
+                      Total Volunteers:{" "}
+                      <span className="font-medium">
+                        {event.volunteers.length}
+                      </span>
+                    </p>
+                    <div className="mt-3 space-y-2">
+                      {event.volunteers.slice(0, 3).map((volunteer: any) => (
+                        <div key={volunteer._id} className="text-sm">
+                          <span className="font-medium">
+                            {volunteer.displayName}
+                          </span>{" "}
+                          - {volunteer.email}
+                        </div>
+                      ))}
+                      {event.volunteers.length > 3 && (
+                        <p className="text-sm text-black dark:text-white">
+                          And {event.volunteers.length - 3} more volunteers
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Feedback Section */}
+                {event.feedbacks && event.feedbacks.length > 0 ? (
+                  <div className="mt-7">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Feedback Summary
+                    </h3>
+                    <div className="space-y-3">
+                      {event.feedbacks.map((feedback: any, index: number) => (
+                        <div
+                          key={index}
+                          className="p-3 border rounded-lg bg-gray-50 dark:bg-gray-800"
+                        >
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-medium">
+                                {feedback.title || "Feedback"}
+                              </p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                {feedback.content}
+                              </p>
+                            </div>
+                            {feedback.rating && (
+                              <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => (
+                                  <svg
+                                    key={i}
+                                    className={`w-4 h-4 ${
+                                      i < feedback.rating
+                                        ? "text-yellow-400 fill-yellow-400"
+                                        : "text-gray-300 fill-gray-300"
+                                    }`}
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                  </svg>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center mt-2 text-xs text-gray-500">
+                            <span>
+                              From: {feedback.user?.displayName || "Anonymous"}
+                            </span>
+                            {feedback.date && (
+                              <span className="ml-3">
+                                {format(
+                                  new Date(feedback.date),
+                                  "MMM dd, yyyy"
+                                )}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-2">Feedback</h3>
+                    <p className="text-sm text-black dark:text-white">
+                      No feedback has been submitted for this event.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Task Summary */}
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Task Summary</h3>
+                {event.tasks && event.tasks.length > 0 ? (
+                  <>
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center text-sm mb-1">
+                        <span>Overall Completion</span>
+                        <span>100%</span>
+                      </div>
+                      <Progress value={100} className="h-2" />
+                    </div>
+
+                    <div className="space-y-2 mt-4">
+                      <h4 className="font-medium">Tasks Breakdown</h4>
+                      {event.tasks.map((task: any, i: number) => (
+                        <div
+                          key={i}
+                          className="p-3 border rounded-md bg-green-50 border-green-200 dark:bg-green-800 dark:border-green-700"
+                        >
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium">{task.name}</p>
+                            <Badge
+                              variant="outline"
+                              className="bg-green-100 text-green-800 dark:bg-green-300 dark:text-black"
+                            >
+                              Completed
+                            </Badge>
+                          </div>
+                          {task.description && (
+                            <p className="text-sm mt-1">
+                              {task.description}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No tasks were recorded for this event.
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
   // Add this function to your component
-  // const ensureVolunteerTaskConsistency = (eventsList: any) => {
-  //   return eventsList.map((event: any) => {
-  //     // Find all volunteers with assigned tasks
-  //     const volunteersWithTasks = new Set();
-  //     event.tasks.forEach((task: any) => {
-  //       if (task.assignedTo !== null) {
-  //         volunteersWithTasks.add(task.assignedTo);
-  //       }
-  //     });
+  const ensureVolunteerTaskConsistency = (eventsList: any) => {
+    return eventsList.map((event: any) => {
+      // Find all volunteers with assigned tasks
+      const volunteersWithTasks = new Set();
+      event.tasks.forEach((task: any) => {
+        if (task.assignedTo !== null) {
+          volunteersWithTasks.add(task.assignedTo);
+        }
+      });
 
-  //     // Ensure these volunteers are marked as assigned
-  //     const updatedVolunteers = event.volunteers.map((volunteer: any) => {
-  //       if (volunteersWithTasks.has(volunteer.id) && !volunteer.assigned) {
-  //         return { ...volunteer, assigned: true };
-  //       }
-  //       return volunteer;
-  //     });
+      // Ensure these volunteers are marked as assigned
+      const updatedVolunteers = event.volunteers.map((volunteer: any) => {
+        if (volunteersWithTasks.has(volunteer.id) && !volunteer.assigned) {
+          return { ...volunteer, assigned: true };
+        }
+        return volunteer;
+      });
 
-  //     return { ...event, volunteers: updatedVolunteers };
-  //   });
-  // };
+      return { ...event, volunteers: updatedVolunteers };
+    });
+  };
 
   // Use this function when setting initial events and after any event update
   // For example, in useEffect:
@@ -817,42 +1306,46 @@ const EventManagementPage = () => {
     // setEvents((prevEvents) => ensureVolunteerTaskConsistency(prevEvents));
   }, []); // Run once on component mount
 
-  const { t } = useLanguage();
+  const { t } = useLanguage()
 
   return (
     <div className="p-4">
       <Link to="/admin" className="text-primary-600">
         <Button variant="outline" className="mb-4">
-          <ArrowLeft size={16} />
-          {t("back_to_dashboard")}
-        </Button>
+          <ArrowLeft size={16} />{t("back_to_dashboard")}</Button>
       </Link>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">{t("event_management")}</h2>
         <Link to="/admin/events/create">
           <Button>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            {t("add_event")}
-          </Button>
+            <PlusCircle className="h-4 w-4 mr-2" />{t("add_event")}</Button>
         </Link>
       </div>
       {selectedEvent ? (
+        isHistoryView ? (
         <div>
-          <Button
+          {/* <Button
             variant="outline"
             className="mb-4"
             onClick={() => setSelectedEvent(null)}
-          >
-            {t("back_to_events")}
-          </Button>
-
-          {selectedEvent && (
+          >{t("back_to_events")}</Button> */}
+          <CompletedEventDetailView
+            event={selectedEvent}
+            onBack={() => setSelectedEvent(null)}
+          />
+          </div>)
+          :
+          (
+          <div>
             <>
+          {/* {selectedEvent && ( */}
+            {/* <> */}
               {/* Existing event details section */}
+              <Button variant="outline" onClick={() => setSelectedEvent(null)}>
+                Back to Events
+              </Button>
               <div className="flex justify-end mb-4">
-                <Button onClick={() => setIsEditEventOpen(true)}>
-                  {t("edit_event_details")}
-                </Button>
+                <Button onClick={() => setIsEditEventOpen(true)}>{t("edit_event_details")}</Button>
               </div>
 
               <EventEditDialog
@@ -862,7 +1355,7 @@ const EventManagementPage = () => {
                 onSave={handleSaveEventChanges}
               />
             </>
-          )}
+          
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
@@ -875,30 +1368,22 @@ const EventManagementPage = () => {
                         className="h-2 w-32"
                       />
                       <span className="text-xs text-gray-500 ml-2 dark:text-white">
-                        {calculateTaskCompletion(selectedEvent)}
-                        {t("_complete")}
-                      </span>
+                        {calculateTaskCompletion(selectedEvent)}{t("_complete")}</span>
                     </div>
                   )}
                 </div>
                 <Dialog open={isEmailOpen} onOpenChange={setIsEmailOpen}>
                   <DialogTrigger asChild>
                     <Button>
-                      <Mail className="h-4 w-4 mr-2" />
-                      {t("send_update")}
-                    </Button>
+                      <Mail className="h-4 w-4 mr-2" />{t("send_update")}</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>
-                        {t("send_update_to_volunteers")}
-                      </DialogTitle>
+                      <DialogTitle>{t("send_update_to_volunteers")}</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="subject" className="text-right">
-                          {t("subject")}
-                        </Label>
+                        <Label htmlFor="subject" className="text-right">{t("subject")}</Label>
                         <Input
                           id="subject"
                           value={emailUpdate.subject}
@@ -912,9 +1397,7 @@ const EventManagementPage = () => {
                         />
                       </div>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="message" className="text-right">
-                          {t("message")}
-                        </Label>
+                        <Label htmlFor="message" className="text-right">{t("message")}</Label>
                         <Textarea
                           id="message"
                           value={emailUpdate.message}
@@ -930,9 +1413,7 @@ const EventManagementPage = () => {
                       </div>
                     </div>
                     <div className="flex justify-end">
-                      <Button onClick={handleSendUpdate}>
-                        {t("send_to_all_volunteers")}
-                      </Button>
+                      <Button onClick={handleSendUpdate}>{t("send_to_all_volunteers")}</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -942,9 +1423,7 @@ const EventManagementPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">
-                      {t("event_details")}
-                    </h3>
+                    <h3 className="text-lg font-semibold mb-2">{t("event_details")}</h3>
                     <div className="space-y-2">
                       <p>
                         <strong>{t("description_")}</strong>{" "}
@@ -955,25 +1434,23 @@ const EventManagementPage = () => {
                       </p>
                       <p>
                         <strong>{t("dates_")}</strong>{" "}
-                        {format(selectedEvent.startDate, "MMM dd, yyyy")}
-                        {t("_")} {format(selectedEvent.endDate, "MMM dd, yyyy")}
+                        {format(selectedEvent.startDate, "MMM dd, yyyy")}{t("_")}{" "}
+                        {format(selectedEvent.endDate, "MMM dd, yyyy")}
                       </p>
                       <p>
-                        <strong>{t("location_")}</strong>{" "}
-                        {selectedEvent.location}
+                        <strong>{t("location_")}</strong> {selectedEvent.location}
                       </p>
                     </div>
                   </div>
-                  {selectedEvent.applications.length > 0 && (
+                  {selectedEvent.applications && selectedEvent.applications.length > 0 && (
                     <div className="mt-8 ">
-                      <h3 className="text-lg font-semibold mb-4 ">
-                        {t("applications")}
-                      </h3>
+                      <h3 className="text-lg font-semibold mb-4 ">{t("applications")}</h3>
 
                       <div className="space-y-2 ">
                         {selectedEvent.applications.map((application: any) => {
                           return (
                             <ApplicationCard
+                              key={application._id}
                               setSelectedEvent={setSelectedEvent}
                               application={application}
                             />
@@ -982,11 +1459,9 @@ const EventManagementPage = () => {
                       </div>
                     </div>
                   )}
-                  {selectedEvent.volunteers.length > 0 && (
+                  {selectedEvent.volunteers && selectedEvent.volunteers.length > 0 && (
                     <div className="mt-8">
-                      <h3 className="text-lg font-semibold mb-4">
-                        {t("volunteers")}
-                      </h3>
+                      <h3 className="text-lg font-semibold mb-4">{t("volunteers")}</h3>
 
                       <div className="space-y-2">
                         {selectedEvent.volunteers.map((volunteer: any) => {
@@ -1023,18 +1498,14 @@ const EventManagementPage = () => {
                                         volunteer.id
                                       );
                                     }}
-                                  >
-                                    {t("_active_")}
-                                    {/* {volunteer.assigned ? "Active" : "Waitlisted"} */}
+                                  >{t("_active_")}{/* {volunteer.assigned ? "Active" : "Waitlisted"} */}
                                   </Button>
                                 )}
                                 {hasAssignedTasks && !volunteer.assigned && (
                                   <Badge
                                     variant="outline"
                                     className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-300 dark:text-black"
-                                  >
-                                    {t("has_assigned_tasks")}
-                                  </Badge>
+                                  >{t("has_assigned_tasks")}</Badge>
                                 )}
 
                                 {/* Add this new email button */}
@@ -1052,9 +1523,7 @@ const EventManagementPage = () => {
                                     setIsVolunteerEmailOpen(true);
                                   }}
                                 >
-                                  <Mail className="h-3 w-3 mr-1" />
-                                  {t("email")}
-                                </Button>
+                                  <Mail className="h-3 w-3 mr-1" />{t("email")}</Button>
                               </div>
                             </div>
                           );
@@ -1073,9 +1542,7 @@ const EventManagementPage = () => {
                     >
                       <DialogTrigger asChild>
                         <Button size="sm">
-                          <PlusCircle className="h-4 w-4 mr-2" />
-                          {t("add_task")}
-                        </Button>
+                          <PlusCircle className="h-4 w-4 mr-2" />{t("add_task")}</Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -1083,9 +1550,7 @@ const EventManagementPage = () => {
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="taskTitle" className="text-right">
-                              {t("task")}
-                            </Label>
+                            <Label htmlFor="taskTitle" className="text-right">{t("task")}</Label>
                             <Input
                               id="taskTitle"
                               value={newTask.title}
@@ -1103,9 +1568,7 @@ const EventManagementPage = () => {
                             <Label
                               htmlFor="taskDescription"
                               className="text-right"
-                            >
-                              {t("description")}
-                            </Label>
+                            >{t("description")}</Label>
                             <Textarea
                               id="taskDescription"
                               value={newTask.description}
@@ -1121,9 +1584,7 @@ const EventManagementPage = () => {
                             />
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="assignTo" className="text-right">
-                              {t("assign_to")}
-                            </Label>
+                            <Label htmlFor="assignTo" className="text-right">{t("assign_to")}</Label>
                             <Select
                               value={newTask.assignedTo}
                               onValueChange={(value) =>
@@ -1149,9 +1610,7 @@ const EventManagementPage = () => {
                             </Select>
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="completed" className="text-right">
-                              {t("status")}
-                            </Label>
+                            <Label htmlFor="completed" className="text-right">{t("status")}</Label>
                             <div className="flex items-center space-x-2 col-span-3">
                               <Checkbox
                                 id="completed"
@@ -1166,16 +1625,12 @@ const EventManagementPage = () => {
                               <label
                                 htmlFor="completed"
                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                              >
-                                {t("mark_as_completed")}
-                              </label>
+                              >{t("mark_as_completed")}</label>
                             </div>
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          <Button onClick={handleAddTask} disabled={isPending}>
-                            {t("save_task")}
-                          </Button>
+                          <Button onClick={handleAddTask} disabled={isPending}>{t("save_task")}</Button>
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -1188,11 +1643,7 @@ const EventManagementPage = () => {
                         variant={taskFilter === "all" ? "default" : "outline"}
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("all")}
-                      >
-                        {t("all_")}
-                        {selectedEvent.tasks.length}
-                        {t("_")}
-                      </Badge>
+                      >{t("all_")}{selectedEvent.tasks.length}{t("_")}</Badge>
                       <Badge
                         variant={
                           taskFilter === "completed" ? "default" : "outline"
@@ -1200,11 +1651,7 @@ const EventManagementPage = () => {
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("completed")}
                       >
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        {t("completed_")}
-                        {getTaskStats(selectedEvent).completed}
-                        {t("_")}
-                      </Badge>
+                        <CheckCircle2 className="h-3 w-3 mr-1" />{t("completed_")}{getTaskStats(selectedEvent).completed}{t("_")}</Badge>
                       <Badge
                         variant={
                           taskFilter === "pending" ? "default" : "outline"
@@ -1212,11 +1659,7 @@ const EventManagementPage = () => {
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("pending")}
                       >
-                        <Clock className="h-3 w-3 mr-1" />
-                        {t("pending_")}
-                        {getTaskStats(selectedEvent).pending}
-                        {t("_")}
-                      </Badge>
+                        <Clock className="h-3 w-3 mr-1" />{t("pending_")}{getTaskStats(selectedEvent).pending}{t("_")}</Badge>
                       <Badge
                         variant={
                           taskFilter === "unassigned" ? "default" : "outline"
@@ -1224,17 +1667,13 @@ const EventManagementPage = () => {
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("unassigned")}
                       >
-                        <Circle className="h-3 w-3 mr-1" />
-                        {t("unassigned_")}
-                        {getTaskStats(selectedEvent).unassigned}
-                        {t("_")}
-                      </Badge>
+                        <Circle className="h-3 w-3 mr-1" />{t("unassigned_")}{getTaskStats(selectedEvent).unassigned}{t("_")}</Badge>
                     </div>
                   </div>
 
                   {/* Updated Task Cards with appropriate action buttons */}
                   <div className="space-y-2">
-                    {selectedEvent.tasks.length > 0 ? (
+                    {selectedEvent.tasks && selectedEvent.tasks.length > 0 ? (
                       getFilteredTasks(selectedEvent, taskFilter).map(
                         (task: Task, i: number) => (
                           <div
@@ -1271,9 +1710,7 @@ const EventManagementPage = () => {
                                       setIsTaskAssignOpen(true);
                                     }}
                                   >
-                                    <RotateCcw className="h-3 w-3 mr-1" />
-                                    {t("reopen")}
-                                  </Button>
+                                    <RotateCcw className="h-3 w-3 mr-1" />{t("reopen")}</Button>
                                 ) : task.assignedTo !== null ? (
                                   <Button
                                     variant="outline"
@@ -1286,9 +1723,7 @@ const EventManagementPage = () => {
                                       setIsTaskAssignOpen(true);
                                     }}
                                   >
-                                    <CheckCircle2 className="h-3 w-3 mr-1" />
-                                    {t("complete")}
-                                  </Button>
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />{t("complete")}</Button>
                                 ) : (
                                   <Button
                                     variant="outline"
@@ -1302,9 +1737,7 @@ const EventManagementPage = () => {
                                     }}
                                     className="text-gray-500 dark:text-black"
                                   >
-                                    <ArrowRight className="h-3 w-3 mr-1" />
-                                    {t("assign")}
-                                  </Button>
+                                    <ArrowRight className="h-3 w-3 mr-1" />{t("assign")}</Button>
                                 )}
 
                                 {/* Always show reassign button for assigned tasks */}
@@ -1366,9 +1799,7 @@ const EventManagementPage = () => {
                         )
                       )
                     ) : (
-                      <p className="text-gray-500 text-sm dark:text-gray-300">
-                        {t("no_tasks_added_for_this_event_yet_")}
-                      </p>
+                      <p className="text-gray-500 text-sm dark:text-gray-300">{t("no_tasks_added_for_this_event_yet_")}</p>
                     )}
                   </div>
                 </div>
@@ -1400,8 +1831,7 @@ const EventManagementPage = () => {
                       </p>
                     )}
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500 dark:text-gray-300">
-                        {t("current_status_")}{" "}
+                      <p className="text-sm text-gray-500 dark:text-gray-300">{t("current_status_")}{" "}
                         <Badge
                           variant="outline"
                           className={`${
@@ -1420,8 +1850,7 @@ const EventManagementPage = () => {
                         </Badge>
                       </p>
                       {taskToAssign.assignedTo && (
-                        <p className="text-sm text-gray-500 mt-1 dark:text-gray-300">
-                          {t("currently_assigned_to_")}{" "}
+                        <p className="text-sm text-gray-500 mt-1 dark:text-gray-300">{t("currently_assigned_to_")}{" "}
                           {selectedEvent.volunteers.find(
                             (v: any) => v.id === taskToAssign.assignedTo
                           )?.name || "Unknown"}
@@ -1433,9 +1862,7 @@ const EventManagementPage = () => {
 
                 {taskToAssign?.actionType === "reassign" && (
                   <div className="grid grid-cols-4 items-center gap-4 mb-4">
-                    <Label htmlFor="assignToVolunteer" className="text-right">
-                      {t("assign_to")}
-                    </Label>
+                    <Label htmlFor="assignToVolunteer" className="text-right">{t("assign_to")}</Label>
                     <Select
                       onValueChange={(value) => handleTaskAssignment(value)}
                       defaultValue={
@@ -1466,13 +1893,10 @@ const EventManagementPage = () => {
                 {(taskToAssign?.actionType === "complete" ||
                   taskToAssign?.actionType === "reopen") && (
                   <div className="mt-4 mb-4">
-                    <p>
-                      {t("are_you_sure_you_want_to")}{" "}
+                    <p>{t("are_you_sure_you_want_to")}{" "}
                       {taskToAssign?.actionType === "complete"
                         ? "mark this task as complete"
-                        : "reopen this task"}
-                      {t("_")}
-                    </p>
+                        : "reopen this task"}{t("_")}</p>
                   </div>
                 )}
 
@@ -1480,9 +1904,7 @@ const EventManagementPage = () => {
                   <Button
                     variant="outline"
                     onClick={() => setIsTaskAssignOpen(false)}
-                  >
-                    {t("cancel")}
-                  </Button>
+                  >{t("cancel")}</Button>
 
                   {/* Conditional confirm button based on action type */}
                   {taskToAssign?.actionType === "complete" && (
@@ -1492,9 +1914,7 @@ const EventManagementPage = () => {
                           taskToAssign.assignedTo?.toString()
                         )
                       }
-                    >
-                      {t("mark_complete")}
-                    </Button>
+                    >{t("mark_complete")}</Button>
                   )}
 
                   {taskToAssign?.actionType === "reopen" && (
@@ -1504,20 +1924,18 @@ const EventManagementPage = () => {
                           taskToAssign.assignedTo?.toString()
                         )
                       }
-                    >
-                      {t("reopen_task")}
-                    </Button>
+                    >{t("reopen_task")}</Button>
                   )}
                 </div>
               </div>
             </DialogContent>
           </Dialog>
         </div>
-      ) : (
+      )) : (
         <div>
           <Tabs
-            defaultValue="active"
-            onValueChange={setActiveTab}
+            defaultValue={EventStatus.ACTIVE}
+            onValueChange={(value) => setActiveTab(value as EventStatus)}
             value={activeTab}
           >
             <TabsList
@@ -1526,52 +1944,47 @@ const EventManagementPage = () => {
                 const currentIndex = Array.from(tabTriggers).findIndex(
                   (tab) => tab === document.activeElement
                 );
-                if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-                  e.preventDefault();
-                  const nextIndex = (currentIndex + 1) % tabTriggers.length;
-                  (tabTriggers[nextIndex] as HTMLElement).focus();
-                } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-                  e.preventDefault();
-                  const prevIndex =
-                    (currentIndex - 1 + tabTriggers.length) %
-                    tabTriggers.length;
-                  (tabTriggers[prevIndex] as HTMLElement).focus();
-                }
+
+                // if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                //   e.preventDefault();
+                //   const nextIndex = (currentIndex + 1) % tabTriggers.length;
+                //   tabTriggers[nextIndex].focus();
+                // } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                //   e.preventDefault();
+                //   const prevIndex =
+                //     (currentIndex - 1 + tabTriggers.length) %
+                //     tabTriggers.length;
+                //   tabTriggers[prevIndex].focus();
+                // }
               }}
             >
               <TabsTrigger
                 id="tab-active"
-                value="active"
+                value={EventStatus.ACTIVE}
                 role="tab"
-                tabIndex={activeTab === "active" ? 0 : -1}
-                aria-selected={activeTab === "active"}
+                tabIndex={activeTab === EventStatus.ACTIVE ? 0 : -1}
+                aria-selected={activeTab === EventStatus.ACTIVE}
                 aria-controls="panel-active"
-              >
-                {t("active")}
-              </TabsTrigger>
-              <TabsTrigger
+              >{t("active")}</TabsTrigger>
+              {/* <TabsTrigger
                 id="tab-underReview"
                 value="underReview"
                 role="tab"
                 tabIndex={activeTab === "underReview" ? 0 : -1}
                 aria-selected={activeTab === "underReview"}
                 aria-controls="panel-underReview"
-              >
-                {t("under_review")}
-              </TabsTrigger>
+              >{t("under_review")}</TabsTrigger> */}
               <TabsTrigger
                 id="tab-history"
-                value="history"
+                value={EventStatus.COMPLETED}
                 role="tab"
-                tabIndex={activeTab === "history" ? 0 : -1}
-                aria-selected={activeTab === "history"}
+                tabIndex={activeTab === EventStatus.COMPLETED ? 0 : -1}
+                aria-selected={activeTab === EventStatus.COMPLETED}
                 aria-controls="panel-history"
-              >
-                {t("history")}
-              </TabsTrigger>
+              >{t("history")}</TabsTrigger>
             </TabsList>
             <TabsContent
-              value="active"
+              value={EventStatus.ACTIVE}
               role="tabpanel"
               tabIndex={0}
               aria-labelledby="tab-active"
@@ -1588,13 +2001,10 @@ const EventManagementPage = () => {
                   <Loader />
                 </div>
               ) : isError ? (
-                <p className="text-red-400">
-                  {t("error_loading_programs_please_try_again_")}
-                </p>
+                <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
               ) : events.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
-                    {t("showing")} {events.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{" "}{events.length}{" "}
                     {events.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
@@ -1615,13 +2025,11 @@ const EventManagementPage = () => {
                 </>
               ) : (
                 !isLoading && (
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
-                    {t("no_events_found_matching_your_criteria_")}
-                  </p>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">{t("no_events_found_matching_your_criteria_")}</p>
                 )
               )}
             </TabsContent>
-            <TabsContent
+            {/* <TabsContent
               value="underReview"
               role="tabpanel"
               tabIndex={0}
@@ -1633,79 +2041,33 @@ const EventManagementPage = () => {
                 .map((event) => renderEventCard(event))}
               {events.filter((event) => event.status === "underReview")
                 .length === 0 && <p>{t("no_events_under_review_")}</p>}
-            </TabsContent>
+            </TabsContent> */}
             <TabsContent
-              value="history"
+              value={EventStatus.COMPLETED}
               role="tabpanel"
               tabIndex={0}
               aria-labelledby="tab-history"
-              className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="mt-4"
             >
-              {events
+              {/* {events
                 .filter((event) => event.status === "history")
                 .map((event) => renderEventCard(event))}
               {events.filter((event) => event.status === "history").length ===
-                0 && <p>{t("no_past_events_")}</p>}
+                0 && <p>{t("no_past_events_")}</p>} */}
+                <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                Showing {dummyCompletedEvents.length} completed{" "}
+                {dummyCompletedEvents.length === 1 ? "event" : "events"}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
+                {dummyCompletedEvents.map((eachEvent) =>
+                  renderHistoryEventCard(eachEvent)
+                )}
+              </div>
             </TabsContent>
           </Tabs>
-
-          <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("add_new_event")}</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="title" className="text-right">
-                    {t("title")}
-                  </Label>
-                  <Input
-                    id="title"
-                    value={newEvent.title}
-                    onChange={(e) =>
-                      setNewEvent({ ...newEvent, title: e.target.value })
-                    }
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="description" className="text-right">
-                    {t("description")}
-                  </Label>
-                  <Textarea
-                    id="description"
-                    value={newEvent.description}
-                    onChange={(e) =>
-                      setNewEvent({
-                        ...newEvent,
-                        description: e.target.value,
-                      })
-                    }
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="location" className="text-right">
-                    {t("location")}
-                  </Label>
-                  <Input
-                    id="location"
-                    value={newEvent.location}
-                    onChange={(e) =>
-                      setNewEvent({ ...newEvent, location: e.target.value })
-                    }
-                    className="col-span-3"
-                  />
-                </div>
-                {/* Date pickers would go here */}
-              </div>
-              <div className="flex justify-end">
-                <Button onClick={handleAddEvent}>{t("add_event")}</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+          </div>
       )}
+
       {/* Add the individual volunteer email dialog */}
       <Dialog
         open={isVolunteerEmailOpen}
@@ -1713,26 +2075,16 @@ const EventManagementPage = () => {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {t("send_email_to")}
-              {volunteerEmailData.volunteerName}
+            <DialogTitle>{t("send_email_to")}{volunteerEmailData.volunteerName}
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="text-sm mb-2">
-              <p>
-                {t("recipient_")}
-                {volunteerEmailData.volunteerName}
-              </p>
-              <p>
-                {t("email_")}
-                {volunteerEmailData.volunteerEmail}
-              </p>
+              <p>{t("recipient_")}{volunteerEmailData.volunteerName}</p>
+              <p>{t("email_")}{volunteerEmailData.volunteerEmail}</p>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="volunteer-subject" className="text-right">
-                {t("subject")}
-              </Label>
+              <Label htmlFor="volunteer-subject" className="text-right">{t("subject")}</Label>
               <Input
                 id="volunteer-subject"
                 value={volunteerEmailData.subject}
@@ -1746,9 +2098,7 @@ const EventManagementPage = () => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="volunteer-message" className="text-right">
-                {t("message")}
-              </Label>
+              <Label htmlFor="volunteer-message" className="text-right">{t("message")}</Label>
               <Textarea
                 id="volunteer-message"
                 value={volunteerEmailData.message}
@@ -1764,9 +2114,7 @@ const EventManagementPage = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleSendVolunteerEmail}>
-              {t("send_email")}
-            </Button>
+            <Button onClick={handleSendVolunteerEmail}>{t("send_email")}</Button>
           </div>
         </DialogContent>
       </Dialog>

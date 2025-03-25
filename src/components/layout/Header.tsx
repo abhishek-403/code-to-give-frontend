@@ -178,7 +178,7 @@ const Header = () => {
             className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             variant="outline"
             size="sm"
-          >{t("contact_us")}</Button>
+          >{t("Contact_Us")}</Button>
         </Link>
 
         <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
@@ -281,7 +281,7 @@ const Header = () => {
 
             variant="outline"
             size="sm"
-          >{t("donate_now")}</Button>
+          >{t("Donate_Now")}</Button>
         </Link>
 
         <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
@@ -335,7 +335,7 @@ const Header = () => {
                 className="w-full flex items-center"
                 aria-label="View Contact Details"
               >
-                <Contact2 className="h-4 w-4 mr-2" />{t("contact_us")}</Link>
+                <Contact2 className="h-4 w-4 mr-2" />{t("Contact_Us")}</Link>
             </DropdownMenuItem>
 
             {/* Font Size Controls for Mobile */}

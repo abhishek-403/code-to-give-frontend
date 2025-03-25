@@ -103,11 +103,11 @@ class DashboardService {
   static async getCompletionData(): Promise<CompletionData[]> {
     // TODO: Replace with actual API call
     return Promise.resolve([
-      { project: "Community Cleanup", completion: 85, target: 100 },
-      { project: "Food Drive", completion: 62, target: 75 },
-      { project: "Tutoring Program", completion: 43, target: 50 },
-      { project: "Senior Support", completion: 29, target: 40 },
-      { project: "Youth Mentorship", completion: 38, target: 45 },
+      { project: "Annual Inclusive Sports Day", completion: 85, target: 100 },
+      { project: "Blind Cricket Tournament", completion: 62, target: 75 },
+      { project: "Disability Awareness Marathon", completion: 43, target: 50 },
+      { project: "Art & Talent Fest", completion: 29, target: 40 },
+      { project: "Free Eye Camp & Health Drive", completion: 38, target: 45 },
     ]);
   }
 
@@ -125,11 +125,16 @@ class DashboardService {
   static async getTopVolunteers(): Promise<VolunteerActivity[]> {
     // TODO: Replace with actual API call
     return Promise.resolve([
-      { name: "Sarah Johnson", hours: 48, tasks: 15, events: 6 },
-      { name: "Michael Rodriguez", hours: 42, tasks: 12, events: 5 },
-      { name: "Emma Williams", hours: 36, tasks: 10, events: 4 },
-      { name: "David Chen", hours: 30, tasks: 9, events: 3 },
-      { name: "Olivia Martinez", hours: 28, tasks: 8, events: 4 },
+      { name: "Aarav Sharma", hours: 40, tasks: 14, events: 5 },
+      { name: "Priya Singh", hours: 38, tasks: 11, events: 6 },
+      { name: "Vikram Iyer", hours: 35, tasks: 10, events: 4 },
+      { name: "Ananya Reddy", hours: 32, tasks: 9, events: 3 },
+      { name: "Rohan Desai", hours: 29, tasks: 8, events: 2 },
+      { name: "Aditya Kapoor", hours: 45, tasks: 13, events: 7 },
+      { name: "Meera Patel", hours: 37, tasks: 12, events: 5 },
+      { name: "Arjun Nair", hours: 33, tasks: 10, events: 4 },
+      { name: "Ishaan Chatterjee", hours: 31, tasks: 9, events: 3 },
+      { name: "Kavya Joshi", hours: 27, tasks: 7, events: 2 },
     ]);
   }
 
@@ -520,7 +525,7 @@ const AdminDashboardPage = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">{t("admin_dashboard")}</h2>
+        <h2 className="text-2xl font-semibold">{t("Admin_Dashboard")}</h2>
         <div className="flex space-x-2">
           {/* Export Data Dropdown */}
 
@@ -581,10 +586,12 @@ const AdminDashboardPage = () => {
             <div className="rounded-full bg-blue-100 p-3 mb-2">
               <CalendarDays className="h-8 w-8 text-blue-600" />
             </div>
-            <h3 className="text-3xl font-bold">{t("18")}</h3>
+            <h3 className="text-3xl font-bold">{t("10")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("active_events")}
+              {t("Active_Events")}
             </p>
+            {/* <h3 className="text-3xl font-bold">{t("18")}</h3>
+            <p className="text-sm text-muted-foreground">{t("active_events")}</p> */}
           </CardContent>
         </Card>
         <Card>
@@ -625,14 +632,14 @@ const AdminDashboardPage = () => {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>{t("event_management")}</CardTitle>
-          <CardDescription>{t("create_and_manage_events_")}</CardDescription>
+          <CardDescription>{t("create_and_Manage_Events_")}</CardDescription>
         </CardHeader>
         <CardContent className="flex space-x-4">
           <Link to="/admin/events/create">
             <Button>{t("create_event")}</Button>
           </Link>
           <Link to="/admin/events/manage">
-            <Button variant="outline">{t("manage_events")}</Button>
+            <Button variant="outline">{t("manage_Events")}</Button>
           </Link>
         </CardContent>
       </Card>

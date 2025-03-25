@@ -154,6 +154,11 @@
     "hi": "स्वयंसेवक पंजीकरण फॉर्म फील्ड्स",
     "kn": "ಸ್ವಯಂಸೇವಕ ನೋಂದಣಿ ಫಾರ್ಮ್ ಫೀಲ್ಡ್‌ಗಳು"
   },
+  "notify_users": {
+    "en": "Notify User",
+    "hi": "उपयोगकर्ता को सूचित करें",
+    "kn": "ಬಳಕೆದಾರರನ್ನು ತಿಳಿಸಿ"
+  },
   "define_the_fields_volunteers_must_fill_out_to_register_for_this_event_": {
     "en": "Define the fields volunteers must fill out to register for this event.",
     "hi": "उन फील्ड्स को परिभाषित करें जिन्हें स्वयंसेवकों को इस इवेंट के लिए पंजीकरण करने के लिए भरना होगा।",

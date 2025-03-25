@@ -46,9 +46,12 @@ const DonateNowForm: React.FC = () => {
             <ArrowLeft size={16} />{t("back_to_home")}</Button>
         </Link>
 
-        <h1 className="text-3xl font-bold mb-4">{t("donate_now")}</h1>
+        <h1 className="text-3xl font-bold mb-4">{t("Donate_Now_Change_Lives")}</h1>
         <p className="mb-4 text-gray-800 dark:text-gray-200 border-gray-800 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{t(
-          "fill_out_the_form_below_to_make_a_donation_required_fields_are_marked_with_an_asterisk_"
+          "fill_out_the_form_below_to_make_a_donation_"
+        )}</p>
+        <p className="mb-4 text-gray-800 dark:text-gray-200 border-gray-800 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{t(
+          "All_fields_are_mandatory"
         )}</p>
       </div>
       <form
@@ -114,7 +117,7 @@ const DonateNowForm: React.FC = () => {
                 <Input
                   type="email"
                   id="email"
-                  placeholder="email@example.com"
+                  placeholder="ayusht@amail.com"
                   className={cn(errors.email && "border-red-500")}
                   aria-invalid={!!errors.email}
                   {...field}
@@ -160,12 +163,12 @@ const DonateNowForm: React.FC = () => {
 
         {/* Donation Information Section */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">{t("donation_information")}</legend>
+          <legend className="text-xl font-semibold px-2">{t("donation_Information")}</legend>
 
           {/* Donation Amount */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="amount" className="text-sm font-medium">{t("donation_amount_")}<span className="text-red-500">{t("_")}</span>
+              <Label htmlFor="amount" className="text-sm font-medium">{t("donation_Amount_")}<span className="text-red-500">{t("_")}</span>
               </Label>
               {errors.amount && (
                 <p className="text-sm text-red-500" id="amount-error" aria-live="assertive">
