@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --bg-light: #ffffff;
   --bg-dark: #171717;
@@ -15,12 +16,4 @@ body {
 
 .dark body {
   background-color: var(--bg-dark);
-}
-
-/* .dark * {
-  font-weight: bold;
-} */
-
-* {
-  font-family: "Domine", sans-serif
 }

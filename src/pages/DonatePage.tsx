@@ -39,7 +39,7 @@ const DonateNowForm: React.FC = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
-        <Link to="/" className="text-primary-600">
+        <Link to="/" className="mb-4 text-gray-800 dark:text-gray-200 border-gray-800 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
           <Button variant="outline" className="mb-4">
             <ArrowLeft size={16} />
             Back to Home
@@ -47,7 +47,7 @@ const DonateNowForm: React.FC = () => {
         </Link>
 
         <h1 className="text-3xl font-bold mb-4">Donate Now</h1>
-        <p className="text-gray-600">
+        <p className="mb-4 text-gray-800 dark:text-gray-200 border-gray-800 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
           Fill out the form below to make a donation. Required fields are marked
           with an asterisk (*).
         </p>
@@ -60,7 +60,7 @@ const DonateNowForm: React.FC = () => {
         aria-labelledby="form-title"
       >
         {/* Personal Information Section */}
-        <fieldset className="space-y-4 border border-gray-200 rounded p-4">
+        <fieldset className="space-y-4 border border-black dark:border-white rounded p-4">
           <legend className="text-xl font-semibold px-2">Personal Information</legend>
 
           {/* Full Name */}

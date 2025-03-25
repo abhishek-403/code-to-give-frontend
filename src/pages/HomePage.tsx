@@ -34,6 +34,8 @@ import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
 
+import { generateVolunteerCertificate } from "@/utils/certificateGenerator";
+
 interface EventType {
   _id: string;
   name: string;
@@ -162,26 +164,26 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFiltersApplied, setIsFiltersApplied] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const { data: volunteerArray } = useGetVolunteerDomains({ isEnabled: true });
+  // const { data: volunteerArray } = useGetVolunteerDomains({ isEnabled: true });
 
   // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
   const [activeTab, setActiveTab] = useState("active");
 
   const location = useLocation(); // Access navigation state
- useEffect(() => {
+  useEffect(() => {
     // Check if navigation state contains an activeTab value
     if (location.state?.activeTab) {
       setActiveTab(location.state.activeTab);
     }
   }, [location.state]);
 
-
-
-
-  const [user, _] = useAuthState(auth);
+  // const [user, _] = useAuthState(auth);
   // const [user, loading] = useAuthState(auth);
   // const [user, _, loading] = useAuthState(auth);
+
+
+  const [user, _, loading] = useAuthState(auth);
 
 
   const navigate = useNavigate();
@@ -498,8 +500,8 @@ const HomePage = () => {
             <div className="flex gap-2 w-full">
               <Link to="/participant/register" className="w-1/2">
                 <Button
-                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
-                  variant="outline"
+                  className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                  variant="default"
                   size="sm"
                 >
                   Participant
@@ -507,8 +509,8 @@ const HomePage = () => {
               </Link>
               <Link to="/spectator/register" className="w-1/2">
                 <Button
-                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
-                  variant="outline"
+                  className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                  variant="default"
                   size="sm"
                 >
                   Spectator
@@ -516,9 +518,7 @@ const HomePage = () => {
               </Link>
             </div>
 
-          
             {!user ? (
-              
               <Button
                 className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
                 aria-label={`Apply to volunteer with ${ev.name}`}
@@ -540,9 +540,7 @@ const HomePage = () => {
                 >
                   Apply Now
                 </Button>
-                </Link>
-                
-                
+              </Link>
             )}
           </div>
         </CardContent>
@@ -633,6 +631,108 @@ const HomePage = () => {
     );
   };
 
+  const HistoryCard = ({ event }: { event: HistoryEventType }) => {
+    const navigate = useNavigate();
+    const handleDownloadCertificate = () => {
+      // TODO: Replace with actual user data from backend
+      const mockUserData = {
+        name: "John Doe",
+        email: "john.doe@example.com",
+        eventName: event.name,
+        eventDate: formatDateFromDate(event.endDate),
+      };
+      generateVolunteerCertificate(mockUserData);
+    };
+
+    const handleProvideFeedback = () => {
+      // Navigate to feedback page with event details
+      navigate(`/feedback/${event._id}`, {
+        state: {
+          eventId: event._id,
+          eventName: event.name,
+        },
+      });
+    };
+    return (
+      <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
+        <CardHeader>
+          <div className="flex w-full justify-between mb-2 items-start">
+            <div className="w-full">
+              <div className="flex w-full">
+                <CardTitle className="text-lg font-semibold">
+                  {event.name}
+                </CardTitle>
+                {event.feedbackSubmitted && (
+                  <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600 text-center">
+                    Feedback Done
+                  </Badge>
+                )}
+              </div>
+
+              <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
+                {event.volunteeringDomains &&
+                  event.volunteeringDomains.map((domain) => (
+                    <Badge
+                      key={domain.id}
+                      variant="outline"
+                      className="border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    >
+                      {domain.name}
+                    </Badge>
+                  ))}
+
+                {event.availability &&
+                  event.availability.map((avail) => (
+                    <Badge
+                      key={avail}
+                      variant="outline"
+                      className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
+                    >
+                      {avail}
+                    </Badge>
+                  ))}
+              </CardDescription>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-800 dark:text-gray-200">
+            {event.description || event.location}
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <p className="text-sm font-medium">
+              <span
+                className="text-gray-700 dark:text-gray-300"
+                aria-hidden="true"
+              >
+                📅{" "}
+              </span>
+              <span className="text-gray-800 dark:text-gray-200">
+                {formatDateFromDate(event.startDate)} to{" "}
+                {formatDateFromDate(event.endDate)}
+              </span>
+            </p>
+            <div className="flex space-x-4">
+              <Button onClick={handleDownloadCertificate} className="w-full">
+                Download Certificate
+              </Button>
+              {!event.feedbackSubmitted && (
+                <Button
+                  onClick={handleProvideFeedback}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  Provide Feedback
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   const DUMMY_HISTORY_EVENTS: HistoryEventType[] = [
     {
       _id: "hist1",
@@ -659,6 +759,7 @@ const HomePage = () => {
       feedbackSubmitted: true,
     },
   ];
+
 
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
@@ -1207,95 +1308,12 @@ const HomePage = () => {
                     Showing {DUMMY_HISTORY_EVENTS.length}{" "}
                     {DUMMY_HISTORY_EVENTS.length === 1 ? "event" : "events"}
                   </div>
-                 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
-    <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
-      <CardHeader>
-        <div className="flex justify-between mb-2 items-start">
-          <div className="w-full">
-            <div className="flex w-full items-center">
-              <CardTitle className="text-lg font-semibold flex-grow">
-                {eachEvent.name}
-              </CardTitle>
-              {eachEvent.feedbackSubmitted && (
-                <Badge 
-                  variant="default"
-                  className="ml-2 bg-green-500 hover:bg-green-600 text-white text-xs px-2 py-1 rounded-full inline-flex items-center justify-center text-center"
-                >
-                  Feedback Done
-                </Badge>
-              )}
-            </div>
-            <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
-              <Badge
-                variant="outline"
-                className="border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-              >
-                {eachEvent.volunteeringDomains[0].name}
-              </Badge>
-              {eachEvent.location && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                >
-                  {eachEvent.location}
-                </Badge>
-              )}
-              {eachEvent.availability && (
-                <Badge
-                  variant="outline"
-                  className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
-                >
-                  {eachEvent.availability[0]}
-                </Badge>
-              )}
-            </CardDescription>
-          </div>
-        </div>
-        {eachEvent.description && (
-          <p className="text-sm text-gray-800 dark:text-gray-200">
-            {eachEvent.description}
-          </p>
-        )}
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3 ">
-          <p className="text-sm font-medium">
-            <span
-              className="text-gray-700 dark:text-gray-300"
-              aria-hidden="true"
-            >
-              📅{" "}
-            </span>
-            <span className="text-gray-800 dark:text-gray-200">
-              {formatDateFromDate(eachEvent.startDate)} to{" "}
-              {formatDateFromDate(eachEvent.endDate)}
-            </span>
-          </p>
-          {eachEvent.feedbackSubmitted ? (
-            <Button
-              className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
-              aria-label={`View feedback for ${eachEvent.name}`}
-              tabIndex={0}
-            >
-              View Feedback
-            </Button>
-          ) : (
-            <Button
-              className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
-              aria-label={`Submit feedback for ${eachEvent.name}`}
-              tabIndex={0}
-            >
-              Submit Feedback
-            </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  ))}
-</div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
+                      <HistoryCard key={eachEvent._id} event={eachEvent} />
+                    ))}
+                  </div>
                 </>
               ) : (
                 <div
