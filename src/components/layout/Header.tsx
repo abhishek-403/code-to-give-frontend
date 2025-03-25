@@ -139,6 +139,7 @@ const Header = () => {
       >
         <Button 
           variant="outline" 
+          className="dark:!border-neutral-50 rounded"
           size="sm"
           tabIndex={0}
         >
@@ -150,7 +151,7 @@ const Header = () => {
 
   return (
     <header
-      className="select-none bg-background border-b p-4 pl-8 pr-8 flex items-center justify-between"
+      className="select-none bg-background dark:bg-[#282828] border-b p-4 pl-8 pr-8 flex items-center justify-between"
       aria-label="Main Navigation and Site Controls"
     >
       <Link
@@ -280,7 +281,7 @@ const Header = () => {
           aria-label="Make a Donation"
         >
           <Button
-            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded dark:!border-neutral-50"
             variant="outline"
             size="sm"
           >
