@@ -1,4 +1,5 @@
 import googleLogo from "@/assets/googleicon.png";
+import backgroundImage from '@/assets/dis7.webp';
 import Logo from "@/assets/samarthanam_logo_nobg.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,72 +60,162 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      {/* <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" /> */}
-      <Link to="/">
-        <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" />
-      </Link>
-      <h2 className="text-2xl font-semibold mb-6">{t("login")}</h2>
-      <form
-        onSubmit={handleLogin}
-        className="flex flex-col space-y-4 w-80"
-        aria-labelledby="login-heading"
-      >
-        {/* Email Input */}
-        <label htmlFor="email" className="sr-only">{t("email")}</label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          aria-required="true"
-        />
+    // <div className="flex flex-col items-center justify-center min-h-screen p-4">
+    //   {/* <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" /> */}
+    //   <Link to="/">
+    //     <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" />
+    //   </Link>
+    //   <h2 className="text-2xl font-semibold mb-6">{t("login")}</h2>
+    //   <form
+    //     onSubmit={handleLogin}
+    //     className="flex flex-col space-y-4 w-80"
+    //     aria-labelledby="login-heading"
+    //   >
+    //     {/* Email Input */}
+    //     <label htmlFor="email" className="sr-only">{t("email")}</label>
+    //     <Input
+    //       id="email"
+    //       type="email"
+    //       placeholder="Email"
+    //       value={email}
+    //       onChange={(e) => setEmail(e.target.value)}
+    //       required
+    //       aria-required="true"
+    //     />
 
-        {/* Password Input */}
-        <label htmlFor="password" className="sr-only">{t("password")}</label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          aria-required="true"
-        />
+    //     {/* Password Input */}
+    //     <label htmlFor="password" className="sr-only">{t("password")}</label>
+    //     <Input
+    //       id="password"
+    //       type="password"
+    //       placeholder="Password"
+    //       value={password}
+    //       onChange={(e) => setPassword(e.target.value)}
+    //       required
+    //       aria-required="true"
+    //     />
 
-        {/* Submit Button */}
+    //     {/* Submit Button */}
 
-        <Button disabled={isPending || loading} type="submit">{t("login")}</Button>
+    //     <Button disabled={isPending || loading} type="submit">{t("login")}</Button>
 
-        {/* Google Login Button */}
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleGoogleLogin}
-          disabled={isPending || loading}
-          aria-label="Sign in with Google"
-        >
-          <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />{t("login_with_google")}</Button>
-      </form>
-      {/* Display error messages for screen readers */}
-      {error && (
-        <p className="text-red-500 mt-2" role="alert" aria-live="assertive">
-          {error}
-        </p>
-      )}
-      {/* Signup Link */}
-      <p className="mt-4">{t("don_t_have_an_account_")}<Button variant="link" onClick={() => navigate("/signup")}>{t("sign_up")}</Button>
-      </p>
-      {/* 🔹 Return to Home Button */}
+    //     {/* Google Login Button */}
+    //     <Button
+    //       type="button"
+    //       variant="outline"
+    //       onClick={handleGoogleLogin}
+    //       disabled={isPending || loading}
+    //       aria-label="Sign in with Google"
+    //     >
+    //       <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />{t("login_with_google")}</Button>
+    //   </form>
+    //   {/* Display error messages for screen readers */}
+    //   {error && (
+    //     <p className="text-red-500 mt-2" role="alert" aria-live="assertive">
+    //       {error}
+    //     </p>
+    //   )}
+    //   {/* Signup Link */}
+    //   <p className="mt-4">{t("don_t_have_an_account_")}<Button variant="link" onClick={() => navigate("/signup")}>{t("sign_up")}</Button>
+    //   </p>
+    //   {/* 🔹 Return to Home Button */}
+    //   <Button
+    //     variant="ghost"
+    //     onClick={() => navigate("/")}
+    //     className="text-blue-600 underline"
+    //     aria-label="Return to Home"
+    //   >{t("return_to_home")}</Button>
+    // </div>
+
+    // <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
+      <div
+  className=" flex justify-end items-center relative min-h-screen bg-cover bg-center"
+  style={{
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover', // Ensures the image covers the entire screen
+    backgroundRepeat: 'no-repeat', // Prevents the image from repeating
+    backgroundPosition: 'center', // Centers the image
+  }}
+    >
+    
+  {/* Overlay for better contrast */}
+  <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+
+  {/* Login Form */}
+  <div className="relative mr-20 z-10 flex flex-col rounded-3xl items-center justify-center w-min h-min bg-white p-4">
+    <Link to="/">
+      <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" />
+    </Link>
+    <h2 className="text-2xl font-semibold mb-6 text-black">{t("login")}</h2>
+    <form
+      onSubmit={handleLogin}
+      className="flex flex-col space-y-4 w-80 bg-white p-6 rounded-lg shadow-lg border"
+      aria-labelledby="login-heading"
+    >
+      {/* Email Input */}
+      <label htmlFor="email" className="sr-only">{t("email")}</label>
+      <Input
+        id="email"
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        aria-required="true"
+      />
+
+      {/* Password Input */}
+      <label htmlFor="password" className="sr-only">{t("password")}</label>
+      <Input
+        id="password"
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        aria-required="true"
+      />
+
+      {/* Submit Button */}
+      <Button disabled={isPending || loading} type="submit">{t("login")}</Button>
+
+      {/* Google Login Button */}
       <Button
-        variant="ghost"
-        onClick={() => navigate("/")}
-        className="text-blue-600 underline"
-        aria-label="Return to Home"
-      >{t("return_to_home")}</Button>
-    </div>
+        type="button"
+        variant="outline"
+        onClick={handleGoogleLogin}
+        disabled={isPending || loading}
+        aria-label="Sign in with Google"
+      >
+        <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />
+        {t("login_with_google")}
+      </Button>
+    </form>
+
+    {/* Display error messages for screen readers */}
+    {error && (
+      <p className="text-red-500 mt-2" role="alert" aria-live="assertive">
+        {error}
+      </p>
+    )}
+
+    {/* Signup Link */}
+    <p className="mt-4 text-red-500 hover:text-red-600">
+      {t("don_t_have_an_account_")}
+      <Button variant="link" onClick={() => navigate("/signup")}>{t("sign_up")}</Button>
+    </p>
+
+    {/* Return to Home Button */}
+    <Button
+      variant="ghost"
+      onClick={() => navigate("/")}
+      className="text-blue-300 underline"
+      aria-label="Return to Home"
+    >
+      {t("return_to_home")}
+    </Button>
+  </div>
+</div>
   );
 };
 
