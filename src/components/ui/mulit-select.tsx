@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import useLanguage from "@/lib/hooks/useLang";
 import { cn } from "@/lib/utils";
 
 /**
@@ -183,6 +184,7 @@ export const MultiSelect = React.forwardRef<
     //     onValueChange(allValues);
     //   }
     // };
+    const {t }= useLanguage();
 
     return (
       <Popover
@@ -338,7 +340,9 @@ export const MultiSelect = React.forwardRef<
                       <CommandItem
                         onSelect={handleClear}
                         className="flex-1 justify-center cursor-pointer"
-                      >{t("clear")}</CommandItem>
+                      >
+                        {t("clear")}
+                      </CommandItem>
                       <Separator
                         orientation="vertical"
                         className="flex min-h-6 h-full"
@@ -348,7 +352,9 @@ export const MultiSelect = React.forwardRef<
                   <CommandItem
                     onSelect={() => setIsPopoverOpen(false)}
                     className="flex-1 justify-center cursor-pointer max-w-full"
-                  >{t("close")}</CommandItem>
+                  >
+                    {t("close")}
+                  </CommandItem>
                 </div>
               </CommandGroup>
             </CommandList>

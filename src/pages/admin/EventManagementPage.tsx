@@ -115,7 +115,7 @@ const EventEditDialog = ({
     mutate({
       eventId: event._id,
       eventData: {
-        title: editedEvent.title,
+        name: editedEvent.title,
         description: editedEvent.description,
         startDate: new Date(editedEvent.startDate),
         endDate: new Date(editedEvent.endDate),
@@ -715,7 +715,6 @@ const EventManagementPage = () => {
     const completionPercentage = calculateTaskCompletion(event);
     const taskStats = getTaskStats(event);
 
-  const { t } = useLanguage()
 
     return (
       <div key={event.id} className="border p-4 rounded-md mb-4">
@@ -1492,7 +1491,7 @@ const EventManagementPage = () => {
                 <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
               ) : events.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{events.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{" "}{events.length}{" "}
                     {events.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">

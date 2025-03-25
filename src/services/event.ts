@@ -95,6 +95,7 @@ export const useInfiniteEvents = ({
     initialPageParam: 1,
   });
 };
+
 export const useInfiniteEventsForAdmin = ({
   activeTab,
   city,
@@ -290,7 +291,7 @@ export const useCreateEventMutation = () => {
         eventData
       );
 
-      if (response.result.status === ResponseStatusType.Success) {
+      if (response.status === ResponseStatusType.Success) {
         return response.result;
       }
       throw new Error(response.result);

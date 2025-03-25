@@ -38,8 +38,8 @@ import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
 
-import { generateVolunteerCertificate } from "@/utils/certificateGenerator";
 import useLanguage from "@/lib/hooks/useLang";
+import { generateVolunteerCertificate } from "@/utils/certificateGenerator";
 
 interface EventType {
   _id: string;
@@ -280,10 +280,13 @@ const HomePage = () => {
     ...filterParams,
   });
 
+  useEffect(() => {
+    refetch();
+  }, [user]);
   const { ref: loadMoreRef, inView } = useInView();
 
   const events = data?.pages.flatMap((page) => page.events) || [];
-  const { t } = useLanguage()
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -463,10 +466,11 @@ const HomePage = () => {
               <span
                 className="text-gray-700 dark:text-gray-300"
                 aria-hidden="true"
-              >{t("_")}{" "}
+              >
+                {t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(ev.startDate)}{t("to")}{" "}
+                {formatDateFromDate(ev.startDate)} {t("to")}{" "}
                 {formatDateFromDate(ev.endDate)}
               </span>
             </p>
@@ -502,14 +506,18 @@ const HomePage = () => {
                   className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   variant="default"
                   size="sm"
-                >{t("participant")}</Button>
+                >
+                  {t("participant")}
+                </Button>
               </Link>
               <Link to="/spectator/register" className="w-1/2">
                 <Button
                   className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   variant="default"
                   size="sm"
-                >{t("spectator")}</Button>
+                >
+                  {t("spectator")}
+                </Button>
               </Link>
             </div>
 
@@ -532,7 +540,9 @@ const HomePage = () => {
                   className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
                   aria-label={`Apply to volunteer with ${ev.name}`}
                   tabIndex={0}
-                >{t("apply_now")}</Button>
+                >
+                  {t("apply_now")}
+                </Button>
               </Link>
             )}
           </div>
@@ -560,7 +570,9 @@ const HomePage = () => {
                   {application.eventId.name}
                 </CardTitle>
                 {application.status === ApplicationStatus.APPROVED && (
-                  <Badge className=" ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">{t("approved")}</Badge>
+                  <Badge className=" ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">
+                    {t("approved")}
+                  </Badge>
                 )}
               </div>
 
@@ -594,11 +606,12 @@ const HomePage = () => {
               <span
                 className="text-gray-700 dark:text-gray-300"
                 aria-hidden="true"
-              >{t("_")}{" "}
+              >
+                {t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(application.willingEndDate)}{t("to")}{" "}
-                {formatDateFromDate(application.willingEndDate)}
+                {formatDateFromDate(application.willingEndDate)}{" "}
+                {t("to")} {" "}{formatDateFromDate(application.willingEndDate)}
               </span>
             </p>
             {application.status === ApplicationStatus.APPROVED ? (
@@ -610,7 +623,9 @@ const HomePage = () => {
               </Link>
             ) : (
               <div>
-                <Button variant={"outline"} className="w-full mt-2">{t("approval_pending")}</Button>
+                <Button variant={"outline"} className="w-full mt-2">
+                  {t("approval_pending")}
+                </Button>
               </div>
             )}
           </div>
@@ -651,7 +666,9 @@ const HomePage = () => {
                   {event.name}
                 </CardTitle>
                 {event.feedbackSubmitted && (
-                  <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600 text-center">{t("feedback_done")}</Badge>
+                  <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600 text-center">
+                    {t("feedback_done")}
+                  </Badge>
                 )}
               </div>
 
@@ -691,11 +708,12 @@ const HomePage = () => {
               <span
                 className="text-gray-700 dark:text-gray-300"
                 aria-hidden="true"
-              >{t("_")}{" "}
+              >
+                {t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(event.startDate)}{t("to")}{" "}
-                {formatDateFromDate(event.endDate)}
+                {formatDateFromDate(event.startDate)}
+                {t("to")} {formatDateFromDate(event.endDate)}
               </span>
             </p>
             {/* <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
@@ -705,13 +723,17 @@ const HomePage = () => {
               <Button
                 onClick={handleDownloadCertificate}
                 className="w-full sm:flex-1"
-              >{t("download_certificate")}</Button>
+              >
+                {t("download_certificate")}
+              </Button>
               {!event.feedbackSubmitted && (
                 <Button
                   onClick={handleProvideFeedback}
                   variant="secondary"
                   className="w-full sm:flex-1"
-                >{t("provide_feedback")}</Button>
+                >
+                  {t("provide_feedback")}
+                </Button>
               )}
             </div>
           </div>
@@ -754,7 +776,9 @@ const HomePage = () => {
     <div className="p-6 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
       <style>{customStyles}</style>
       {/* Main content link for keyboard nav */}
-      <a href="#main-content" className="skip-link">{t("skip_to_main_content")}</a>
+      <a href="#main-content" className="skip-link">
+        {t("skip_to_main_content")}
+      </a>
       {/*Filters */}
       <div className="md:sticky self-start top-[10px] z-10">
         <Card className="shadow-md h-fit">
@@ -763,7 +787,9 @@ const HomePage = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="relative">
-              <Label htmlFor="searchInput" className="sr-only">{t("search_for_an_event")}</Label>
+              <Label htmlFor="searchInput" className="sr-only">
+                {t("search_for_an_event")}
+              </Label>
               <Search
                 className="absolute left-2 top-2.5 h-4 w-4 text-gray-400"
                 aria-hidden="true"
@@ -785,7 +811,9 @@ const HomePage = () => {
                 <Label
                   htmlFor="city-select"
                   className="text-sm font-medium text-gray-800 dark:text-gray-200"
-                >{t("city")}</Label>
+                >
+                  {t("city")}
+                </Label>
                 <Select value={city} onValueChange={setCity}>
                   <SelectTrigger
                     id="city-select"
@@ -795,7 +823,9 @@ const HomePage = () => {
                     <SelectValue placeholder="Select city" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all_cities">{t("all_cities")}</SelectItem>
+                    <SelectItem value="all_cities">
+                      {t("all_cities")}
+                    </SelectItem>
                     <SelectItem value="Delhi">{t("delhi")}</SelectItem>
                     <SelectItem value="Mumbai">{t("mumbai")}</SelectItem>
                     <SelectItem value="Bangalore">{t("bangalore")}</SelectItem>
@@ -808,7 +838,9 @@ const HomePage = () => {
                 <Label
                   htmlFor="domain-select"
                   className="text-sm font-medium text-gray-800 dark:text-gray-200"
-                >{t("volunteering_domain")}</Label>
+                >
+                  {t("volunteering_domain")}
+                </Label>
                 <Select value={domain} onValueChange={setDomain}>
                   <SelectTrigger
                     id="domain-select"
@@ -818,10 +850,16 @@ const HomePage = () => {
                     <SelectValue placeholder="Select domain" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all_domains">{t("all_domains")}</SelectItem>
-                    <SelectItem value="Rehabilitation">{t("rehabilitation")}</SelectItem>
+                    <SelectItem value="all_domains">
+                      {t("all_domains")}
+                    </SelectItem>
+                    <SelectItem value="Rehabilitation">
+                      {t("rehabilitation")}
+                    </SelectItem>
                     <SelectItem value="Education">{t("education")}</SelectItem>
-                    <SelectItem value="Community Support">{t("community_support")}</SelectItem>
+                    <SelectItem value="Community Support">
+                      {t("community_support")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -831,7 +869,9 @@ const HomePage = () => {
                 <Label
                   htmlFor="availability-select"
                   className="text-sm font-medium text-gray-800 dark:text-gray-200"
-                >{t("availability")}</Label>
+                >
+                  {t("availability")}
+                </Label>
                 <Select value={availability} onValueChange={setAvailability}>
                   <SelectTrigger
                     id="availability-select"
@@ -841,8 +881,12 @@ const HomePage = () => {
                     <SelectValue placeholder="Select availability" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all_availability">{t("any_availability")}</SelectItem>
-                    <SelectItem value="Both">{t("both_weekdays_weekends")}</SelectItem>
+                    <SelectItem value="all_availability">
+                      {t("any_availability")}
+                    </SelectItem>
+                    <SelectItem value="Both">
+                      {t("both_weekdays_weekends")}
+                    </SelectItem>
                     <SelectItem value="Week days">{t("weekdays")}</SelectItem>
                     <SelectItem value="Week ends">{t("weekends")}</SelectItem>
                   </SelectContent>
@@ -854,7 +898,9 @@ const HomePage = () => {
                 <Label
                   htmlFor="start-date"
                   className="text-sm font-medium text-gray-800 dark:text-gray-200"
-                >{t("start_date")}</Label>
+                >
+                  {t("start_date")}
+                </Label>
                 <Input
                   id="start-date"
                   type="date"
@@ -870,7 +916,9 @@ const HomePage = () => {
                 <Label
                   htmlFor="end-date"
                   className="text-sm font-medium text-gray-800 dark:text-gray-200"
-                >{t("end_date")}</Label>
+                >
+                  {t("end_date")}
+                </Label>
                 <Input
                   id="end-date"
                   type="date"
@@ -899,14 +947,18 @@ const HomePage = () => {
                   // }}
                   onClick={handleApplyFilters}
                   aria-label="Apply filters"
-                >{t("apply_filters")}</Button>
+                >
+                  {t("apply_filters")}
+                </Button>
 
                 <Button
                   variant="outline"
                   className="w-full focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   onClick={clearAllFilters}
                   aria-label="Clear all filters"
-                >{t("clear_all")}</Button>
+                >
+                  {t("clear_all")}
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -920,7 +972,9 @@ const HomePage = () => {
           searchQuery) && (
           <Card className="mt-4 shadow-sm">
             <CardContent className="py-3">
-              <p className="text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">{t("active_filters_")}</p>
+              <p className="text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
+                {t("active_filters_")}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {/* Here the filter badges will be rendered - same as original code */}
                 {/* Search query badge */}
@@ -928,12 +982,16 @@ const HomePage = () => {
                   <Badge
                     variant="secondary"
                     className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  >{t("search_")}{searchQuery}
+                  >
+                    {t("search_")}
+                    {searchQuery}
                     <button
                       className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                       onClick={() => setSearchQuery("")}
                       aria-label={`Clear search filter: ${searchQuery}`}
-                    >{t("_")}</button>
+                    >
+                      {t("_")}
+                    </button>
                   </Badge>
                 )}
 
@@ -942,7 +1000,9 @@ const HomePage = () => {
                   <Badge
                     variant="secondary"
                     className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  >{t("city_")}{city === "all_cities" ? "All Cities" : city}
+                  >
+                    {t("city_")}
+                    {city === "all_cities" ? "All Cities" : city}
                     <button
                       className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                       onClick={() => {
@@ -955,7 +1015,9 @@ const HomePage = () => {
                       aria-label={`Clear city filter: ${
                         city === "all_cities" ? "All Cities" : city
                       }`}
-                    >{t("_")}</button>
+                    >
+                      {t("_")}
+                    </button>
                   </Badge>
                 )}
 
@@ -964,7 +1026,9 @@ const HomePage = () => {
                   <Badge
                     variant="secondary"
                     className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  >{t("domain_")}{domain === "all_domains" ? "All Domains" : domain}
+                  >
+                    {t("domain_")}
+                    {domain === "all_domains" ? "All Domains" : domain}
                     <button
                       className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                       onClick={() => {
@@ -977,7 +1041,9 @@ const HomePage = () => {
                       aria-label={`Clear domain filter: ${
                         domain === "all_domains" ? "All Domains" : domain
                       }`}
-                    >{t("_")}</button>
+                    >
+                      {t("_")}
+                    </button>
                   </Badge>
                 )}
 
@@ -986,7 +1052,8 @@ const HomePage = () => {
                   <Badge
                     variant="secondary"
                     className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  >{t("availability_")}{" "}
+                  >
+                    {t("availability_")}{" "}
                     {availability === "all_availability"
                       ? "Any Availability"
                       : availability}
@@ -1004,7 +1071,9 @@ const HomePage = () => {
                           ? "Any Availability"
                           : availability
                       }`}
-                    >{t("_")}</button>
+                    >
+                      {t("_")}
+                    </button>
                   </Badge>
                 )}
 
@@ -1013,7 +1082,9 @@ const HomePage = () => {
                   <Badge
                     variant="secondary"
                     className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  >{t("date_range")}<button
+                  >
+                    {t("date_range")}
+                    <button
                       className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                       onClick={() => {
                         setStartDate("");
@@ -1024,7 +1095,9 @@ const HomePage = () => {
                         }
                       }}
                       aria-label="Clear date range filter"
-                    >{t("_")}</button>
+                    >
+                      {t("_")}
+                    </button>
                   </Badge>
                 )}
               </div>
@@ -1053,7 +1126,9 @@ const HomePage = () => {
               onClick={() => setActiveTab("active")}
               onKeyDown={(e) => handleTabKeyDown(e, "active")}
               tabIndex={0}
-            >{t("active")}</button>
+            >
+              {t("active")}
+            </button>
             {user && (
               <button
                 ref={tabRefs.myApplications}
@@ -1071,7 +1146,9 @@ const HomePage = () => {
                 }}
                 onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
                 tabIndex={0}
-              >{t("my_applications")}</button>
+              >
+                {t("my_applications")}
+              </button>
             )}
             {user && (
               <button
@@ -1088,7 +1165,9 @@ const HomePage = () => {
                 onClick={() => setActiveTab("history")}
                 onKeyDown={(e) => handleTabKeyDown(e, "history")}
                 tabIndex={0}
-              >{t("history")}</button>
+              >
+                {t("history")}
+              </button>
             )}
           </div>
 
@@ -1106,10 +1185,13 @@ const HomePage = () => {
                   <Loader />
                 </div>
               ) : isError ? (
-                <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
+                <p className="text-red-400">
+                  {t("error_loading_programs_please_try_again_")}
+                </p>
               ) : events.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{events.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    {t("showing")} {events.length}{" "}
                     {events.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
@@ -1138,12 +1220,16 @@ const HomePage = () => {
                     className="h-12 w-12 text-gray-500 dark:text-gray-400 mx-auto mb-4"
                     aria-hidden="true"
                   />
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">{t("no_events_found_matching_your_criteria_")}</p>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                    {t("no_events_found_matching_your_criteria_")}
+                  </p>
                   <Button
                     variant="link"
                     onClick={clearAllFilters}
                     className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 rounded-md"
-                  >{t("clear_filters_and_try_again")}</Button>
+                  >
+                    {t("clear_filters_and_try_again")}
+                  </Button>
                 </div>
               ))}
           </div>
@@ -1161,10 +1247,13 @@ const HomePage = () => {
                   <Loader />
                 </div>
               ) : isApplicationError ? (
-                <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
+                <p className="text-red-400">
+                  {t("error_loading_programs_please_try_again_")}
+                </p>
               ) : myApplicationData.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{myApplicationData.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    {t("showing")} {myApplicationData.length}{" "}
                     {myApplicationData.length === 1
                       ? "application"
                       : "applications"}
@@ -1198,12 +1287,16 @@ const HomePage = () => {
                     className="h-12 w-12 text-gray-500 dark:text-gray-400 mx-auto mb-4"
                     aria-hidden="true"
                   />
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">{t("no_applications_found_")}</p>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                    {t("no_applications_found_")}
+                  </p>
                   <Button
                     variant="link"
                     onClick={clearAllFilters}
                     className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 rounded-md"
-                  >{t("clear_filters_and_try_again")}</Button>
+                  >
+                    {t("clear_filters_and_try_again")}
+                  </Button>
                 </div>
               ))}
           </div>
@@ -1221,10 +1314,14 @@ const HomePage = () => {
                   <Loader />
                 </div>
               ) : isError ? (
-                <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
+                <p className="text-red-400">
+                  {t("error_loading_programs_please_try_again_")}
+                </p>
               ) : historyEvents && historyEvents.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{historyEvents.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    {t("showing")}
+                    {historyEvents.length}{" "}
                     {historyEvents.length === 1 ? "event" : "events"}
                   </div>
 
@@ -1330,12 +1427,16 @@ const HomePage = () => {
                     className="h-12 w-12 text-gray-500 dark:text-gray-400 mx-auto mb-4"
                     aria-hidden="true"
                   />
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">{t("no_events_found_matching_your_criteria_")}</p>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                    {t("no_events_found_matching_your_criteria_")}
+                  </p>
                   <Button
                     variant="link"
                     onClick={clearAllFilters}
                     className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 rounded-md"
-                  >{t("clear_filters_and_try_again")}</Button>
+                  >
+                    {t("clear_filters_and_try_again")}
+                  </Button>
                 </div>
               ))}
           </div>
