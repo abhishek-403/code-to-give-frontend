@@ -473,7 +473,7 @@ const AdminDashboardPage = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">{t("admin_dashboard")}</h2>
+        <h2 className="text-2xl font-semibold">{t("Admin_Dashboard")}</h2>
         <div className="flex space-x-2">
           {/* Export Data Dropdown */}
 
@@ -529,7 +529,7 @@ const AdminDashboardPage = () => {
               <CalendarDays className="h-8 w-8 text-blue-600" />
             </div>
             <h3 className="text-3xl font-bold">{t("10")}</h3>
-            <p className="text-sm text-muted-foreground">{t("active_events")}</p>
+            <p className="text-sm text-muted-foreground">{t("Active_Events")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -538,7 +538,7 @@ const AdminDashboardPage = () => {
               <Activity className="h-8 w-8 text-green-600" />
             </div>
             <h3 className="text-3xl font-bold">{t("92_")}</h3>
-            <p className="text-sm text-muted-foreground">{t("volunteer_engagement")}</p>
+            <p className="text-sm text-muted-foreground">{t("Volunteer_Engagement")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -547,7 +547,7 @@ const AdminDashboardPage = () => {
               <CheckCircle className="h-8 w-8 text-yellow-600" />
             </div>
             <h3 className="text-3xl font-bold">{t("78_")}</h3>
-            <p className="text-sm text-muted-foreground">{t("task_completion")}</p>
+            <p className="text-sm text-muted-foreground">{t("Task_Completion")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -555,8 +555,8 @@ const AdminDashboardPage = () => {
             <div className="rounded-full bg-purple-100 p-3 mb-2">
               <Star className="h-8 w-8 text-purple-600" />
             </div>
-            <h3 className="text-3xl font-bold">{t("4_3")}</h3>
-            <p className="text-sm text-muted-foreground">{t("average_feedback")}</p>
+            <h3 className="text-3xl font-bold">{t("4.3")}</h3>
+            <p className="text-sm text-muted-foreground">{t("Average_Feedback")}</p>
           </CardContent>
         </Card>
       </div>
@@ -564,14 +564,14 @@ const AdminDashboardPage = () => {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>{t("event_management")}</CardTitle>
-          <CardDescription>{t("create_and_manage_events_")}</CardDescription>
+          <CardDescription>{t("create_and_Manage_Events_")}</CardDescription>
         </CardHeader>
         <CardContent className="flex space-x-4">
           <Link to="/admin/events/create">
             <Button>{t("create_event")}</Button>
           </Link>
           <Link to="/admin/events/manage">
-            <Button variant="outline">{t("manage_events")}</Button>
+            <Button variant="outline">{t("manage_Events")}</Button>
           </Link>
         </CardContent>
       </Card>
@@ -579,7 +579,7 @@ const AdminDashboardPage = () => {
       <Card className="mb-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>{t("data_visualization")}</CardTitle>
+            <CardTitle>{t("Data_Visualization")}</CardTitle>
             <CardDescription>{t("metrics_on_engagement_task_completion_rates_and_feedback_")}</CardDescription>
           </div>
           <Button 

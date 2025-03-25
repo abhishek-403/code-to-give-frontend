@@ -33,8 +33,8 @@ const UserProfilePage: React.FC = () => {
         setTimeout(() => {
           const mockUser: User = {
             id: 1,
-            name: 'John Doe',
-            email: 'john.doe@example.com',
+            name: 'Abhishek Sharma',
+            email: 'abhishek605404@gmail.com',
             profilePicture: 'https://via.placeholder.com/150',
             role: 'volunteer',
             volunteerHistory: ['Event 1', 'Event 2'],

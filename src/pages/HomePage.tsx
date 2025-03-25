@@ -759,7 +759,7 @@ const HomePage = () => {
       <div className="md:sticky self-start top-[10px] z-10">
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">{t("find_events")}</CardTitle>
+            <CardTitle className="text-lg">{t("Find_Events")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="relative">
@@ -808,7 +808,7 @@ const HomePage = () => {
                 <Label
                   htmlFor="domain-select"
                   className="text-sm font-medium text-gray-800 dark:text-gray-200"
-                >{t("volunteering_domain")}</Label>
+                >{t("Volunteering_Domain")}</Label>
                 <Select value={domain} onValueChange={setDomain}>
                   <SelectTrigger
                     id="domain-select"
