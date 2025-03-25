@@ -80,6 +80,7 @@ const EventEditDialog = ({
   onOpenChange: (open: boolean) => void;
   onSave: (updatedDetails: any) => void;
 }) => {
+  const { t } = useLanguage()
   const [editedEvent, setEditedEvent] = useState({
     title: event?.name || "", // Use empty string as fallback
     description: event?.description || "",
@@ -140,7 +141,6 @@ const EventEditDialog = ({
     setOpen(false);
   };
 
-  const { t } = useLanguage()
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -715,14 +715,15 @@ const EventManagementPage = () => {
     const completionPercentage = calculateTaskCompletion(event);
     const taskStats = getTaskStats(event);
 
-  const { t } = useLanguage()
 
     return (
       <div key={event.id} className="border p-4 rounded-md mb-4">
         <h3 className="font-semibold text-lg">{event.name}</h3>
         <p className="text-sm text-gray-500 mb-2">{event.description}</p>
         <div className="text-sm mb-2">
-          <div>{t("_")}{format(event.startDate, "MMM dd, yyyy")}{t("_")}{" "}
+          <div>{t("_")}{format(event.startDate, "MMM dd, yyyy")}
+          </div>
+          <div>
             {format(event.endDate, "MMM dd, yyyy")}
           </div>
           <div>{t("_")}{event.location}</div>
@@ -1492,7 +1493,7 @@ const EventManagementPage = () => {
                 <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
               ) : events.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{events.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{" "}{events.length}{" "}
                     {events.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">

@@ -466,7 +466,7 @@ const HomePage = () => {
               >{t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(ev.startDate)}{t("to")}{" "}
+                {formatDateFromDate(ev.startDate)}{" "}{t("to")}{" "}
                 {formatDateFromDate(ev.endDate)}
               </span>
             </p>
@@ -597,7 +597,7 @@ const HomePage = () => {
               >{t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(application.willingEndDate)}{t("to")}{" "}
+                {formatDateFromDate(application.willingEndDate)}{" "}{t("to")}{" "}
                 {formatDateFromDate(application.willingEndDate)}
               </span>
             </p>
@@ -694,7 +694,7 @@ const HomePage = () => {
               >{t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(event.startDate)}{t("to")}{" "}
+                {formatDateFromDate(event.startDate)}{" "}{t("to")}{" "}
                 {formatDateFromDate(event.endDate)}
               </span>
             </p>
@@ -1109,7 +1109,7 @@ const HomePage = () => {
                 <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
               ) : events.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{events.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing") }{" "}{events.length}{" "}
                     {events.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
@@ -1164,7 +1164,7 @@ const HomePage = () => {
                 <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
               ) : myApplicationData.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{myApplicationData.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{" "}{myApplicationData.length}{" "}
                     {myApplicationData.length === 1
                       ? "application"
                       : "applications"}
@@ -1224,7 +1224,7 @@ const HomePage = () => {
                 <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
               ) : historyEvents && historyEvents.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{historyEvents.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{" "}{historyEvents.length}{" "}
                     {historyEvents.length === 1 ? "event" : "events"}
                   </div>
 
