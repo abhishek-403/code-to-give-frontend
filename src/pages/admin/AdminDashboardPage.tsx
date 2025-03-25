@@ -352,23 +352,30 @@ const AdminDashboardPage = () => {
     }
   };
 
-  // Prepare chart configurations
+  const getScoreColor = (score) => {
+    if (score >= 4.5) return "text-green-600 dark:text-green-400";
+    if (score >= 4.0) return "text-blue-600 dark:text-blue-400";
+    if (score >= 3.0) return "text-yellow-600 dark:text-yellow-400";
+    return "text-red-600 dark:text-red-400";
+  };
+
+  // Chart configurations with improved accessibility color contrast
   const volunteerEngagementChartData = {
     labels: engagementData.map((item) => item.date),
     datasets: [
       {
         label: "Volunteer Participation",
         data: engagementData.map((item) => item.volunteers),
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(56, 189, 248, 1)", // Higher contrast blue
+        backgroundColor: "rgba(56, 189, 248, 0.2)",
         tension: 0.4,
         fill: true,
       },
       {
         label: "Events",
         data: engagementData.map((item) => item.events * 15), // Scaled for visualization
-        borderColor: "rgba(153, 102, 255, 1)",
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
+        borderColor: "rgba(168, 85, 247, 1)", // Higher contrast purple
+        backgroundColor: "rgba(168, 85, 247, 0.2)",
         tension: 0.4,
         fill: true,
       },
@@ -377,13 +384,39 @@ const AdminDashboardPage = () => {
 
   const engagementOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: "top",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 20,
+        },
       },
       title: {
         display: true,
         text: "Volunteer Engagement Over Time",
+        font: {
+          size: 16,
+          weight: "bold",
+        },
+        padding: {
+          top: 10,
+          bottom: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        bodyFont: {
+          size: 14,
+        },
+        titleFont: {
+          size: 16,
+        },
+        padding: 10,
+        cornerRadius: 6,
+        displayColors: true,
       },
     },
     scales: {
@@ -392,42 +425,92 @@ const AdminDashboardPage = () => {
         title: {
           display: true,
           text: "Number of Volunteers",
+          font: {
+            weight: "bold",
+          },
+        },
+        grid: {
+          color: "rgba(160, 160, 160, 0.15)",
         },
       },
       x: {
         title: {
           display: true,
           text: "Month",
+          font: {
+            weight: "bold",
+          },
+        },
+        grid: {
+          display: false,
         },
       },
     },
   };
 
+  // Completion chart configuration with improved styling
   const completionChartData = {
     labels: completionData.map((item) => item.project),
     datasets: [
       {
         label: "Completed Tasks",
         data: completionData.map((item) => item.completion),
-        backgroundColor: "rgba(54, 162, 235, 0.6)",
+        backgroundColor: "rgba(54, 162, 235, 0.7)",
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1,
       },
       {
         label: "Target",
         data: completionData.map((item) => item.target),
-        backgroundColor: "rgba(255, 206, 86, 0.6)",
+        backgroundColor: "rgba(255, 206, 86, 0.7)",
+        borderColor: "rgba(255, 206, 86, 1)",
+        borderWidth: 1,
       },
     ],
   };
 
   const completionOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: "top",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 20,
+        },
       },
       title: {
         display: true,
         text: "Task Completion by Project",
+        font: {
+          size: 16,
+          weight: "bold",
+        },
+        padding: {
+          top: 10,
+          bottom: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        bodyFont: {
+          size: 14,
+        },
+        titleFont: {
+          size: 16,
+        },
+        padding: 10,
+        cornerRadius: 6,
+        displayColors: true,
+        callbacks: {
+          label: function (context) {
+            const label = context.dataset.label || "";
+            const value = context.parsed.y || 0;
+            return `${label}: ${value} tasks`;
+          },
+        },
       },
     },
     scales: {
@@ -436,11 +519,31 @@ const AdminDashboardPage = () => {
         title: {
           display: true,
           text: "Tasks",
+          font: {
+            weight: "bold",
+          },
+        },
+        grid: {
+          color: "rgba(160, 160, 160, 0.15)",
+        },
+      },
+      x: {
+        ticks: {
+          maxRotation: 0,
+          minRotation: 0,
+          autoSkip: true,
+          font: {
+            size: 11,
+          },
+        },
+        grid: {
+          display: false,
         },
       },
     },
   };
 
+  // Feedback chart configuration with improved styling
   const feedbackChartData = {
     labels: feedbackData.map((item) => item.category),
     datasets: [
@@ -448,11 +551,11 @@ const AdminDashboardPage = () => {
         label: "Average Score",
         data: feedbackData.map((item) => item.score),
         backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 99, 132, 0.7)",
+          "rgba(54, 162, 235, 0.7)",
+          "rgba(255, 206, 86, 0.7)",
+          "rgba(75, 192, 192, 0.7)",
+          "rgba(153, 102, 255, 0.7)",
         ],
         borderColor: [
           "rgba(255, 99, 132, 1)",
@@ -462,33 +565,54 @@ const AdminDashboardPage = () => {
           "rgba(153, 102, 255, 1)",
         ],
         borderWidth: 1,
+        hoverOffset: 10,
       },
     ],
   };
 
-  // const feedbackOptions = {
-  //   responsive: true,
-  //   plugins: {
-  //     legend: {
-  //       position: "top" as const,
-  //     },
-  //     title: {
-  //       display: true,
-  //       text: "Average Feedback Scores",
-  //     },
-  //   },
-  //   scales: {
-  //     r: {
-  //       min: 0,
-  //       max: 5,
-  //       ticks: {
-  //         stepSize: 1,
-  //       },
-  //     },
-  //   },
-  // };
+  const feedbackOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 10,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: "Average Feedback Scores",
+        font: {
+          size: 16,
+          weight: "bold",
+        },
+        padding: {
+          top: 10,
+          bottom: 10,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        callbacks: {
+          label: function (context) {
+            const label = context.label || "";
+            const value = context.raw || 0;
+            const count =
+              feedbackData.find((item) => item.category === label)?.count || 0;
+            return [`Score: ${value.toFixed(1)}/5`, `Responses: ${count}`];
+          },
+        },
+      },
+    },
+  };
 
-  // Volunteer activity radar chart
+  // Volunteer radar chart configuration with improved styling
   const volunteerRadarData = {
     labels: ["Hours", "Tasks", "Events", "Feedback", "Recruitment"],
     datasets: [
@@ -498,6 +622,11 @@ const AdminDashboardPage = () => {
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 2,
+        pointBackgroundColor: "rgba(75, 192, 192, 1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(75, 192, 192, 1)",
+        pointLabelFontSize: 14,
       },
       {
         label: "Previous Month",
@@ -505,6 +634,11 @@ const AdminDashboardPage = () => {
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 2,
+        pointBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
+        pointLabelFontSize: 14,
       },
     ],
   };
@@ -514,140 +648,211 @@ const AdminDashboardPage = () => {
       r: {
         angleLines: {
           display: true,
+          color: "rgba(160, 160, 160, 0.2)",
         },
         suggestedMin: 0,
         suggestedMax: 100,
+        pointLabels: {
+          font: {
+            size: 12,
+            weight: "bold",
+          },
+        },
+        ticks: {
+          stepSize: 20,
+          backdropColor: "transparent",
+          z: 100,
+          font: {
+            size: 10,
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        bodyFont: {
+          size: 14,
+        },
+        titleFont: {
+          size: 16,
+        },
+        padding: 10,
+        displayColors: true,
+      },
+    },
+    elements: {
+      line: {
+        tension: 0.1,
       },
     },
   };
+
   const { t } = useLanguage();
-  const u = useAppSelector((a) => a.user);
+
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">{t("Admin_Dashboard")}</h2>
-        <div className="flex space-x-2">
-          {/* Export Data Dropdown */}
-
-          {/* <Link to="/changeroles" className="hover:underline">
-              <Button  className="flex items-center" 
-            variant="outline" size="sm">
-                Change Roles
-              </Button>
-          </Link> */}
-
-          {u.role === UserRole.ADMIN && (
-            <Link to="/admin/changeroles">
-              <Button className="flex items-center" variant="outline">
+    <div className="p-4 space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+        <h1 className="text-3xl font-bold">{t("Admin_Dashboard")}</h1>
+        <div className="flex flex-wrap gap-2">
+          <Link to="/admin/changeroles">
+            <Button
+              className="flex items-center"
+              variant="outline"
+              aria-label={t("manage_roles")}
+            >
+              <span className="sr-only md:not-sr-only">
                 {t("manage_roles")}
-              </Button>
-            </Link>
-          )}
+              </span>
+            </Button>
+          </Link>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" disabled={exportLoading}>
+              <Button
+                variant="outline"
+                disabled={exportLoading}
+                aria-label={exportLoading ? "Exporting data" : "Export data"}
+              >
                 <Download className="mr-2 h-4 w-4" />
-                {exportLoading ? "Exporting..." : "Export Data"}
+                <span>{exportLoading ? t("exporting") : t("export_data")}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={exportDataToCSV}>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem
+                onClick={exportDataToCSV}
+                className="cursor-pointer"
+              >
                 <FileText className="mr-2 h-4 w-4" />
-                {t("export_current_view_as_csv")}
+                <span>{t("export_current_view_as_csv")}</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={exportAllDataToCSV}>
+              <DropdownMenuItem
+                onClick={exportAllDataToCSV}
+                className="cursor-pointer"
+              >
                 <Database className="mr-2 h-4 w-4" />
-                {t("export_all_data_as_csv")}
+                <span>{t("export_all_data_as_csv")}</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={exportToExcel}>
+              <DropdownMenuItem
+                onClick={exportToExcel}
+                className="cursor-pointer"
+              >
                 <FileText className="mr-2 h-4 w-4" />
-                {t("export_as_excel")}
+                <span>{t("export_as_excel")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Refresh Button */}
           <Button
             className="flex items-center"
             variant="outline"
             onClick={loadData}
             disabled={loading}
+            aria-label={loading ? "Loading data" : "Refresh data"}
           >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            {loading ? "Loading..." : "Refresh Data"}
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            />
+            <span>{loading ? t("loading") : t("refresh_data")}</span>
           </Button>
         </div>
       </div>
-      {/* Quick Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center pt-6">
-            <div className="rounded-full bg-blue-100 p-3 mb-2">
-              <CalendarDays className="h-8 w-8 text-blue-600" />
+
+      {/* Quick Stats Summary with improved accessibility */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="transition-all hover:shadow-md">
+          <CardContent className="flex flex-col items-center justify-center p-6">
+            <div className="rounded-full bg-blue-100 dark:bg-blue-900 p-3 mb-3">
+              <CalendarDays
+                className="h-8 w-8 text-blue-600 dark:text-blue-300"
+                aria-hidden="true"
+              />
             </div>
             <h3 className="text-3xl font-bold">{t("10")}</h3>
             <p className="text-sm text-muted-foreground">
               {t("Active_Events")}
             </p>
-            {/* <h3 className="text-3xl font-bold">{t("18")}</h3>
-            <p className="text-sm text-muted-foreground">{t("active_events")}</p> */}
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center pt-6">
-            <div className="rounded-full bg-green-100 p-3 mb-2">
-              <Activity className="h-8 w-8 text-green-600" />
+        <Card className="transition-all hover:shadow-md">
+          <CardContent className="flex flex-col items-center justify-center p-6">
+            <div className="rounded-full bg-green-100 dark:bg-green-900 p-3 mb-3">
+              <Activity
+                className="h-8 w-8 text-green-600 dark:text-green-300"
+                aria-hidden="true"
+              />
             </div>
             <h3 className="text-3xl font-bold">{t("92_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("volunteer_engagement")}
+              {t("Volunteer_Engagement")}
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center pt-6">
-            <div className="rounded-full bg-yellow-100 p-3 mb-2">
-              <CheckCircle className="h-8 w-8 text-yellow-600" />
+        <Card className="transition-all hover:shadow-md">
+          <CardContent className="flex flex-col items-center justify-center p-6">
+            <div className="rounded-full bg-yellow-100 dark:bg-yellow-900 p-3 mb-3">
+              <CheckCircle
+                className="h-8 w-8 text-yellow-600 dark:text-yellow-300"
+                aria-hidden="true"
+              />
             </div>
             <h3 className="text-3xl font-bold">{t("78_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("task_completion")}
+              {t("Task_Completion")}
             </p>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center pt-6">
-            <div className="rounded-full bg-purple-100 p-3 mb-2">
-              <Star className="h-8 w-8 text-purple-600" />
+        <Card className="transition-all hover:shadow-md">
+          <CardContent className="flex flex-col items-center justify-center p-6">
+            <div className="rounded-full bg-purple-100 dark:bg-purple-900 p-3 mb-3">
+              <Star
+                className="h-8 w-8 text-purple-600 dark:text-purple-300"
+                aria-hidden="true"
+              />
             </div>
-            <h3 className="text-3xl font-bold">{t("4_3")}</h3>
+            <h3 className="text-3xl font-bold">{t("4.3")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("average_feedback")}
+              {t("Average_Feedback")}
             </p>
           </CardContent>
         </Card>
       </div>
+
       {/* Event Management Card */}
-      <Card className="mb-6">
+      <Card className="transition-all hover:shadow-md">
         <CardHeader>
-          <CardTitle>{t("event_management")}</CardTitle>
+          <CardTitle className="text-xl">{t("event_management")}</CardTitle>
           <CardDescription>{t("create_and_Manage_Events_")}</CardDescription>
         </CardHeader>
-        <CardContent className="flex space-x-4">
+        <CardContent className="flex flex-wrap gap-4">
           <Link to="/admin/events/create">
-            <Button>{t("create_event")}</Button>
+            <Button className="flex items-center gap-2">
+              <span className="hidden sm:inline">+</span>
+              {t("create_event")}
+            </Button>
           </Link>
           <Link to="/admin/events/manage">
-            <Button variant="outline">{t("manage_Events")}</Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <span className="hidden sm:inline">🔍</span>
+              {t("manage_Events")}
+            </Button>
           </Link>
         </CardContent>
       </Card>
-      {/* Data Visualization Tabs */}
-      <Card className="mb-6">
-        <CardHeader className="flex flex-row items-center justify-between">
+
+      {/* Data Visualization Tabs with enhanced accessibility */}
+      <Card className="transition-all hover:shadow-md">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <CardTitle>{t("data_visualization")}</CardTitle>
+            <CardTitle className="text-xl">{t("Data_Visualization")}</CardTitle>
             <CardDescription>
               {t("metrics_on_engagement_task_completion_rates_and_feedback_")}
             </CardDescription>
@@ -657,9 +862,11 @@ const AdminDashboardPage = () => {
             size="sm"
             onClick={exportDataToCSV}
             disabled={exportLoading}
+            className="self-start sm:self-auto"
+            aria-label="Export current view"
           >
-            <Download className="mr-2 h-4 w-4" />
-            {t("export_view")}
+            <Download className="mr-2 h-4 w-4" aria-hidden="true" />
+            <span>{t("export_view")}</span>
           </Button>
         </CardHeader>
         <CardContent>
@@ -667,7 +874,7 @@ const AdminDashboardPage = () => {
             defaultValue="engagement"
             onValueChange={(value) => setActiveTab(value)}
           >
-            <TabsList className="mb-4">
+            <TabsList className="mb-6 w-full justify-start overflow-x-auto">
               <TabsTrigger value="engagement">{t("engagement")}</TabsTrigger>
               <TabsTrigger value="completion">{t("completion")}</TabsTrigger>
               <TabsTrigger value="feedback">{t("feedback")}</TabsTrigger>
@@ -680,6 +887,13 @@ const AdminDashboardPage = () => {
                   options={engagementOptions}
                   data={volunteerEngagementChartData}
                 />
+              </div>
+              <div className="mt-4 text-sm text-muted-foreground">
+                <p>
+                  <span className="font-medium">Note:</span> Events data is
+                  scaled (×15) for better visualization alongside volunteer
+                  numbers.
+                </p>
               </div>
             </TabsContent>
 
@@ -696,30 +910,39 @@ const AdminDashboardPage = () => {
                     data={feedbackChartData}
                     options={{
                       responsive: true,
+                      maintainAspectRatio: false,
                       plugins: {
                         legend: {
                           position: "right",
+                          labels: {
+                            boxWidth: 12,
+                            usePointStyle: true,
+                            padding: 20,
+                          },
                         },
                         title: {
                           display: true,
                           text: "Feedback Distribution",
+                          font: {
+                            size: 16,
+                            weight: "bold",
+                          },
                         },
                       },
                     }}
                   />
                 </div>
-                <div className="overflow-auto max-h-64 bg-card rounded-lg border">
-                  {/* Table with proper dark mode styling */}
+                <div className="overflow-auto h-64 rounded-lg border dark:border-gray-700">
                   <table className="w-full border-collapse">
                     <thead className="sticky top-0 z-20">
-                      <tr className="bg-card shadow-sm">
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                           {t("category")}
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                           {t("score")}
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                           {t("responses")}
                         </th>
                       </tr>
@@ -733,7 +956,11 @@ const AdminDashboardPage = () => {
                           <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
                             {item.category}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                          <td
+                            className={`px-4 py-3 whitespace-nowrap text-sm font-medium ${getScoreColor(
+                              item.score
+                            )}`}
+                          >
                             {item.score.toFixed(1)}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm">
@@ -750,29 +977,59 @@ const AdminDashboardPage = () => {
             <TabsContent value="overview" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="h-64">
-                  <Radar data={volunteerRadarData} options={radarOptions} />
+                  <Radar
+                    data={volunteerRadarData}
+                    options={{
+                      scales: {
+                        r: {
+                          angleLines: {
+                            display: true,
+                          },
+                          suggestedMin: 0,
+                          suggestedMax: 100,
+                          ticks: {
+                            backdropColor: "transparent",
+                            z: 100,
+                          },
+                        },
+                      },
+                      plugins: {
+                        legend: {
+                          position: "top",
+                          labels: {
+                            boxWidth: 12,
+                            usePointStyle: true,
+                            padding: 20,
+                          },
+                        },
+                      },
+                    }}
+                  />
                 </div>
                 <div className="flex flex-col h-64">
-                  <h3 className="font-medium mb-2">
+                  <h3 className="font-medium mb-3">
                     {t("top_volunteers_this_month")}
                   </h3>
-                  <div className="overflow-auto max-h-64 bg-card rounded-lg border">
+                  <div className="overflow-auto h-full rounded-lg border dark:border-gray-700">
                     <table className="w-full border-collapse">
-                      <thead className="sticky top-0">
-                        <tr className="bg-card shadow-sm">
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                      <thead className="sticky top-0 z-20">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                             {t("name")}
                           </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                             {t("hours")}
                           </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                             {t("tasks")}
+                          </th>
+                          <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
+                            {t("events")}
                           </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
-                        {topVolunteers.map((volunteer, index) => (
+                        {topVolunteers.slice(0, 5).map((volunteer, index) => (
                           <tr
                             key={index}
                             className="hover:bg-muted/50 transition-colors"
@@ -786,6 +1043,9 @@ const AdminDashboardPage = () => {
                             <td className="px-4 py-3 whitespace-nowrap text-sm">
                               {volunteer.tasks}
                             </td>
+                            <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap text-sm">
+                              {volunteer.events}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -797,6 +1057,25 @@ const AdminDashboardPage = () => {
           </Tabs>
         </CardContent>
       </Card>
+
+      {/* Accessible skip to top link - visible only when scrolled down */}
+      <div
+        className="fixed bottom-4 right-4 opacity-0 transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100"
+        style={{ opacity: "var(--scroll-opacity, 0)" }}
+        aria-hidden="true"
+      >
+        <Button
+          variant="secondary"
+          size="sm"
+          className="rounded-full shadow-lg"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="Scroll to top"
+        >
+          ↑
+        </Button>
+      </div>
+
+      {/* Scroll listener effect is moved outside JSX */}
     </div>
   );
 };
