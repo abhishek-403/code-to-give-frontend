@@ -174,7 +174,7 @@ const Header = () => {
 
         
         {/* contact us button linking to /contact */}
-       {/* 
+       
         <Link
           to="/contactus"
           className="hover:underline"
@@ -187,7 +187,7 @@ const Header = () => {
           >
             Contact Us
           </Button>
-        </Link> */}
+        </Link>
 
         <span className="text-gray-400" aria-hidden="true">
           |
