@@ -10,7 +10,7 @@ const ContactUsPage: React.FC = () => {
       {/* Page Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-        <p className="text-gray-600">
+        <p className="text-lg font-bold text-gray-700 dark:text-gray-300">
           Have questions or want to get in touch? We'd love to hear from you!
         </p>
       </div>
@@ -22,7 +22,7 @@ const ContactUsPage: React.FC = () => {
          
             <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
             {/* Centers in India */}
-            <h3 className="text-lg font-bold text-red-600 text-center mb-2">
+            <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300">
                 CENTERS ACROSS INDIA
             </h3>
             <div className="grid grid-cols-2 gap-x-6">
@@ -51,7 +51,7 @@ const ContactUsPage: React.FC = () => {
             </div>
 
             {/* Centers Outside India */}
-            <h3 className="text-lg font-bold text-red-600 text-center mt-4 mb-2">
+            <h3 className="text-lg font-bold text-lg font-bold text-gray-700 dark:text-gray-300 text-center mt-4 mb-2">
                 CENTERS OUTSIDE INDIA
             </h3>
             <ul className="grid grid-cols-2 list-disc list-inside text-gray-800 ">
@@ -109,7 +109,7 @@ const ContactUsPage: React.FC = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             >
               Send Message
             </Button>
@@ -121,33 +121,33 @@ const ContactUsPage: React.FC = () => {
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">Follow Us</h2>
         <div className="flex justify-center space-x-6">
-          <a
+            <a
             href="https://www.facebook.com/samarthanaminfo/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
-            className="text-red-500 hover:text-red-600"
-          >
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500"
+            >
             <Facebook size={32} />
-          </a>
-          <a
+            </a>
+            <a
             href="https://x.com/SamarthanamTFTD?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Twitter"
-            className="text-red-500 hover:text-red-600"
-          >
+            className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
+            >
             <Twitter size={32} />
-          </a>
-          <a
+            </a>
+            <a
             href="https://www.instagram.com/samarthanamtrustforthedisabled/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className="text-red-500 hover:text-red-600"
-          >
+            className="text-pink-500 hover:text-pink-600"
+            >
             <Instagram size={32} />
-          </a>
+            </a>
         </div>
       </div>
     </div>
