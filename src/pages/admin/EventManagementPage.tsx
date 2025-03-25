@@ -28,12 +28,12 @@ import {
   useInfiniteEventsForAdmin,
 } from "@/services/event";
 import { RootState, useAppSelector } from "@/store";
+import { Task } from "@/types/event";
 import Loader from "@/utils/loader";
 import { format } from "date-fns";
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowRightLeft,
   CheckCircle2,
   Circle,
   Clock,
@@ -146,7 +146,7 @@ const EventManagementPage = () => {
   const calculateTaskCompletion = (event: any) => {
     if (event.tasks.length === 0) return 0;
     const completedTasks = event.tasks.filter(
-      (task: any) => task.completed
+      (task: any) => task.status === TaskStatus.COMPLETED
     ).length;
     return Math.round((completedTasks / event.tasks.length) * 100);
   };
@@ -278,7 +278,9 @@ const EventManagementPage = () => {
   const getTaskStats = (event: any) => {
     if (!event) return { completed: 0, pending: 0, unassigned: 0, total: 0 };
 
-    const completed = event.tasks.filter((task: any) => task.completed).length;
+    const completed = event.tasks.filter(
+      (task: any) => task.status === TaskStatus.COMPLETED
+    ).length;
     const unassigned = event.tasks.filter(
       (task: any) => task.assignedTo === null
     ).length;
@@ -295,13 +297,16 @@ const EventManagementPage = () => {
   // Filter tasks based on their status
   const getFilteredTasks = (event: any, filter: any) => {
     if (!event) return [];
+    console.log(event);
 
     switch (filter) {
       case "completed":
-        return event.tasks.filter((task: any) => task.completed);
+        return event.tasks.filter(
+          (task: any) => task.status === TaskStatus.COMPLETED
+        );
       case "pending":
         return event.tasks.filter(
-          (task: any) => !task.completed && task.assignedTo !== null
+          (task: any) => task.status === TaskStatus.ASSIGNED
         );
       case "unassigned":
         return event.tasks.filter((task: any) => task.assignedTo === null);
@@ -311,7 +316,6 @@ const EventManagementPage = () => {
   };
 
   const handleEdit = (id: any) => {
-    
     const eventToEdit = events.find((event) => event._id === id);
     setSelectedEvent(eventToEdit);
     setTaskFilter("all"); // Reset filter when selecting a new event
@@ -729,7 +733,12 @@ const EventManagementPage = () => {
 
                       <div className="space-y-2 ">
                         {selectedEvent.applications.map((application: any) => {
-                          return <ApplicationCard setSelectedEvent={setSelectedEvent} application={application} />;
+                          return (
+                            <ApplicationCard
+                              setSelectedEvent={setSelectedEvent}
+                              application={application}
+                            />
+                          );
                         })}
                       </div>
                     </div>
@@ -884,7 +893,7 @@ const EventManagementPage = () => {
                                 <SelectValue placeholder="Select volunteer" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="none">Unassigned</SelectItem>
+                                {/* <SelectItem value="none">Unassigned</SelectItem> */}
                                 {selectedEvent.volunteers.map(
                                   (volunteer: any) => (
                                     <SelectItem
@@ -978,12 +987,12 @@ const EventManagementPage = () => {
                   <div className="space-y-2">
                     {selectedEvent.tasks.length > 0 ? (
                       getFilteredTasks(selectedEvent, taskFilter).map(
-                        (task: any) => (
+                        (task: Task, i: number) => (
                           <div
-                            key={task.id}
+                            key={i}
                             className={`border p-3 rounded-md ${
-                              task.completed
-                                ? "bg-green-50 border-green-200"
+                              task.status === TaskStatus.COMPLETED
+                                ? "bg-green-100 border-green-200"
                                 : task.assignedTo === null
                                 ? "bg-gray-50 border-gray-200"
                                 : "bg-yellow-50 border-yellow-200"
@@ -992,14 +1001,16 @@ const EventManagementPage = () => {
                             <div className="flex items-center justify-between mb-1">
                               <p
                                 className={`font-medium ${
-                                  task.completed ? "text-gray-500" : ""
+                                  task.status === TaskStatus.COMPLETED
+                                    ? "text-gray-500"
+                                    : ""
                                 }`}
                               >
                                 {task.name}
                               </p>
                               <div className="flex gap-1">
                                 {/* Dynamic button based on task state */}
-                                {task.completed ? (
+                                {task.status === TaskStatus.COMPLETED ? (
                                   <Button
                                     variant="outline"
                                     size="sm"
@@ -1047,7 +1058,7 @@ const EventManagementPage = () => {
                                 )}
 
                                 {/* Always show reassign button for assigned tasks */}
-                                {task.assignedTo !== null && (
+                                {/* {task.assignedTo !== null && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
@@ -1062,7 +1073,7 @@ const EventManagementPage = () => {
                                     <ArrowRightLeft className="h-3 w-3 mr-1" />
                                     Reassign
                                   </Button>
-                                )}
+                                )} */}
                               </div>
                             </div>
 
@@ -1083,22 +1094,22 @@ const EventManagementPage = () => {
                                     }`
                                   : "Unassigned"}
                               </p>
-                              <Badge
+                              {/* <Badge
                                 variant="outline"
                                 className={`${
-                                  task.completed
-                                    ? "bg-green-100 text-green-800"
+                                  task.status === TaskStatus.COMPLETED
+                                    ? "bg-green-100 text-geen-800"
                                     : task.assignedTo === null
                                     ? "bg-gray-100 text-gray-800"
                                     : "bg-yellow-100 text-yellow-800"
                                 }`}
                               >
-                                {task.completed
+                                {task.status === TaskStatus.COMPLETED
                                   ? "Completed"
                                   : task.assignedTo === null
                                   ? "Unassigned"
                                   : "Pending"}
-                              </Badge>
+                              </Badge> */}
                             </div>
                           </div>
                         )
@@ -1143,14 +1154,14 @@ const EventManagementPage = () => {
                         <Badge
                           variant="outline"
                           className={`${
-                            taskToAssign.completed
+                            taskToAssign.status === TaskStatus.COMPLETED
                               ? "bg-green-100 text-green-800"
                               : taskToAssign.assignedTo === null
                               ? "bg-gray-100 text-gray-800"
                               : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
-                          {taskToAssign.completed
+                          {taskToAssign.status === TaskStatus.COMPLETED
                             ? "Completed"
                             : taskToAssign.assignedTo === null
                             ? "Unassigned"
@@ -1353,9 +1364,11 @@ const EventManagementPage = () => {
                   </div>
                 </>
               ) : (
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
-                  No events found matching your criteria.
-                </p>
+                !isLoading && (
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                    No events found matching your criteria.
+                  </p>
+                )
               )}
             </TabsContent>
             <TabsContent

@@ -3,11 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { EventStatus, TaskStatus } from "@/lib/constants/server-constants";
+import { auth } from "@/lib/firebaseConfig";
+import {
+  useUpdateVolunteerEventTasksStatus,
+  useVolunteerEventTasks,
+} from "@/services/user";
 import { Event, Task } from "@/types/event";
+import Loader from "@/utils/loader";
+import LoadingPage from "@/utils/loading-page";
 import { ArrowLeft, CheckCircle2, Clock, RefreshCw } from "lucide-react";
 import { Types } from "mongoose";
-import React, { useMemo, useState } from "react";
-import { Link } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { Link, useParams } from "react-router";
 
 const VolunteerEventPage: React.FC = () => {
   // Dummy data that closely matches backend structure
@@ -57,12 +65,26 @@ const VolunteerEventPage: React.FC = () => {
       updatedAt: new Date(),
     },
   ];
-
+  const { eventId } = useParams<{ eventId: string }>();
   // State management for tasks (simulating backend interaction)
+  const [user] = useAuthState(auth);
+  const {
+    data: tsk,
+    isLoading,
+    refetch,
+  } = useVolunteerEventTasks(eventId, !!user);
+  const { mutate: updateTaskStatus, isPending } =
+    useUpdateVolunteerEventTasksStatus();
   const [event, setEvent] = useState<Event>(dummyEvent);
-  const [tasks, setTasks] = useState<Task[]>(dummyTasks);
+  const [tasks, setTasks] = useState<Task[] | undefined>(dummyTasks);
   const [taskFilter, setTaskFilter] = useState<TaskStatus | "all">("all");
-
+  useEffect(() => {
+    setTasks(tsk);
+  }, [tsk]);
+  if (!tasks) {
+    <div>No tasks</div>;
+    return;
+  }
   // Calculate progress
   const completedTasks = tasks.filter(
     (task) => task.status === TaskStatus.COMPLETED
@@ -71,20 +93,36 @@ const VolunteerEventPage: React.FC = () => {
   const progress = (completedTasks / totalTasks) * 100;
 
   // Filter tasks based on selected filter
-  const filteredTasks = useMemo(() => {
-    return tasks.filter(
-      (task) => taskFilter === "all" || task.status === taskFilter
-    );
-  }, [tasks, taskFilter]);
+  // const filteredTasks = useMemo(() => {
+  //   return tasks.filter(
+  //     (task) => taskFilter === "all" || task.status === taskFilter
+  //   );
+  // }, [tasks, taskFilter]);
 
   // Toggle task status (simulating backend update)
-  const toggleTaskStatus = (taskId: Types.ObjectId) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task._id.equals(taskId)
+  const toggleTaskStatus = ({
+    id,
+    status,
+  }: {
+    id: Types.ObjectId;
+    status: TaskStatus;
+  }) => {
+    console.log(id);
+    updateTaskStatus(
+      {
+        taskId: id,
+        status,
+      },
+      {
+        onSuccess: () => refetch(),
+      }
+    );
+    setTasks((prevTasks: any) =>
+      prevTasks.map((task: Task) =>
+        task._id.toString() === id.toString()
           ? {
               ...task,
-              status: task.status,
+              status,
               completedAt:
                 task.status === TaskStatus.COMPLETED
                   ? task.completedAt
@@ -93,10 +131,16 @@ const VolunteerEventPage: React.FC = () => {
           : task
       )
     );
-
     // TODO: Replace with actual API call
     // eventService.updateTaskStatus(taskId, newStatus)
   };
+
+  if (isLoading || isPending)
+    return (
+      <div className="w-full mt-24 flex items-center justify-center ">
+        <Loader />;
+      </div>
+    );
 
   return (
     <div className="container mx-auto p-6">
@@ -142,8 +186,8 @@ const VolunteerEventPage: React.FC = () => {
           Completed
         </Badge>
         <Badge
-          variant={taskFilter === TaskStatus.INPROGRESS ? "default" : "outline"}
-          onClick={() => setTaskFilter(TaskStatus.INPROGRESS)}
+          variant={taskFilter === TaskStatus.ASSIGNED ? "default" : "outline"}
+          onClick={() => setTaskFilter(TaskStatus.ASSIGNED)}
           className="cursor-pointer"
         >
           <Clock className="h-4 w-4 mr-1" />
@@ -153,10 +197,10 @@ const VolunteerEventPage: React.FC = () => {
 
       {/* Tasks List */}
       <div className="space-y-3">
-        {filteredTasks.length === 0 ? (
+        {tasks.length === 0 ? (
           <p className="text-gray-500 text-center">No tasks found.</p>
         ) : (
-          filteredTasks.map((task) => (
+          tasks.map((task) => (
             <Card
               key={task._id.toString()}
               className={`
@@ -187,13 +231,21 @@ const VolunteerEventPage: React.FC = () => {
                       }
                     >
                       {task.status === TaskStatus.COMPLETED
-                        ? "Completed"
-                        : "Pending"}
+                        ? TaskStatus.COMPLETED
+                        : TaskStatus.ASSIGNED}
                     </Badge>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => toggleTaskStatus(task._id)}
+                      onClick={() =>
+                        toggleTaskStatus({
+                          id: task._id,
+                          status:
+                            task.status === TaskStatus.COMPLETED
+                              ? TaskStatus.ASSIGNED
+                              : TaskStatus.COMPLETED,
+                        })
+                      }
                     >
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Toggle Status

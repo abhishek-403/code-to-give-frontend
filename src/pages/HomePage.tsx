@@ -51,7 +51,7 @@ interface MyApplicationType {
   applicantId: string;
   applicantName: string;
   applicantPhone: string;
-  eventId: { name: string; description: string };
+  eventId: { _id: string; name: string; description: string };
   availability: Availabitity;
   notes?: string;
   status: string;
@@ -548,7 +548,7 @@ const HomePage = () => {
             </p>
             {application.status === ApplicationStatus.APPROVED ? (
               <Link
-                to={`/volunteer/event/${application._id}`}
+                to={`/volunteer/event/${application.eventId?._id}`}
                 state={{ applicationData: application }}
               >
                 <Button className="w-full mt-2">View Tasks</Button>
