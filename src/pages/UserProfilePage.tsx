@@ -81,7 +81,7 @@ const UserProfilePage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="container mx-auto max-w-4xl py-8 px-4" aria-live="polite" aria-busy="true">
-        <h1 className="text-3xl font-bold mb-8">{t("user_profile")}</h1>
+        <h1 className="text-3xl font-bold mb-8">{t("User_Profile")}</h1>
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="flex flex-col md:flex-row gap-8">
             <Skeleton className="w-32 h-32 rounded-full" />
@@ -126,7 +126,7 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <main className="container mx-auto max-w-4xl py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8">{t("user_profile")}</h1>
+      <h1 className="text-3xl font-bold mb-8">{t("User_Profile")}</h1>
       <div className="grid gap-6">
         <Card className="overflow-hidden">          
           <div className="px-6 p-6">
@@ -149,14 +149,14 @@ const UserProfilePage: React.FC = () => {
                   variant="outline"
                   // className="ml-1"
                   aria-label="show current events"
-                >{t("current_events")}</Button>
+                >{t("Current_Events")}</Button>
               <Button 
                   // onClick={handleEdit}
                   onClick={() => navigate("/", { state: { activeTab: "history" } })}
                   variant="outline"
                   // className="ml-1"
                   aria-label="show user events history"
-                >{t("events_history")}</Button>
+                >{t("Events_History")}</Button>
 
               {!isEditing && (
                 <Button 
@@ -164,7 +164,7 @@ const UserProfilePage: React.FC = () => {
                   variant="outline"
                   className="bg-gray-700 text-white hover:bg-black hover:text-white"
                   aria-label="Edit profile information"
-                >{t("edit_profile")}</Button>
+                >{t("Edit_Profile")}</Button>
               )}
               </div>
                
