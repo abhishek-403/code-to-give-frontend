@@ -285,7 +285,7 @@ export const MultiSelect = React.forwardRef<
               onKeyDown={handleInputKeyDown}
             />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>{t("no_results_found_")}</CommandEmpty>
               <CommandGroup>
                 {/* <CommandItem
                   key="all"
@@ -338,9 +338,7 @@ export const MultiSelect = React.forwardRef<
                       <CommandItem
                         onSelect={handleClear}
                         className="flex-1 justify-center cursor-pointer"
-                      >
-                        Clear
-                      </CommandItem>
+                      >{t("clear")}</CommandItem>
                       <Separator
                         orientation="vertical"
                         className="flex min-h-6 h-full"
@@ -350,9 +348,7 @@ export const MultiSelect = React.forwardRef<
                   <CommandItem
                     onSelect={() => setIsPopoverOpen(false)}
                     className="flex-1 justify-center cursor-pointer max-w-full"
-                  >
-                    Close
-                  </CommandItem>
+                  >{t("close")}</CommandItem>
                 </div>
               </CommandGroup>
             </CommandList>

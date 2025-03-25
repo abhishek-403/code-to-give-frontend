@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Availabitity } from "@/lib/constants/server-constants";
+import useLanguage from "@/lib/hooks/useLang";
 import { generateVolunteerCertificate } from "@/utils/certificateGenerator";
 import { formatDateFromDate } from "@/utils/formattedDate";
 import { useNavigate } from "react-router-dom";
@@ -59,6 +60,8 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
     });
   };
 
+  const { t } = useLanguage()
+  
   return (
     <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
       <CardHeader>
@@ -69,9 +72,7 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
                 {event.name}
               </CardTitle>
               {event.feedbackSubmitted && (
-                <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">
-                  Feedback Done
-                </Badge>
+                <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">{t("feedback_done")}</Badge>
               )}
             </div>
 
@@ -111,26 +112,21 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
             <span
               className="text-gray-700 dark:text-gray-300"
               aria-hidden="true"
-            >
-              📅{" "}
+            >{t("_")}{" "}
             </span>
             <span className="text-gray-800 dark:text-gray-200">
-              {formatDateFromDate(event.startDate)} to{" "}
+              {formatDateFromDate(event.startDate)}{t("to")}{" "}
               {formatDateFromDate(event.endDate)}
             </span>
           </p>
           <div className="flex  space-x-4 w-auto">
-            <Button onClick={handleDownloadCertificate} className="w-full">
-              Download Certificate
-            </Button>
+            <Button onClick={handleDownloadCertificate} className="w-full">{t("download_certificate")}</Button>
             {!event.feedbackSubmitted && (
               <Button
                 onClick={handleProvideFeedback}
                 variant="secondary"
                 className="w-full"
-              >
-                Provide Feedback
-              </Button>
+              >{t("provide_feedback")}</Button>
             )}
           </div>
         </div>

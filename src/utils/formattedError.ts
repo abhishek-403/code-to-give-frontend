@@ -1,5 +1,5 @@
-
 // export const formatFirebaseError = (error: unknown) => {
+
 //   if (typeof error === "string") {
 //     const errorMessages: { [key: string]: string } = {
 //       "auth/invalid-email": "Invalid email format",

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router";
 import { ArrowLeft } from "lucide-react";
+import useLanguage from "@/lib/hooks/useLang";
 
 interface ParticipantRegistrationFormData {
   name: string;
@@ -35,24 +36,21 @@ const ParticipantRegistrationForm: React.FC = () => {
     console.log("Participant Registration Data:", data);
     alert(`Thank you for registering for the event: ${data.event}!`);
   };
+  const { t } = useLanguage()
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
         <Link to="/" className="text-primary-600">
           <Button variant="outline" className="mb-4">
-            <ArrowLeft size={16} />
-            Back to Home
-          </Button>
+            <ArrowLeft size={16} />{t("back_to_home")}</Button>
         </Link>
 
-        <h1 className="text-3xl font-bold mb-4">Participant Registration</h1>
-        <p className="text-gray-600">
-          Fill out the form below to register as a participant for this event.
-          Required fields are marked with an asterisk (*).
-        </p>
+        <h1 className="text-3xl font-bold mb-4">{t("participant_registration")}</h1>
+        <p className="text-gray-600">{t(
+          "fill_out_the_form_below_to_register_as_a_participant_for_this_event_required_fields_are_marked_with_an_asterisk_"
+        )}</p>
       </div>
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6"
@@ -61,13 +59,12 @@ const ParticipantRegistrationForm: React.FC = () => {
       >
         {/* Personal Information Section */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">Personal Information</legend>
+          <legend className="text-xl font-semibold px-2">{t("personal_information")}</legend>
 
           {/* Full Name */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="name" className="text-sm font-medium">
-                Full Name <span className="text-red-500">*</span>
+              <Label htmlFor="name" className="text-sm font-medium">{t("full_name")}<span className="text-red-500">{t("_")}</span>
               </Label>
               {errors.name && (
                 <p className="text-sm text-red-500" id="name-error" aria-live="assertive">
@@ -95,8 +92,7 @@ const ParticipantRegistrationForm: React.FC = () => {
           {/* Email */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email <span className="text-red-500">*</span>
+              <Label htmlFor="email" className="text-sm font-medium">{t("email")}<span className="text-red-500">{t("_")}</span>
               </Label>
               {errors.email && (
                 <p className="text-sm text-red-500" id="email-error" aria-live="assertive">
@@ -130,8 +126,7 @@ const ParticipantRegistrationForm: React.FC = () => {
           {/* Phone */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="phone" className="text-sm font-medium">
-                Phone Number <span className="text-red-500">*</span>
+              <Label htmlFor="phone" className="text-sm font-medium">{t("phone_number")}<span className="text-red-500">{t("_")}</span>
               </Label>
               {errors.phone && (
                 <p className="text-sm text-red-500" id="phone-error" aria-live="assertive">
@@ -165,13 +160,12 @@ const ParticipantRegistrationForm: React.FC = () => {
 
         {/* Event Information Section */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">Event Information</legend>
+          <legend className="text-xl font-semibold px-2">{t("event_information")}</legend>
 
           {/* Event Name */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="event" className="text-sm font-medium">
-                Event Name <span className="text-red-500">*</span>
+              <Label htmlFor="event" className="text-sm font-medium">{t("event_name")}<span className="text-red-500">{t("_")}</span>
               </Label>
               {errors.event && (
                 <p className="text-sm text-red-500" id="event-error" aria-live="assertive">
@@ -199,13 +193,11 @@ const ParticipantRegistrationForm: React.FC = () => {
 
         {/* Additional Information Section */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">Additional Information</legend>
+          <legend className="text-xl font-semibold px-2">{t("additional_information")}</legend>
 
           {/* Message */}
           <div className="space-y-2">
-            <Label htmlFor="message" className="text-sm font-medium">
-              Additional Comments
-            </Label>
+            <Label htmlFor="message" className="text-sm font-medium">{t("additional_comments")}</Label>
             <Controller
               name="message"
               control={control}
@@ -231,8 +223,7 @@ const ParticipantRegistrationForm: React.FC = () => {
             {isSubmitting ? "Submitting..." : "Register Now"}
           </Button>
           <p className="text-xs text-gray-500">
-            <span className="text-red-500">*</span> indicates required fields
-          </p>
+            <span className="text-red-500">{t("_")}</span>{t("indicates_required_fields")}</p>
         </div>
       </form>
     </div>

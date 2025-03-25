@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { EventStatus, TaskStatus } from "@/lib/constants/server-constants";
 import { auth } from "@/lib/firebaseConfig";
+import useLanguage from "@/lib/hooks/useLang";
 import {
   useUpdateVolunteerEventTasksStatus,
   useVolunteerEventTasks,
@@ -81,8 +82,10 @@ const VolunteerEventPage: React.FC = () => {
   useEffect(() => {
     setTasks(tsk);
   }, [tsk]);
+  const { t } = useLanguage()
+
   if (!tasks) {
-    <div>No tasks</div>;
+    <div>{t("no_tasks")}</div>;
     return;
   }
   // Calculate progress
@@ -138,8 +141,7 @@ const VolunteerEventPage: React.FC = () => {
   if (isLoading || isPending)
     return (
       <div className="w-full mt-24 flex items-center justify-center ">
-        <Loader />;
-      </div>
+        <Loader />{t("_")}</div>
     );
 
   return (
@@ -147,58 +149,48 @@ const VolunteerEventPage: React.FC = () => {
       <Link to="/" className="flex items-center space-x-2 mb-4">
         <Button variant="outline">
           <ArrowLeft className="h-4 w-4" />
-          <span>Back to Events</span>
+          <span>{t("back_to_events")}</span>
         </Button>
       </Link>
       <h1 className="text-2xl font-bold mb-4">{event.name}</h1>
       <p className="text-gray-700 mb-4">{event.description}</p>
-
       {/* Progress Section */}
       <Card className="mb-4">
         <CardHeader>
-          <CardTitle>Task Progress</CardTitle>
+          <CardTitle>{t("task_progress")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-4">
             <Progress value={progress} className="flex-grow" />
             <span className="text-sm text-gray-600">
-              {completedTasks} / {totalTasks} Tasks
-            </span>
+              {completedTasks}{t("_")}{totalTasks}{t("tasks")}</span>
           </div>
         </CardContent>
       </Card>
-
       {/* Task Filters */}
       <div className="flex space-x-2 mb-4">
         <Badge
           variant={taskFilter === "all" ? "default" : "outline"}
           onClick={() => setTaskFilter("all")}
           className="cursor-pointer"
-        >
-          All Tasks
-        </Badge>
+        >{t("all_tasks")}</Badge>
         <Badge
           variant={taskFilter === TaskStatus.COMPLETED ? "default" : "outline"}
           onClick={() => setTaskFilter(TaskStatus.COMPLETED)}
           className="cursor-pointer"
         >
-          <CheckCircle2 className="h-4 w-4 mr-1" />
-          Completed
-        </Badge>
+          <CheckCircle2 className="h-4 w-4 mr-1" />{t("completed")}</Badge>
         <Badge
           variant={taskFilter === TaskStatus.ASSIGNED ? "default" : "outline"}
           onClick={() => setTaskFilter(TaskStatus.ASSIGNED)}
           className="cursor-pointer"
         >
-          <Clock className="h-4 w-4 mr-1" />
-          Pending
-        </Badge>
+          <Clock className="h-4 w-4 mr-1" />{t("pending")}</Badge>
       </div>
-
       {/* Tasks List */}
       <div className="space-y-3">
         {tasks.length === 0 ? (
-          <p className="text-gray-500 text-center">No tasks found.</p>
+          <p className="text-gray-500 text-center">{t("no_tasks_found_")}</p>
         ) : (
           tasks.map((task) => (
             <Card
@@ -247,14 +239,11 @@ const VolunteerEventPage: React.FC = () => {
                         })
                       }
                     >
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Toggle Status
-                    </Button>
+                      <RefreshCw className="h-4 w-4 mr-2" />{t("toggle_status")}</Button>
                   </div>
                 </div>
                 {task.startDate && (
-                  <p className="text-xs text-gray-500 mt-2">
-                    Due: {task.startDate.toLocaleDateString()}
+                  <p className="text-xs text-gray-500 mt-2">{t("due_")}{task.startDate.toLocaleDateString()}
                   </p>
                 )}
               </CardContent>

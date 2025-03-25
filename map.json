@@ -1,0 +1,1467 @@
+{
+  "loading_": {
+    "en": "Loading...",
+    "hi": "लोड हो रहा है...",
+    "kn": "ಲೋಡ್ ಆಗುತ್ತಿದೆ..."
+  },
+  "error_": {
+    "en": "Error:",
+    "hi": "त्रुटि:",
+    "kn": "ದೋಷ:"
+  },
+  "login": {
+    "en": "Login",
+    "hi": "लॉग इन",
+    "kn": "ಲಾಗಿನ್"
+  },
+  "email": {
+    "en": "Email",
+    "hi": "ईमेल",
+    "kn": "ಇಮೇಲ್"
+  },
+  "password": {
+    "en": "Password",
+    "hi": "पासवर्ड",
+    "kn": "ಪಾಸ್ವರ್ಡ್"
+  },
+  "login_with_google": {
+    "en": "Login with Google",
+    "hi": "Google से लॉग इन करें",
+    "kn": "Google ನೊಂದಿಗೆ ಲಾಗಿನ್ ಆಗಿ"
+  },
+  "don_t_have_an_account_": {
+    "en": "Don't have an account?",
+    "hi": "खाता नहीं है?",
+    "kn": "ಖಾತೆ ಇಲ್ಲವೇ?"
+  },
+  "sign_up": {
+    "en": "Sign up",
+    "hi": "साइन अप",
+    "kn": "ಸೈನ್ ಅಪ್"
+  },
+  "return_to_home": {
+    "en": "Return to Home",
+    "hi": "होम पर वापस जाएं",
+    "kn": "ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ"
+  },
+  "back_to_dashboard": {
+    "en": "Back to Dashboard",
+    "hi": "डैशबोर्ड पर वापस जाएं",
+    "kn": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ"
+  },
+  "create_event": {
+    "en": "Create Event",
+    "hi": "इवेंट बनाएं",
+    "kn": "ಈವೆಂಟ್ ರಚಿಸಿ"
+  },
+  "event_details": {
+    "en": "Event Details",
+    "hi": "इवेंट विवरण",
+    "kn": "ಈವೆಂಟ್ ವಿವರಗಳು"
+  },
+  "basic_information_about_your_event": {
+    "en": "Basic information about your event",
+    "hi": "आपके इवेंट की बेसिक जानकारी",
+    "kn": "ನಿಮ್ಮ ಈವೆಂಟ್ ಬಗ್ಗೆ ಮೂಲಭೂತ ಮಾಹಿತಿ"
+  },
+  "event_name": {
+    "en": "Event Name",
+    "hi": "इवेंट का नाम",
+    "kn": "ಈವೆಂಟ್ ಹೆಸರು"
+  },
+  "description": {
+    "en": "Description",
+    "hi": "विवरण",
+    "kn": "ವಿವರಣೆ"
+  },
+  "provide_details_about_your_event_to_attract_volunteers_": {
+    "en": "Provide details about your event to attract volunteers.",
+    "hi": "स्वयंसेवकों को आकर्षित करने के लिए अपने इवेंट के बारे में विवरण दें।",
+    "kn": "ಸ್ವಯಂಸೇವಕರನ್ನು ಆಕರ್ಷಿಸಲು ನಿಮ್ಮ ಈವೆಂಟ್ ಬಗ್ಗೆ ವಿವರಗಳನ್ನು ನೀಡಿ."
+  },
+  "location": {
+    "en": "Location",
+    "hi": "स्थान",
+    "kn": "ಸ್ಥಳ"
+  },
+  "start_date": {
+    "en": "Start Date",
+    "hi": "प्रारंभ तिथि",
+    "kn": "ಪ್ರಾರಂಭ ದಿನಾಂಕ"
+  },
+  "pick_a_date": {
+    "en": "Pick a date",
+    "hi": "एक तिथि चुनें",
+    "kn": "ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+  },
+  "end_date": {
+    "en": "End Date",
+    "hi": "समाप्ति तिथि",
+    "kn": "ಅಂತಿಮ ದಿನಾಂಕ"
+  },
+  "volunteering_domains": {
+    "en": "Volunteering Domains",
+    "hi": "स्वयंसेवा डोमेन",
+    "kn": "ಸ್ವಯಂಸೇವಾ ಡೊಮೇನ್‌ಗಳು"
+  },
+  "add_new_domain": {
+    "en": "Add new domain",
+    "hi": "नया डोमेन जोड़ें",
+    "kn": "ಹೊಸ ಡೊಮೇನ್ ಸೇರಿಸಿ"
+  },
+  "volunteering_domain": {
+    "en": "Volunteering domain",
+    "hi": "स्वयंसेवा डोमेन",
+    "kn": "ಸ್ವಯಂಸೇವಾ ಡೊಮೇನ್"
+  },
+  "add_a_new_volunteering_domain_": {
+    "en": "Add a new volunteering domain.",
+    "hi": "एक नया स्वयंसेवा डोमेन जोड़ें।",
+    "kn": "ಹೊಸ ಸ್ವಯಂಸೇವಾ ಡೊಮೇನ್ ಸೇರಿಸಿ."
+  },
+  "volunteering_domain_name_": {
+    "en": "Volunteering Domain Name :",
+    "hi": "स्वयंसेवा डोमेन नाम :",
+    "kn": "ಸ್ವಯಂಸೇವಾ ಡೊಮೇನ್ ಹೆಸರು :"
+  },
+  "cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "kn": "ರದ್ದುಮಾಡಿ"
+  },
+  "save": {
+    "en": "Save",
+    "hi": "सहेजें",
+    "kn": "ಉಳಿಸಿ"
+  },
+  "availability": {
+    "en": "Availability",
+    "hi": "उपलब्धता",
+    "kn": "ಲಭ್ಯತೆ"
+  },
+  "volunteer_capacity": {
+    "en": "Volunteer Capacity",
+    "hi": "स्वयंसेवक क्षमता",
+    "kn": "ಸ್ವಯಂಸೇವಕ ಸಾಮರ್ಥ್ಯ"
+  },
+  "note_capacity_will_be_stored_separately_as_it_s_not_part_of_the_main_event_schema_": {
+    "en": "Note: Capacity will be stored separately as it's not part of the main event schema.",
+    "hi": "नोट: क्षमता को अलग से संग्रहीत किया जाएगा क्योंकि यह मुख्य इवेंट स्कीमा का हिस्सा नहीं है।",
+    "kn": "ಗಮನಿಸಿ: ಸಾಮರ್ಥ್ಯವನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ ಏಕೆಂದರೆ ಇದು ಮುಖ್ಯ ಈವೆಂಟ್ ಸ್ಕೀಮಾದ ಭಾಗವಲ್ಲ."
+  },
+  "volunteer_registration_form_fields": {
+    "en": "Volunteer Registration Form Fields",
+    "hi": "स्वयंसेवक पंजीकरण फॉर्म फील्ड्स",
+    "kn": "ಸ್ವಯಂಸೇವಕ ನೋಂದಣಿ ಫಾರ್ಮ್ ಫೀಲ್ಡ್‌ಗಳು"
+  },
+  "define_the_fields_volunteers_must_fill_out_to_register_for_this_event_": {
+    "en": "Define the fields volunteers must fill out to register for this event.",
+    "hi": "उन फील्ड्स को परिभाषित करें जिन्हें स्वयंसेवकों को इस इवेंट के लिए पंजीकरण करने के लिए भरना होगा।",
+    "kn": "ಈ ಈವೆಂಟ್‌ಗೆ ನೋಂದಾಯಿಸಲು ಸ್ವಯಂಸೇವಕರು ಭರ್ತಿ ಮಾಡಬೇಕಾದ ಫೀಲ್ಡ್‌ಗಳನ್ನು ವ್ಯಾಖ್ಯಾನಿಸಿ."
+  },
+  "load_template": {
+    "en": "Load Template",
+    "hi": "टेम्पलेट लोड करें",
+    "kn": "ಟೆಂಪ್ಲೇಟ್ ಲೋಡ್ ಮಾಡಿ"
+  },
+  "load_form_template": {
+    "en": "Load Form Template",
+    "hi": "फॉर्म टेम्पलेट लोड करें",
+    "kn": "ಫಾರ್ಮ್ ಟೆಂಪ್ಲೇಟ್ ಲೋಡ್ ಮಾಡಿ"
+  },
+  "select_a_template_to_load_predefined_form_fields_": {
+    "en": "Select a template to load predefined form fields.",
+    "hi": "पूर्वनिर्धारित फॉर्म फील्ड्स लोड करने के लिए एक टेम्पलेट चुनें।",
+    "kn": "ಪೂರ್ವನಿರ್ಧಾರಿತ ಫಾರ್ಮ್ ಫೀಲ್ಡ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಟೆಂಪ್ಲೇಟ್ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  "loading": {
+    "en": "Loading",
+    "hi": "लोड हो रहा है",
+    "kn": "ಲೋಡ್ ಆಗುತ್ತಿದೆ"
+  },
+  "no_templates_found_": {
+    "en": "No templates found.",
+    "hi": "कोई टेम्पलेट नहीं मिला।",
+    "kn": "ಯಾವುದೇ ಟೆಂಪ್ಲೇಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ."
+  },
+  "field_s_": {
+    "en": "field(s)",
+    "hi": "फील्ड(स)",
+    "kn": "ಫೀಲ್ಡ್(ಗಳು)"
+  },
+  "no_form_fields_added_yet_click_add_field_to_create_your_first_form_field_or_load_a_template_": {
+    "en": "No form fields added yet. Click \"Add Field\" to create your first form field, or load a template.",
+    "hi": "अभी तक कोई फॉर्म फील्ड्स नहीं जोड़े गए हैं। अपना पहला फॉर्म फील्ड बनाने के लिए \"फील्ड जोड़ें\" पर क्लिक करें, या एक टेम्पलेट लोड करें।",
+    "kn": "ಇನ್ನೂ ಯಾವುದೇ ಫಾರ್ಮ್ ಫೀಲ್ಡ್‌ಗಳನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ. ನಿಮ್ಮ ಮೊದಲ ಫಾರ್ಮ್ ಫೀಲ್ಡ್ ರಚಿಸಲು \"ಫೀಲ್ಡ್ ಸೇರಿಸಿ\" ಕ್ಲಿಕ್ ಮಾಡಿ, ಅಥವಾ ಟೆಂಪ್ಲೇಟ್ ಲೋಡ್ ಮಾಡಿ."
+  },
+  "field_": {
+    "en": "Field #",
+    "hi": "फील्ड #",
+    "kn": "ಫೀಲ್ಡ್ #"
+  },
+  "remove": {
+    "en": "Remove",
+    "hi": "हटाएं",
+    "kn": "ತೆಗೆದುಹಾಕಿ"
+  },
+  "field_label": {
+    "en": "Field Label",
+    "hi": "फील्ड लेबल",
+    "kn": "ಫೀಲ್ಡ್ ಲೇಬಲ್"
+  },
+  "field_type": {
+    "en": "Field Type",
+    "hi": "फील्ड प्रकार",
+    "kn": "ಫೀಲ್ಡ್ ಪ್ರಕಾರ"
+  },
+  "placeholder_text": {
+    "en": "Placeholder Text",
+    "hi": "प्लेसहोल्डर टेक्स्ट",
+    "kn": "ಪ್ಲೇಸ್‌ಹೋಲ್ಡರ್ ಟೆಕ್ಸ್ಟ್"
+  },
+  "required_field": {
+    "en": "Required Field",
+    "hi": "आवश्यक फील्ड",
+    "kn": "ಅಗತ್ಯವಿರುವ ಫೀಲ್ಡ್"
+  },
+  "save_as_template": {
+    "en": "Save as template",
+    "hi": "टेम्पलेट के रूप में सहेजें",
+    "kn": "ಟೆಂಪ್ಲೇಟ್ ಆಗಿ ಉಳಿಸಿ"
+  },
+  "add_field": {
+    "en": "Add Field",
+    "hi": "फील्ड जोड़ें",
+    "kn": "ಫೀಲ್ಡ್ ಸೇರಿಸಿ"
+  },
+  "manage_user_roles": {
+    "en": "Manage User Roles",
+    "hi": "उपयोगकर्ता भूमिकाएं प्रबंधित करें",
+    "kn": "ಬಳಕೆದಾರರ ಪಾತ್ರಗಳನ್ನು ನಿರ್ವಹಿಸಿ"
+  },
+  "registered_volunteers_": {
+    "en": "Registered Volunteers:",
+    "hi": "पंजीकृत स्वयंसेवक:",
+    "kn": "ನೋಂದಾಯಿತ ಸ್ವಯಂಸೇವಕರು:"
+  },
+  "registered_webmasters_": {
+    "en": "Registered Webmasters:",
+    "hi": "पंजीकृत वेबमास्टर्स:",
+    "kn": "ನೋಂದಾಯಿತ ವೆಬ್‌ಮಾಸ್ಟರ್‌ಗಳು:"
+  },
+  "find": {
+    "en": "Find",
+    "hi": "खोजें",
+    "kn": "ಹುಡುಕಿ"
+  },
+  "name": {
+    "en": "Name",
+    "hi": "नाम",
+    "kn": "ಹೆಸರು"
+  },
+  "current_role": {
+    "en": "Current Role",
+    "hi": "वर्तमान भूमिका",
+    "kn": "ಪ್ರಸ್ತುತ ಪಾತ್ರ"
+  },
+  "change_role": {
+    "en": "Change Role",
+    "hi": "भूमिका बदलें",
+    "kn": "ಪಾತ್ರ ಬದಲಾಯಿಸಿ"
+  },
+  "action": {
+    "en": "Action",
+    "hi": "कार्रवाई",
+    "kn": "ಕ್ರಿಯೆ"
+  },
+  "user": {
+    "en": "User",
+    "hi": "उपयोगकर्ता",
+    "kn": "ಬಳಕೆದಾರ"
+  },
+  "admin": {
+    "en": "Admin",
+    "hi": "एडमिन",
+    "kn": "ನಿರ್ವಾಹಕ"
+  },
+  "volunteer": {
+    "en": "Volunteer",
+    "hi": "स्वयंसेवक",
+    "kn": "ಸ್ವಯಂಸೇವಕ"
+  },
+  "webmaster": {
+    "en": "Webmaster",
+    "hi": "वेबमास्टर",
+    "kn": "ವೆಬ್‌ಮಾಸ್ಟರ್"
+  },
+  "update": {
+    "en": "Update",
+    "hi": "अपडेट",
+    "kn": "ನವೀಕರಿಸಿ"
+  },
+  "no_users_found_": {
+    "en": "No users found.",
+    "hi": "कोई उपयोगकर्ता नहीं मिला।",
+    "kn": "ಯಾವುದೇ ಬಳಕೆದಾರರನ್ನು ಕಂಡುಹಿಡಿಯಲಾಗಿಲ್ಲ."
+  },
+  "edit_event_details": {
+    "en": "Edit Event Details",
+    "hi": "इवेंट विवरण संपादित करें",
+    "kn": "ಈವೆಂಟ್ ವಿವರಗಳನ್ನು ಸಂಪಾದಿಸಿ"
+  },
+  "event_title": {
+    "en": "Event Title",
+    "hi": "इवेंट शीर्षक",
+    "kn": "ಈವೆಂಟ್ ಶೀರ್ಷಿಕೆ"
+  },
+  "save_changes": {
+    "en": "Save Changes",
+    "hi": "परिवर्तनों को सुरक्षित करें",
+    "kn": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ"
+  },
+  "_": {
+    "en": " ",
+    "hi": " ",
+    "kn": " "
+  },
+  "task_completion": {
+    "en": "Task Completion",
+    "hi": "कार्य पूर्णता",
+    "kn": "ಕಾರ್ಯ ಪೂರ್ಣಗೊಳಿಸುವಿಕೆ"
+  },
+  "details": {
+    "en": "Details",
+    "hi": "विवरण",
+    "kn": "ವಿವರಗಳು"
+  },
+  "delete": {
+    "en": "Delete",
+    "hi": "हटाएं",
+    "kn": "ಅಳಿಸಿ"
+  },
+  "event_management": {
+    "en": "Event Management",
+    "hi": "इवेंट प्रबंधन",
+    "kn": "ಈವೆಂಟ್ ನಿರ್ವಹಣೆ"
+  },
+  "add_event": {
+    "en": "Add Event",
+    "hi": "इवेंट जोड़ें",
+    "kn": "ಈವೆಂಟ್ ಸೇರಿಸಿ"
+  },
+  "back_to_events": {
+    "en": "Back to Events",
+    "hi": "इवेंट्स पर वापस जाएं",
+    "kn": "ಈವೆಂಟ್‌ಗಳಿಗೆ ಹಿಂತಿರುಗಿ"
+  },
+  "_complete": {
+    "en": "% Complete",
+    "hi": "% पूर्ण",
+    "kn": "% ಪೂರ್ಣಗೊಂಡಿದೆ"
+  },
+  "send_update": {
+    "en": "Send Update",
+    "hi": "अपडेट भेजें",
+    "kn": "ನವೀಕರಣ ಕಳುಹಿಸಿ"
+  },
+  "send_update_to_volunteers": {
+    "en": "Send Update to Volunteers",
+    "hi": "स्वयंसेवकों को अपडेट भेजें",
+    "kn": "ಸ್ವಯಂಸೇವಕರಿಗೆ ನವೀಕರಣ ಕಳುಹಿಸಿ"
+  },
+  "subject": {
+    "en": "Subject",
+    "hi": "विषय",
+    "kn": "ವಿಷಯ"
+  },
+  "message": {
+    "en": "Message",
+    "hi": "संदेश",
+    "kn": "ಸಂದೇಶ"
+  },
+  "send_to_all_volunteers": {
+    "en": "Send to All Volunteers",
+    "hi": "सभी स्वयंसेवकों को भेजें",
+    "kn": "ಎಲ್ಲಾ ಸ್ವಯಂಸೇವಕರಿಗೆ ಕಳುಹಿಸಿ"
+  },
+  "description_": {
+    "en": "Description:",
+    "hi": "विवरण:",
+    "kn": "ವಿವರಣೆ:"
+  },
+  "status_": {
+    "en": "Status:",
+    "hi": "स्थिति:",
+    "kn": "ಸ್ಥಿತಿ:"
+  },
+  "dates_": {
+    "en": "Dates:",
+    "hi": "तिथियाँ:",
+    "kn": "ದಿನಾಂಕಗಳು:"
+  },
+  "location_": {
+    "en": "Location:",
+    "hi": "स्थान:",
+    "kn": "ಸ್ಥಳ:"
+  },
+  "applications": {
+    "en": "Applications",
+    "hi": "आवेदन",
+    "kn": "ಅರ್ಜಿಗಳು"
+  },
+  "volunteers": {
+    "en": "Volunteers",
+    "hi": "स्वयंसेवक",
+    "kn": "ಸ್ವಯಂಸೇವಕರು"
+  },
+  "_active_": {
+    "en": "\"Active\"",
+    "hi": "\"सक्रिय\"",
+    "kn": "\"ಸಕ್ರಿಯ\""
+  },
+  "has_assigned_tasks": {
+    "en": "Has assigned tasks",
+    "hi": "कार्य सौंपे गए हैं",
+    "kn": "ನಿಯೋಜಿತ ಕಾರ್ಯಗಳನ್ನು ಹೊಂದಿದೆ"
+  },
+  "tasks": {
+    "en": "Tasks",
+    "hi": "कार्य",
+    "kn": "ಕಾರ್ಯಗಳು"
+  },
+  "add_task": {
+    "en": "Add Task",
+    "hi": "कार्य जोड़ें",
+    "kn": "ಕಾರ್ಯ ಸೇರಿಸಿ"
+  },
+  "add_new_task": {
+    "en": "Add New Task",
+    "hi": "नया कार्य जोड़ें",
+    "kn": "ಹೊಸ ಕಾರ್ಯ ಸೇರಿಸಿ"
+  },
+  "task": {
+    "en": "Task",
+    "hi": "कार्य",
+    "kn": "ಕಾರ್ಯ"
+  },
+  "assign_to": {
+    "en": "Assign To",
+    "hi": "सौंपें",
+    "kn": "ನಿಯೋಜಿಸಿ"
+  },
+  "status": {
+    "en": "Status",
+    "hi": "स्थिति",
+    "kn": "ಸ್ಥಿತಿ"
+  },
+  "mark_as_completed": {
+    "en": "Mark as completed",
+    "hi": "पूर्ण के रूप में चिह्नित करें",
+    "kn": "ಪೂರ್ಣಗೊಂಡದ್ದು ಎಂದು ಗುರುತಿಸಿ"
+  },
+  "save_task": {
+    "en": "Save Task",
+    "hi": "कार्य सहेजें",
+    "kn": "ಕಾರ್ಯ ಉಳಿಸಿ"
+  },
+  "all_": {
+    "en": "All (",
+    "hi": "सभी (",
+    "kn": "ಎಲ್ಲಾ ("
+  },
+  "completed_": {
+    "en": "Completed (",
+    "hi": "पूर्ण (",
+    "kn": "ಪೂರ್ಣಗೊಂಡಿದೆ ("
+  },
+  "pending_": {
+    "en": "Pending (",
+    "hi": "लंबित (",
+    "kn": "ಬಾಕಿ ("
+  },
+  "unassigned_": {
+    "en": "Unassigned (",
+    "hi": "अनियत (",
+    "kn": "ನಿಯೋಜಿಸಲಾಗಿಲ್ಲ ("
+  },
+  "reopen": {
+    "en": "Reopen",
+    "hi": "पुनः खोलें",
+    "kn": "ಮತ್ತೆ ತೆರೆಯಿರಿ"
+  },
+  "complete": {
+    "en": "Complete",
+    "hi": "पूर्ण",
+    "kn": "ಪೂರ್ಣಗೊಳಿಸಿ"
+  },
+  "assign": {
+    "en": "Assign",
+    "hi": "सौंपें",
+    "kn": "ನಿಯೋಜಿಸಿ"
+  },
+  "no_tasks_added_for_this_event_yet_": {
+    "en": "No tasks added for this event yet.",
+    "hi": "अभी तक इस इवेंट के लिए कोई कार्य नहीं जोड़ा गया है।",
+    "kn": "ಈ ಈವೆಂಟ್‌ಗೆ ಇನ್ನೂ ಯಾವುದೇ ಕಾರ್ಯಗಳನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ."
+  },
+  "current_status_": {
+    "en": "Current status:",
+    "hi": "वर्तमान स्थिति:",
+    "kn": "ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ:"
+  },
+  "currently_assigned_to_": {
+    "en": "Currently assigned to:",
+    "hi": "वर्तमान में सौंपा गया:",
+    "kn": "ಪ್ರಸ್ತುತ ನಿಯೋಜಿಸಲಾಗಿದೆ:"
+  },
+  "unassigned": {
+    "en": "Unassigned",
+    "hi": "अनियत",
+    "kn": "ನಿಯೋಜಿಸಲಾಗಿಲ್ಲ"
+  },
+  "are_you_sure_you_want_to": {
+    "en": "Are you sure you want to",
+    "hi": "क्या आप वाकई चाहते हैं",
+    "kn": "ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ"
+  },
+  "mark_complete": {
+    "en": "Mark Complete",
+    "hi": "पूर्ण चिह्नित करें",
+    "kn": "ಪೂರ್ಣಗೊಂಡದ್ದು ಎಂದು ಗುರುತಿಸಿ"
+  },
+  "reopen_task": {
+    "en": "Reopen Task",
+    "hi": "कार्य पुनः खोलें",
+    "kn": "ಕಾರ್ಯವನ್ನು ಮತ್ತೆ ತೆರೆಯಿರಿ"
+  },
+  "active": {
+    "en": "Active",
+    "hi": "सक्रिय",
+    "kn": "ಸಕ್ರಿಯ"
+  },
+  "under_review": {
+    "en": "Under Review",
+    "hi": "समीक्षाधीन",
+    "kn": "ಪರಿಶೀಲನೆಯಲ್ಲಿ"
+  },
+  "history": {
+    "en": "History",
+    "hi": "इतिहास",
+    "kn": "ಇತಿಹಾಸ"
+  },
+  "error_loading_programs_please_try_again_": {
+    "en": "Error loading programs. Please try again.",
+    "hi": "प्रोग्राम लोड करने में त्रुटि। कृपया पुनः प्रयास करें।",
+    "kn": "ಪ್ರೋಗ್ರಾಂಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+  },
+  "showing": {
+    "en": "Showing",
+    "hi": "दिखा रहा है",
+    "kn": "ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತಿದೆ"
+  },
+  "no_events_found_matching_your_criteria_": {
+    "en": "No events found matching your criteria.",
+    "hi": "आपकी कसौटी से मेल खाने वाला कोई इवेंट नहीं मिला।",
+    "kn": "ನಿಮ್ಮ ಮಾನದಂಡಗಳಿಗೆ ಹೊಂದಾಣಿಕೆಯಾಗುವ ಯಾವುದೇ ಈವೆಂಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ."
+  },
+  "no_events_under_review_": {
+    "en": "No events under review.",
+    "hi": "समीक्षाधीन कोई इवेंट नहीं।",
+    "kn": "ಪರಿಶೀಲನೆಯಲ್ಲಿ ಯಾವುದೇ ಈವೆಂಟ್‌ಗಳು ಇಲ್ಲ."
+  },
+  "no_past_events_": {
+    "en": "No past events.",
+    "hi": "कोई पिछला इवेंट नहीं।",
+    "kn": "ಯಾವುದೇ ಹಿಂದಿನ ಈವೆಂಟ್‌ಗಳು ಇಲ್ಲ."
+  },
+  "add_new_event": {
+    "en": "Add New Event",
+    "hi": "नया इवेंट जोड़ें",
+    "kn": "ಹೊಸ ಈವೆಂಟ್ ಸೇರಿಸಿ"
+  },
+  "title": {
+    "en": "Title",
+    "hi": "शीर्षक",
+    "kn": "ಶೀರ್ಷಿಕೆ"
+  },
+  "send_email_to": {
+    "en": "Send Email to",
+    "hi": "ईमेल भेजें",
+    "kn": "ಇಮೇಲ್ ಕಳುಹಿಸಿ"
+  },
+  "recipient_": {
+    "en": "Recipient:",
+    "hi": "प्राप्तकर्ता:",
+    "kn": "ಸ್ವೀಕರಿಸುವವರು:"
+  },
+  "email_": {
+    "en": "Email:",
+    "hi": "ईमेल:",
+    "kn": "ಇಮೇಲ್:"
+  },
+  "send_email": {
+    "en": "Send Email",
+    "hi": "ईमेल भेजें",
+    "kn": "ಇಮೇಲ್ ಕಳುಹಿಸಿ"
+  },
+  "to": {
+    "en": "to",
+    "hi": "को",
+    "kn": "ಗೆ"
+  },
+  "participant": {
+    "en": "Participant",
+    "hi": "प्रतिभागी",
+    "kn": "ಭಾಗವಹಿಸುವವರು"
+  },
+  "spectator": {
+    "en": "Spectator",
+    "hi": "दर्शक",
+    "kn": "ವೀಕ್ಷಕ"
+  },
+  "apply_now": {
+    "en": "Apply Now",
+    "hi": "अभी आवेदन करें",
+    "kn": "ಈಗ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ"
+  },
+  "approved": {
+    "en": "Approved",
+    "hi": "अनुमोदित",
+    "kn": "ಅನುಮೋದಿಸಲಾಗಿದೆ"
+  },
+  "view_tasks": {
+    "en": "View Tasks",
+    "hi": "कार्य देखें",
+    "kn": "ಕಾರ್ಯಗಳನ್ನು ವೀಕ್ಷಿಸಿ"
+  },
+  "approval_pending": {
+    "en": "Approval Pending",
+    "hi": "अनुमोदन लंबित",
+    "kn": "ಅನುಮೋದನೆ ಬಾಕಿಯಿದೆ"
+  },
+  "feedback_done": {
+    "en": "Feedback Done",
+    "hi": "प्रतिक्रिया पूर्ण",
+    "kn": "ಪ್ರತಿಕ್ರಿಯೆ ಪೂರ್ಣಗೊಂಡಿದೆ"
+  },
+  "download_certificate": {
+    "en": "Download Certificate",
+    "hi": "प्रमाणपत्र डाउनलोड करें",
+    "kn": "ಪ್ರಮಾಣಪತ್ರ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ"
+  },
+  "provide_feedback": {
+    "en": "Provide Feedback",
+    "hi": "प्रतिक्रिया दें",
+    "kn": "ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿ"
+  },
+  "skip_to_main_content": {
+    "en": "Skip to main content",
+    "hi": "मुख्य सामग्री पर जाएं",
+    "kn": "ಮುಖ್ಯ ವಿಷಯಕ್ಕೆ ಬದಲಾಯಿಸಿ"
+  },
+  "find_events": {
+    "en": "Find events",
+    "hi": "इवेंट खोजें",
+    "kn": "ಈವೆಂಟ್‌ಗಳನ್ನು ಹುಡುಕಿ"
+  },
+  "search_for_an_event": {
+    "en": "Search for an event",
+    "hi": "एक इवेंट खोजें",
+    "kn": "ಈವೆಂಟ್ ಅನ್ನು ಹುಡುಕಿ"
+  },
+  "city": {
+    "en": "City",
+    "hi": "शहर",
+    "kn": "ನಗರ"
+  },
+  "all_cities": {
+    "en": "All Cities",
+    "hi": "सभी शहर",
+    "kn": "ಎಲ್ಲಾ ನಗರಗಳು"
+  },
+  "delhi": {
+    "en": "Delhi",
+    "hi": "दिल्ली",
+    "kn": "ದೆಹಲಿ"
+  },
+  "mumbai": {
+    "en": "Mumbai",
+    "hi": "मुंबई",
+    "kn": "ಮುಂಬೈ"
+  },
+  "bangalore": {
+    "en": "Bangalore",
+    "hi": "बैंगलोर",
+    "kn": "ಬೆಂಗಳೂರು"
+  },
+  "all_domains": {
+    "en": "All Domains",
+    "hi": "सभी डोमेन",
+    "kn": "ಎಲ್ಲಾ ಡೊಮೇನ್‌ಗಳು"
+  },
+  "rehabilitation": {
+    "en": "Rehabilitation",
+    "hi": "पुनर्वास",
+    "kn": "ಪುನರ್ವಸತಿ"
+  },
+  "education": {
+    "en": "Education",
+    "hi": "शिक्षा",
+    "kn": "ಶಿಕ್ಷಣ"
+  },
+  "community_support": {
+    "en": "Community Support",
+    "hi": "सामुदायिक सहायता",
+    "kn": "ಸಮುದಾಯ ಬೆಂಬಲ"
+  },
+  "any_availability": {
+    "en": "Any Availability",
+    "hi": "कोई उपलब्धता",
+    "kn": "ಯಾವುದೇ ಲಭ್ಯತೆ"
+  },
+  "both_weekdays_weekends": {
+    "en": "Both Weekdays & Weekends",
+    "hi": "सप्ताह के दिन और सप्ताहांत दोनों",
+    "kn": "ವಾರದ ದಿನಗಳು ಮತ್ತು ವಾರಾಂತ್ಯಗಳು ಎರಡೂ"
+  },
+  "weekdays": {
+    "en": "Weekdays",
+    "hi": "सप्ताह के दिन",
+    "kn": "ವಾರದ ದಿನಗಳು"
+  },
+  "weekends": {
+    "en": "Weekends",
+    "hi": "सप्ताहांत",
+    "kn": "ವಾರಾಂತ್ಯಗಳು"
+  },
+  "apply_filters": {
+    "en": "Apply Filters",
+    "hi": "फिल्टर लागू करें",
+    "kn": "ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಅನ್ವಯಿಸಿ"
+  },
+  "clear_all": {
+    "en": "Clear All",
+    "hi": "सभी साफ करें",
+    "kn": "ಎಲ್ಲಾ ತೆರವುಗೊಳಿಸಿ"
+  },
+  "active_filters_": {
+    "en": "Active Filters:",
+    "hi": "सक्रिय फिल्टर:",
+    "kn": "ಸಕ್ರಿಯ ಫಿಲ್ಟರ್‌ಗಳು:"
+  },
+  "search_": {
+    "en": "Search:",
+    "hi": "खोज:",
+    "kn": "ಹುಡುಕಿ:"
+  },
+  "city_": {
+    "en": "City:",
+    "hi": "शहर:",
+    "kn": "ನಗರ:"
+  },
+  "domain_": {
+    "en": "Domain:",
+    "hi": "डोमेन:",
+    "kn": "ಡೊಮೇನ್:"
+  },
+  "availability_": {
+    "en": "Availability:",
+    "hi": "उपलब्धता:",
+    "kn": "ಲಭ್ಯತೆ:"
+  },
+  "date_range": {
+    "en": "Date Range",
+    "hi": "तिथि सीमा",
+    "kn": "ದಿನಾಂಕ ವ್ಯಾಪ್ತಿ"
+  },
+  "my_applications": {
+    "en": "My Applications",
+    "hi": "मेरे आवेदन",
+    "kn": "ನನ್ನ ಅರ್ಜಿಗಳು"
+  },
+  "clear_filters_and_try_again": {
+    "en": "Clear filters and try again",
+    "hi": "फिल्टर साफ करें और फिर से कोशिश करें",
+    "kn": "ಫಿಲ್ಟರ್‌ಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"
+  },
+  "no_applications_found_": {
+    "en": "No applications found.",
+    "hi": "कोई आवेदन नहीं मिला।",
+    "kn": "ಯಾವುದೇ ಅರ್ಜಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ."
+  },
+  "back_to_home": {
+    "en": "Back to Home",
+    "hi": "होम पर वापस जाएं",
+    "kn": "ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ"
+  },
+  "participant_registration": {
+    "en": "Participant Registration",
+    "hi": "प्रतिभागी पंजीकरण",
+    "kn": "ಭಾಗವಹಿಸುವವರ ನೋಂದಣಿ"
+  },
+  "fill_out_the_form_below_to_register_as_a_participant_for_this_event_required_fields_are_marked_with_an_asterisk_": {
+    "en": "Fill out the form below to register as a participant for this event. Required fields are marked with an asterisk (*).",
+    "hi": "इस इवेंट के लिए प्रतिभागी के रूप में पंजीकरण करने के लिए नीचे दिए गए फॉर्म को भरें। आवश्यक फील्ड्स को एक तारांकन (*) से चिह्नित किया गया है।",
+    "kn": "ಈ ಈವೆಂಟ್‌ಗೆ ಭಾಗವಹಿಸುವವರಾಗಿ ನೋಂದಾಯಿಸಲು ಕೆಳಗಿನ ಫಾರ್ಮ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ. ಅಗತ್ಯವಿರುವ ಫೀಲ್ಡ್‌ಗಳನ್ನು ನಕ್ಷತ್ರ ಚಿಹ್ನೆಯಿಂದ (*) ಗುರುತಿಸಲಾಗಿದೆ."
+  },
+  "personal_information": {
+    "en": "Personal Information",
+    "hi": "व्यक्तिगत जानकारी",
+    "kn": "ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ"
+  },
+  "full_name": {
+    "en": "Full Name",
+    "hi": "पूरा नाम",
+    "kn": "ಪೂರ್ಣ ಹೆಸರು"
+  },
+  "phone_number": {
+    "en": "Phone Number",
+    "hi": "फोन नंबर",
+    "kn": "ಫೋನ್ ಸಂಖ್ಯೆ"
+  },
+  "event_information": {
+    "en": "Event Information",
+    "hi": "इवेंट जानकारी",
+    "kn": "ಈವೆಂಟ್ ಮಾಹಿತಿ"
+  },
+  "additional_information": {
+    "en": "Additional Information",
+    "hi": "अतिरिक्त जानकारी",
+    "kn": "ಹೆಚ್ಚುವರಿ ಮಾಹಿತಿ"
+  },
+  "additional_comments": {
+    "en": "Additional Comments",
+    "hi": "अतिरिक्त टिप्पणियाँ",
+    "kn": "ಹೆಚ್ಚುವರಿ ಕಾಮೆಂಟ್‌ಗಳು"
+  },
+  "indicates_required_fields": {
+    "en": "indicates required fields",
+    "hi": "आवश्यक फील्ड्स को दर्शाता है",
+    "kn": "ಅಗತ್ಯವಿರುವ ಫೀಲ್ಡ್‌ಗಳನ್ನು ಸೂಚಿಸುತ್ತದೆ"
+  },
+  "spectator_registration": {
+    "en": "Spectator Registration",
+    "hi": "दर्शक पंजीकरण",
+    "kn": "ವೀಕ್ಷಕರ ನೋಂದಣಿ"
+  },
+  "fill_out_the_form_below_to_register_as_a_spectator_for_this_event_required_fields_are_marked_with_an_asterisk_": {
+    "en": "Fill out the form below to register as a spectator for this event. Required fields are marked with an asterisk (*).",
+    "hi": "इस इवेंट के लिए दर्शक के रूप में पंजीकरण करने के लिए नीचे दिए गए फॉर्म को भरें। आवश्यक फील्ड्स को एक तारांकन (*) से चिह्नित किया गया है।",
+    "kn": "ಈ ಈವೆಂಟ್‌ಗೆ ವೀಕ್ಷಕರಾಗಿ ನೋಂದಾಯಿಸಲು ಕೆಳಗಿನ ಫಾರ್ಮ್ ಅನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ. ಅಗತ್ಯವಿರುವ ಫೀಲ್ಡ್‌ಗಳನ್ನು ನಕ್ಷತ್ರ ಚಿಹ್ನೆಯಿಂದ (*) ಗುರುತಿಸಲಾಗಿದೆ."
+  },
+  "bengaluru": {
+    "en": "Bengaluru",
+    "hi": "बेंगलुरु",
+    "kn": "ಬೆಂಗಳೂರು"
+  },
+  "decrease_text_size": {
+    "en": "Decrease text size",
+    "hi": "टेक्स्ट आकार घटाएं",
+    "kn": "ಪಠ್ಯದ ಗಾತ್ರವನ್ನು ಕಡಿಮೆ ಮಾಡಿ"
+  },
+  "select_when_you_are_generally_available_to_volunteer": {
+    "en": "Select when you are generally available to volunteer",
+    "hi": "चुनें कि आप आम तौर पर स्वयंसेवा के लिए कब उपलब्ध हैं",
+    "kn": "ನೀವು ಸಾಮಾನ್ಯವಾಗಿ ಸ್ವಯಂಸೇವೆಗೆ ಲಭ್ಯವಿರುವಾಗ ಆಯ್ಕೆಮಾಡಿ"
+  },
+  "chennai": {
+    "en": "Chennai",
+    "hi": "चेन्नई",
+    "kn": "ಚೆನ್ನೈ"
+  },
+  "belagavi": {
+    "en": "Belagavi",
+    "hi": "बेलगावी",
+    "kn": "ಬೆಳಗಾವಿ"
+  },
+  "coimbatore": {
+    "en": "Coimbatore",
+    "hi": "कोयंबटूर",
+    "kn": "ಕೊಯಂಬತ್ತೂರು"
+  },
+  "select_start_date": {
+    "en": "Select start date",
+    "hi": "प्रारंभ तिथि चुनें",
+    "kn": "ಪ್ರಾರಂಭ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+  },
+  "already_have_an_account_": {
+    "en": "Already have an account?",
+    "hi": "क्या आपके पास पहले से एक खाता मौजूद है?",
+    "kn": "ಈಗಾಗಲೇ ಖಾತೆ ಹೊಂದಿದ್ದೀರಾ?"
+  },
+  "send_us_a_message": {
+    "en": "Send us a message",
+    "hi": "हमें एक संदेश भेजें",
+    "kn": "ನಮಗೆ ಸಂದೇಶ ಕಳುಹಿಸಿ"
+  },
+  "all_tasks": {
+    "en": "All tasks",
+    "hi": "सभी कार्य",
+    "kn": "ಎಲ್ಲಾ ಕಾರ್ಯಗಳು"
+  },
+  "message_optional_": {
+    "en": "Message (optional)",
+    "hi": "संदेश (वैकल्पिक)",
+    "kn": "ಸಂದೇಶ (ಐಚ್ಛಿಕ)"
+  },
+  "edit_profile": {
+    "en": "Edit profile",
+    "hi": "प्रोफ़ाइल संपादित करें",
+    "kn": "ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ"
+  },
+  "guntur": {
+    "en": "Guntur",
+    "hi": "गुंटूर",
+    "kn": "ಗುಂಟೂರು"
+  },
+  "reject": {
+    "en": "Reject",
+    "hi": "अस्वीकार करें",
+    "kn": "ತಿರಸ್ಕರಿಸಿ"
+  },
+  "kodikonda": {
+    "en": "Kodikonda",
+    "hi": "कोडीकोंडा",
+    "kn": "ಕೊಡಿಕೊಂಡ"
+  },
+  "have_questions_or_want_to_get_in_touch_we_d_love_to_hear_from_you_": {
+    "en": "Have questions or want to get in touch? We'd love to hear from you!",
+    "hi": "प्रश्न हैं या संपर्क करना चाहते हैं? हम आपसे सुनना पसंद करेंगे!",
+    "kn": "ಪ್ರಶ್ನೆಗಳಿವೆಯೇ ಅಥವಾ ಸಂಪರ್ಕಿಸಲು ಬಯಸುವಿರಾ? ನಿಮ್ಮಿಂದ ಕೇಳಲು ನಮಗೆ ಸಂತೋಷವಾಗುತ್ತದೆ!"
+  },
+  "usa": {
+    "en": "USA",
+    "hi": "यूएसए",
+    "kn": "ಯುಎಸ್ಎ"
+  },
+  "feedback": {
+    "en": "Feedback",
+    "hi": "प्रतिक्रिया",
+    "kn": "ಪ್ರತಿಕ್ರಿಯೆ"
+  },
+  "dharwad": {
+    "en": "Dharwad",
+    "hi": "धारवाड़",
+    "kn": "ಧಾರವಾಡ"
+  },
+  "please_enter_your_first_and_last_name": {
+    "en": "Please enter your first and last name",
+    "hi": "कृपया अपना पहला और अंतिम नाम दर्ज करें",
+    "kn": "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಮೊದಲ ಮತ್ತು ಕೊನೆಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ"
+  },
+  "approve": {
+    "en": "Approve",
+    "hi": "अनुमोदन करें",
+    "kn": "ಅನುಮೋದಿಸಿ"
+  },
+  "event_date_": {
+    "en": "Event date:",
+    "hi": "इवेंट की तिथि:",
+    "kn": "ಈವೆಂಟ್ ದಿನಾಂಕ:"
+  },
+  "select_your_volunteering_domain": {
+    "en": "Select your volunteering domain",
+    "hi": "अपना स्वयंसेवा डोमेन चुनें",
+    "kn": "ನಿಮ್ಮ ಸ್ವಯಂಸೇವಾ ಡೊಮೇನ್ ಆಯ್ಕೆಮಾಡಿ"
+  },
+  "no_results_found_": {
+    "en": "No results found",
+    "hi": "कोई परिणाम नहीं मिला",
+    "kn": "ಯಾವುದೇ ಫಲಿತಾಂಶಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+  },
+  "increase_text": {
+    "en": "Increase text",
+    "hi": "टेक्स्ट बढ़ाएं",
+    "kn": "ಪಠ್ಯವನ್ನು ಹೆಚ್ಚಿಸಿ"
+  },
+  "feedback_for": {
+    "en": "Feedback for",
+    "hi": "के लिए प्रतिक्रिया",
+    "kn": "ಗಾಗಿ ಪ್ರತಿಕ್ರಿಯೆ"
+  },
+  "no_user_data_available_": {
+    "en": "No user data available",
+    "hi": "कोई उपयोगकर्ता डेटा उपलब्ध नहीं है",
+    "kn": "ಯಾವುದೇ ಬಳಕೆದಾರರ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ"
+  },
+  "_volunteering_domain_": {
+    "en": "Volunteering domain:",
+    "hi": "स्वयंसेवा डोमेन:",
+    "kn": "ಸ್ವಯಂಸೇವಾ ಡೊಮೇನ್:"
+  },
+  "score": {
+    "en": "Score",
+    "hi": "स्कोर",
+    "kn": "ಸ್ಕೋರ್"
+  },
+  "export_all_data_as_csv": {
+    "en": "Export all data as CSV",
+    "hi": "सभी डेटा को CSV के रूप में निर्यात करें",
+    "kn": "ಎಲ್ಲಾ ಡೇಟಾವನ್ನು CSV ಆಗಿ ರಫ್ತು ಮಾಡಿ"
+  },
+  "data_visualization": {
+    "en": "Data visualization",
+    "hi": "डेटा विज़ुअलाइज़ेशन",
+    "kn": "ಡೇಟಾ ದೃಶ್ಯೀಕರಣ"
+  },
+  "no_tasks_found_": {
+    "en": "No tasks found",
+    "hi": "कोई कार्य नहीं मिला",
+    "kn": "ಯಾವುದೇ ಕಾರ್ಯಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+  },
+  "additional_suggestions": {
+    "en": "Additional suggestions",
+    "hi": "अतिरिक्त सुझाव",
+    "kn": "ಹೆಚ್ಚುವರಿ ಸಲಹೆಗಳು"
+  },
+  "we_will_use_this_to_contact_you_about_volunteer_opportunities": {
+    "en": "We will use this to contact you about volunteer opportunities",
+    "hi": "हम स्वयंसेवा के अवसरों के बारे में आपसे संपर्क करने के लिए इसका उपयोग करेंगे",
+    "kn": "ಸ್ವಯಂಸೇವಾ ಅವಕಾಶಗಳ ಬಗ್ಗೆ ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಲು ನಾವು ಇದನ್ನು ಬಳಸುತ್ತೇವೆ"
+  },
+  "due_": {
+    "en": "Due:",
+    "hi": "नियत:",
+    "kn": "ಬಾಕಿ:"
+  },
+  "willing_dates_": {
+    "en": "Willing dates:",
+    "hi": "इच्छुक तिथियाँ:",
+    "kn": "ಇಚ್ಛೆಯ ದಿನಾಂಕಗಳು:"
+  },
+  "category": {
+    "en": "Category",
+    "hi": "श्रेणी",
+    "kn": "ವರ್ಗ"
+  },
+  "engagement": {
+    "en": "Engagement",
+    "hi": "सगाई",
+    "kn": "ಒಳಗೊಳ್ಳುವಿಕೆ"
+  },
+  "email_address": {
+    "en": "Email address",
+    "hi": "ईमेल पता",
+    "kn": "ಇಮೇಲ್ ವಿಳಾಸ"
+  },
+  "pending": {
+    "en": "Pending",
+    "hi": "लंबित",
+    "kn": "ಬಾಕಿಯಿದೆ"
+  },
+  "when_can_you_start_volunteering_": {
+    "en": "When can you start volunteering?",
+    "hi": "आप कब स्वयंसेवा शुरू कर सकते हैं?",
+    "kn": "ನೀವು ಯಾವಾಗ ಸ್ವಯಂಸೇವೆ ಪ್ರಾರಂಭಿಸಬಹುದು?"
+  },
+  "logout": {
+    "en": "Logout",
+    "hi": "लॉग आउट",
+    "kn": "ಲಾಗ್ ಔಟ್"
+  },
+  "donation_information": {
+    "en": "Donation information",
+    "hi": "दान जानकारी",
+    "kn": "ದಾನ ಮಾಹಿತಿ"
+  },
+  "92_": {
+    "en": "92%",
+    "hi": "92%",
+    "kn": "92%"
+  },
+  "export_as_excel": {
+    "en": "Export as Excel",
+    "hi": "एक्सेल के रूप में निर्यात करें",
+    "kn": "ಎಕ್ಸೆಲ್ ಆಗಿ ರಫ್ತು ಮಾಡಿ"
+  },
+  "donation_amount_": {
+    "en": "Donation amount:",
+    "hi": "दान राशि:",
+    "kn": "ದಾನದ ಮೊತ್ತ:"
+  },
+  "centers_outside_india": {
+    "en": "Centers outside India",
+    "hi": "भारत के बाहर केंद्र",
+    "kn": "ಭಾರತದ ಹೊರಗಿನ ಕೇಂದ್ರಗಳು"
+  },
+  "share_any_skills_preferences_or_other_information_that_might_be_helpful": {
+    "en": "Share any skills, preferences or other information that might be helpful",
+    "hi": "कोई भी कौशल, वरीयताएं या अन्य जानकारी साझा करें जो सहायक हो सकती है",
+    "kn": "ಯಾವುದೇ ಕೌಶಲ್ಯಗಳು, ಆದ್ಯತೆಗಳು ಅಥವಾ ಸಹಾಯಕವಾಗಬಹುದಾದ ಇತರ ಮಾಹಿತಿಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ"
+  },
+  "bhubaneswar": {
+    "en": "Bhubaneswar",
+    "hi": "भुवनेश्वर",
+    "kn": "ಭುವನೇಶ್ವರ"
+  },
+  "event_not_found": {
+    "en": "Event not found",
+    "hi": "इवेंट नहीं मिला",
+    "kn": "ಈವೆಂಟ್ ಕಂಡುಬಂದಿಲ್ಲ"
+  },
+  "close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "kn": "ಮುಚ್ಚಿ"
+  },
+  "required_fields": {
+    "en": "Required fields",
+    "hi": "आवश्यक फील्ड्स",
+    "kn": "ಅಗತ್ಯವಿರುವ ಫೀಲ್ಡ್‌ಗಳು"
+  },
+  "_notes_": {
+    "en": "Notes:",
+    "hi": "नोट्स:",
+    "kn": "ಟಿಪ್ಪಣಿಗಳು:"
+  },
+  "overall_experience_rating": {
+    "en": "Overall experience rating",
+    "hi": "समग्र अनुभव रेटिंग",
+    "kn": "ಒಟ್ಟಾರೆ ಅನುಭವ ರೇಟಿಂಗ್"
+  },
+  "export_current_view_as_csv": {
+    "en": "Export current view as CSV",
+    "hi": "वर्तमान दृश्य को CSV के रूप में निर्यात करें",
+    "kn": "ಪ್ರಸ್ತುತ ನೋಟವನ್ನು CSV ಆಗಿ ರಫ್ತು ಮಾಡಿ"
+  },
+  "kolkata": {
+    "en": "Kolkata",
+    "hi": "कोलकाता",
+    "kn": "ಕೋಲ್ಕತ್ತಾ"
+  },
+  "bellari": {
+    "en": "Bellari",
+    "hi": "बेल्लारी",
+    "kn": "ಬಳ್ಳಾರಿ"
+  },
+  "donate_now": {
+    "en": "Donate now",
+    "hi": "अभी दान करें",
+    "kn": "ಈಗ ದಾನ ಮಾಡಿ"
+  },
+  "_availability_": {
+    "en": "Availability:",
+    "hi": "उपलब्धता:",
+    "kn": "ಲಭ್ಯತೆ:"
+  },
+  "admin_dashboard": {
+    "en": "Admin dashboard",
+    "hi": "एडमिन डैशबोर्ड",
+    "kn": "ನಿರ್ವಾಹಕ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
+  },
+  "responses": {
+    "en": "Responses",
+    "hi": "प्रतिक्रियाएं",
+    "kn": "ಪ್ರತಿಕ್ರಿಯೆಗಳು"
+  },
+  "would_you_recommend_this_event_": {
+    "en": "Would you recommend this event?",
+    "hi": "क्या आप इस इवेंट की सिफारिश करेंगे?",
+    "kn": "ನೀವು ಈ ಈವೆಂಟ್‌ಗೆ ಶಿಫಾರಸು ಮಾಡುತ್ತೀರಾ?"
+  },
+  "manage_roles": {
+    "en": "Manage roles",
+    "hi": "भूमिकाएं प्रबंधित करें",
+    "kn": "ಪಾತ್ರಗಳನ್ನು ನಿರ್ವಹಿಸಿ"
+  },
+  "describe_your_experience": {
+    "en": "Describe your experience",
+    "hi": "अपने अनुभव का वर्णन करें",
+    "kn": "ನಿಮ್ಮ ಅನುಭವವನ್ನು ವಿವರಿಸಿ"
+  },
+  "reduce_text": {
+    "en": "Reduce text",
+    "hi": "टेक्स्ट कम करें",
+    "kn": "ಪಠ್ಯವನ್ನು ಕಡಿಮೆ ಮಾಡಿ"
+  },
+  "user_profile": {
+    "en": "User profile",
+    "hi": "उपयोगकर्ता प्रोफ़ाइल",
+    "kn": "ಬಳಕೆದಾರರ ಪ್ರೊಫೈಲ್"
+  },
+  "hyderabad": {
+    "en": "Hyderabad",
+    "hi": "हैदराबाद",
+    "kn": "ಹೈದರಾಬಾದ್"
+  },
+  "no_tasks": {
+    "en": "No tasks",
+    "hi": "कोई कार्य नहीं",
+    "kn": "ಯಾವುದೇ ಕಾರ್ಯಗಳಿಲ್ಲ"
+  },
+  "increase_text_size": {
+    "en": "Increase text size",
+    "hi": "टेक्स्ट आकार बढ़ाएं",
+    "kn": "ಪಠ್ಯದ ಗಾತ್ರವನ್ನು ಹೆಚ್ಚಿಸಿ"
+  },
+  "no": {
+    "en": "No",
+    "hi": "नहीं",
+    "kn": "ಇಲ್ಲ"
+  },
+  "loading_event_details_": {
+    "en": "Loading event details...",
+    "hi": "इवेंट विवरण लोड हो रहा है...",
+    "kn": "ಈವೆಂಟ್ ವಿವರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
+  },
+  "bhopal": {
+    "en": "Bhopal",
+    "hi": "भोपाल",
+    "kn": "ಭೋಪಾಲ್"
+  },
+  "english": {
+    "en": "English",
+    "hi": "अंग्रेज़ी",
+    "kn": "ಇಂಗ್ಲಿಷ್"
+  },
+  "language": {
+    "en": "Language",
+    "hi": "भाषा",
+    "kn": "ಭಾಷೆ"
+  },
+  "top_volunteers_this_month": {
+    "en": "Top volunteers this month",
+    "hi": "इस महीने के शीर्ष स्वयंसेवक",
+    "kn": "ಈ ತಿಂಗಳ ಉತ್ತಮ ಸ್ವಯಂಸೇವಕರು"
+  },
+  "confirm_action": {
+    "en": "Confirm action",
+    "hi": "कार्रवाई की पुष्टि करें",
+    "kn": "ಕ್ರಿಯೆಯನ್ನು ದೃಢೀಕರಿಸಿ"
+  },
+  "reset_text": {
+    "en": "Reset text",
+    "hi": "टेक्स्ट रीसेट करें",
+    "kn": "ಪಠ್ಯವನ್ನು ಮರುಹೊಂದಿಸಿ"
+  },
+  "profile": {
+    "en": "Profile",
+    "hi": "प्रोफ़ाइल",
+    "kn": "ಪ್ರೊಫೈಲ್"
+  },
+  "gurugram": {
+    "en": "Gurugram",
+    "hi": "गुड़गांव",
+    "kn": "ಗುರುಗ್ರಾಮ್"
+  },
+  "78_": {
+    "en": "78%",
+    "hi": "78%",
+    "kn": "78%"
+  },
+  "completed": {
+    "en": "Completed",
+    "hi": "पूर्ण",
+    "kn": "ಪೂರ್ಣಗೊಂಡಿದೆ"
+  },
+  "retry": {
+    "en": "Retry",
+    "hi": "पुनः प्रयास करें",
+    "kn": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"
+  },
+  "toggle_status": {
+    "en": "Toggle status",
+    "hi": "स्थिति टॉगल करें",
+    "kn": "ಸ್ಥಿತಿಯನ್ನು ಟಾಗಲ್ ಮಾಡಿ"
+  },
+  "metrics_on_engagement_task_completion_rates_and_feedback_": {
+    "en": "Metrics on engagement, task completion rates and feedback",
+    "hi": "सगाई, कार्य पूर्णता दर और प्रतिक्रिया पर मेट्रिक्स",
+    "kn": "ಒಳಗೊಳ್ಳುವಿಕೆ, ಕಾರ್ಯ ಪೂರ್ಣಗೊಳಿಸುವ ದರ ಮತ್ತು ಪ್ರತಿಕ್ರಿಯೆಗಳ ಮೆಟ್ರಿಕ್ಸ್"
+  },
+  "events_history": {
+    "en": "Events history",
+    "hi": "इवेंट्स इतिहास",
+    "kn": "ಈವೆಂಟ್‌ಗಳ ಇತಿಹಾಸ"
+  },
+  "task_progress": {
+    "en": "Task progress",
+    "hi": "कार्य प्रगति",
+    "kn": "ಕಾರ್ಯ ಪ್ರಗತಿ"
+  },
+  "confirm": {
+    "en": "Confirm",
+    "hi": "पुष्टि करें",
+    "kn": "ದೃಢೀಕರಿಸಿ"
+  },
+  "pune": {
+    "en": "Pune",
+    "hi": "पुणे",
+    "kn": "ಪುಣೆ"
+  },
+  "average_feedback": {
+    "en": "Average feedback",
+    "hi": "औसत प्रतिक्रिया",
+    "kn": "ಸರಾಸರಿ ಪ್ರತಿಕ್ರಿಯೆ"
+  },
+  "export_view": {
+    "en": "Export view",
+    "hi": "दृश्य निर्यात करें",
+    "kn": "ನೋಟವನ್ನು ರಫ್ತು ಮಾಡಿ"
+  },
+  "18": {
+    "en": "18",
+    "hi": "18",
+    "kn": "18"
+  },
+  "reset_text_size": {
+    "en": "Reset text size",
+    "hi": "टेक्स्ट आकार रीसेट करें",
+    "kn": "ಪಠ್ಯ ಗಾತ್ರವನ್ನು ಮರುಹೊಂದಿಸಿ"
+  },
+  "error": {
+    "en": "Error",
+    "hi": "त्रुटि",
+    "kn": "ದೋಷ"
+  },
+  "sign_up_with_google": {
+    "en": "Sign up with Google",
+    "hi": "Google से साइन अप करें",
+    "kn": "Google ನೊಂದಿಗೆ ಸೈನ್ ಅಪ್ ಮಾಡಿ"
+  },
+  "samarthanam_official": {
+    "en": "Samarthanam Official",
+    "hi": "समर्थनम आधिकारिक",
+    "kn": "ಸಮರ್ಥನಂ ಅಧಿಕೃತ"
+  },
+  "are_you_sure_you_want_to_set_the_application_as": {
+    "en": "Are you sure you want to set the application as",
+    "hi": "क्या आप वाकई एप्लिकेशन को इस रूप में सेट करना चाहते हैं",
+    "kn": "ನೀವು ಖಚಿತವಾಗಿ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಹೀಗೆ ಹೊಂದಿಸಲು ಬಯಸುವಿರಾ"
+  },
+  "completion": {
+    "en": "Completion",
+    "hi": "पूर्णता",
+    "kn": "ಪೂರ್ಣಗೊಳಿಸುವಿಕೆ"
+  },
+  "current_events": {
+    "en": "Current events",
+    "hi": "वर्तमान इवेंट्स",
+    "kn": "ಪ್ರಸ್ತುತ ಈವೆಂಟ್‌ಗಳು"
+  },
+  "active_events": {
+    "en": "Active events",
+    "hi": "सक्रिय इवेंट्स",
+    "kn": "ಸಕ್ರಿಯ ಈವೆಂಟ್‌ಗಳು"
+  },
+  "volunteer_registration_": {
+    "en": "Volunteer registration:",
+    "hi": "स्वयंसेवक पंजीकरण:",
+    "kn": "ಸ್ವಯಂಸೇವಕ ನೋಂದಣಿ:"
+  },
+  "create_and_manage_events_": {
+    "en": "Create and manage events",
+    "hi": "इवेंट्स बनाएं और प्रबंधित करें",
+    "kn": "ಈವೆಂಟ್‌ಗಳನ್ನು ರಚಿಸಿ ಮತ್ತು ನಿರ್ವಹಿಸಿ"
+  },
+  "4_3": {
+    "en": "4.3",
+    "hi": "4.3",
+    "kn": "4.3"
+  },
+  "enter_a_10_digit_phone_number_without_spaces_or_dashes": {
+    "en": "Enter a 10-digit phone number without spaces or dashes",
+    "hi": "बिना स्पेस या डैश के 10 अंकों का फोन नंबर दर्ज करें",
+    "kn": "ಜಾಗಗಳು ಅಥವಾ ಡ್ಯಾಶ್‌ಗಳಿಲ್ಲದೆ 10-ಅಂಕಿಯ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ"
+  },
+  "overview": {
+    "en": "Overview",
+    "hi": "अवलोकन",
+    "kn": "ಅವಲೋಕನ"
+  },
+  "manage_events": {
+    "en": "Manage events",
+    "hi": "इवेंट्स प्रबंधित करें",
+    "kn": "ಈವೆಂಟ್‌ಗಳನ್ನು ನಿರ್ವಹಿಸಿ"
+  },
+  "yes": {
+    "en": "Yes",
+    "hi": "हाँ",
+    "kn": "ಹೌದು"
+  },
+  "contact_us": {
+    "en": "Contact us",
+    "hi": "हमसे संपर्क करें",
+    "kn": "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ"
+  },
+  "follow_us": {
+    "en": "Follow us",
+    "hi": "हमें फॉलो करें",
+    "kn": "ನಮ್ಮನ್ನು ಅನುಸರಿಸಿ"
+  },
+  "notifications": {
+    "en": "Notifications",
+    "hi": "सूचनाएं",
+    "kn": "ಅಧಿಸೂಚನೆಗಳು"
+  },
+  "clear": {
+    "en": "Clear",
+    "hi": "साफ़ करें",
+    "kn": "ಸ್ಪಷ್ಟ"
+  },
+  "centers_across_india": {
+    "en": "Centers across India",
+    "hi": "भारत भर में केंद्र",
+    "kn": "ಭಾರತದಾದ್ಯಂತ ಕೇಂದ್ರಗಳು"
+  },
+  "kochi": {
+    "en": "Kochi",
+    "hi": "कोच्चि",
+    "kn": "ಕೊಚ್ಚಿ"
+  },
+  "hours": {
+    "en": "Hours",
+    "hi": "घंटे",
+    "kn": "ಗಂಟೆಗಳು"
+  },
+  "send_message": {
+    "en": "Send message",
+    "hi": "संदेश भेजें",
+    "kn": "ಸಂದೇಶ ಕಳುಹಿಸಿ"
+  },
+  "what_did_you_learn_": {
+    "en": "What did you learn?",
+    "hi": "आपने क्या सीखा?",
+    "kn": "ನೀವು ಏನು ಕಲಿತಿದ್ದೀರಿ?"
+  },
+  "volunteer_engagement": {
+    "en": "Volunteer engagement",
+    "hi": "स्वयंसेवक सगाई",
+    "kn": "ಸ್ವಯಂಸೇವಕರ ಒಳಗೊಳ್ಳುವಿಕೆ"
+  },
+  "mysuru": {
+    "en": "Mysuru",
+    "hi": "मैसूरु",
+    "kn": "ಮೈಸೂರು"
+  },
+  "until_when_can_you_volunteer_": {
+    "en": "Until when can you volunteer?",
+    "hi": "आप कब तक स्वयंसेवा कर सकते हैं?",
+    "kn": "ನೀವು ಯಾವವರೆಗೆ ಸ್ವಯಂಸೇವೆ ಮಾಡಬಹುದು?"
+  },
+  "submit_feedback": {
+    "en": "Submit feedback",
+    "hi": "प्रतिक्रिया सबमिट करें",
+    "kn": "ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸಲ್ಲಿಸಿ"
+  },
+  "uk": {
+    "en": "UK",
+    "hi": "यूके",
+    "kn": "ಯುಕೆ"
+  },
+  "select_end_date": {
+    "en": "Select end date",
+    "hi": "समाप्ति तिथि चुनें",
+    "kn": "ಅಂತಿಮ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+  },
+  "samarthanam_all_rights_reserved_": {
+    "en": "Samarthanam. All rights reserved.",
+    "hi": "समर्थनम। सर्वाधिकार सुरक्षित।",
+    "kn": "ಸಮರ್ಥನಂ. ಎಲ್ಲ ಹಕ್ಕುಗಳು ಕಾಯ್ದಿರಿಸಲ್ಪಟ್ಟಿವೆ."
+  },
+  "when_are_you_available_": {
+    "en": "When are you available?",
+    "hi": "आप कब उपलब्ध हैं?",
+    "kn": "ನೀವು ಯಾವಾಗ ಲಭ್ಯರಾಗಿರುತ್ತೀರಿ?"
+  }
+}

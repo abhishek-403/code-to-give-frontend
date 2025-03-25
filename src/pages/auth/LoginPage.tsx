@@ -36,15 +36,14 @@ const LoginPage = () => {
   };
 
   if (loading) {
-    return <div className="text-center p-4">Loading...</div>;
+    return <div className="text-center p-4">{t("loading_")}</div>;
   }
 
   if (authError) {
     console.log(authError.message);
     
     return (
-      <div className="text-red-500 text-center p-4">
-        Error: {formatFirebaseError(authError.message)}
+      <div className="text-red-500 text-center p-4">{t("error_")}{formatFirebaseError(authError.message)}
       </div>
     );
   }
@@ -61,18 +60,14 @@ const LoginPage = () => {
       <Link to="/">
         <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" />
       </Link>
-
-      <h2 className="text-2xl font-semibold mb-6">Login</h2>
-
+      <h2 className="text-2xl font-semibold mb-6">{t("login")}</h2>
       <form
         onSubmit={handleLogin}
         className="flex flex-col space-y-4 w-80"
         aria-labelledby="login-heading"
       >
         {/* Email Input */}
-        <label htmlFor="email" className="sr-only">
-          Email
-        </label>
+        <label htmlFor="email" className="sr-only">{t("email")}</label>
         <Input
           id="email"
           type="email"
@@ -84,9 +79,7 @@ const LoginPage = () => {
         />
 
         {/* Password Input */}
-        <label htmlFor="password" className="sr-only">
-          Password
-        </label>
+        <label htmlFor="password" className="sr-only">{t("password")}</label>
         <Input
           id="password"
           type="password"
@@ -99,9 +92,7 @@ const LoginPage = () => {
 
         {/* Submit Button */}
 
-        <Button disabled={isPending || loading} type="submit">
-          Login
-        </Button>
+        <Button disabled={isPending || loading} type="submit">{t("login")}</Button>
 
         {/* Google Login Button */}
         <Button
@@ -111,35 +102,24 @@ const LoginPage = () => {
           disabled={isPending || loading}
           aria-label="Sign in with Google"
         >
-          <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />
-          Login with Google
-        </Button>
+          <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />{t("login_with_google")}</Button>
       </form>
-
       {/* Display error messages for screen readers */}
       {error && (
         <p className="text-red-500 mt-2" role="alert" aria-live="assertive">
           {error}
         </p>
       )}
-
       {/* Signup Link */}
-      <p className="mt-4">
-        Don't have an account?
-        <Button variant="link" onClick={() => navigate("/signup")}>
-          Sign up
-        </Button>
+      <p className="mt-4">{t("don_t_have_an_account_")}<Button variant="link" onClick={() => navigate("/signup")}>{t("sign_up")}</Button>
       </p>
-
       {/* 🔹 Return to Home Button */}
       <Button
         variant="ghost"
         onClick={() => navigate("/")}
         className="text-blue-600 underline"
         aria-label="Return to Home"
-      >
-        Return to Home
-      </Button>
+      >{t("return_to_home")}</Button>
     </div>
   );
 };

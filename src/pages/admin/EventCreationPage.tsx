@@ -43,6 +43,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Availabitity } from "@/lib/constants/server-constants";
+import useLanguage from "@/lib/hooks/useLang";
 import { cn } from "@/lib/utils";
 import {
   useCreateEventMutation,
@@ -178,6 +179,8 @@ const EventCreationPage = () => {
     watch,
   } = form;
 
+  const { t } = useLanguage()
+
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "formFields",
@@ -236,20 +239,15 @@ const EventCreationPage = () => {
     <div className="container mx-auto p-6 max-w-4xl">
       <Link to="/admin" className="text-primary-600">
         <Button variant="outline" className="mb-4">
-          <ArrowLeft size={16} />
-          Back to Dashboard
-        </Button>
+          <ArrowLeft size={16} />{t("back_to_dashboard")}</Button>
       </Link>
-      <h1 className="text-3xl font-bold mb-6">Create Event</h1>
-
+      <h1 className="text-3xl font-bold mb-6">{t("create_event")}</h1>
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <Card>
             <CardHeader>
-              <CardTitle>Event Details</CardTitle>
-              <CardDescription>
-                Basic information about your event
-              </CardDescription>
+              <CardTitle>{t("event_details")}</CardTitle>
+              <CardDescription>{t("basic_information_about_your_event")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Event Name (formerly Title) */}
@@ -259,7 +257,7 @@ const EventCreationPage = () => {
                 rules={{ required: "Event name is required" }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="name">Event Name</FormLabel>
+                    <FormLabel htmlFor="name">{t("event_name")}</FormLabel>
                     <FormControl>
                       <Input
                         id="name"
@@ -287,7 +285,7 @@ const EventCreationPage = () => {
                 rules={{ required: "Description is required" }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="description">Description</FormLabel>
+                    <FormLabel htmlFor="description">{t("description")}</FormLabel>
                     <FormControl>
                       <Textarea
                         id="description"
@@ -297,9 +295,7 @@ const EventCreationPage = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Provide details about your event to attract volunteers.
-                    </FormDescription>
+                    <FormDescription>{t("provide_details_about_your_event_to_attract_volunteers_")}</FormDescription>
                     {errors.description && (
                       <FormMessage>
                         <span className="flex items-center gap-2 text-red-500">
@@ -319,7 +315,7 @@ const EventCreationPage = () => {
                 rules={{ required: "Location is required" }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="location">Location</FormLabel>
+                    <FormLabel htmlFor="location">{t("location")}</FormLabel>
                     <FormControl>
                       <Input
                         id="location"
@@ -347,7 +343,7 @@ const EventCreationPage = () => {
                 rules={{ required: "Start date is required" }}
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel htmlFor="startDate">Start Date</FormLabel>
+                    <FormLabel htmlFor="startDate">{t("start_date")}</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -363,7 +359,7 @@ const EventCreationPage = () => {
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span>Pick a date</span>
+                              <span>{t("pick_a_date")}</span>
                             )}
                           </Button>
                         </FormControl>
@@ -402,7 +398,7 @@ const EventCreationPage = () => {
                 }}
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel htmlFor="endDate">End Date</FormLabel>
+                    <FormLabel htmlFor="endDate">{t("end_date")}</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -418,7 +414,7 @@ const EventCreationPage = () => {
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span>Pick a date</span>
+                              <span>{t("pick_a_date")}</span>
                             )}
                           </Button>
                         </FormControl>
@@ -507,9 +503,7 @@ const EventCreationPage = () => {
                 rules={{ required: "Volunteering domain is required" }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="volunteeringDomains">
-                      Volunteering Domains
-                    </FormLabel>
+                    <FormLabel htmlFor="volunteeringDomains">{t("volunteering_domains")}</FormLabel>
                     <FormControl>
                       <MultiSelect
                         options={volDomains ?? []}
@@ -544,22 +538,16 @@ const EventCreationPage = () => {
                       variant="outline"
                       className="flex items-center gap-2"
                     >
-                      <BookMarked size={16} />
-                      Add new domain
-                    </Button>
+                      <BookMarked size={16} />{t("add_new_domain")}</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Volunteering domain</DialogTitle>
-                      <DialogDescription>
-                        Add a new volunteering domain.
-                      </DialogDescription>
+                      <DialogTitle>{t("volunteering_domain")}</DialogTitle>
+                      <DialogDescription>{t("add_a_new_volunteering_domain_")}</DialogDescription>
                     </DialogHeader>
                     <div className="py-4">
                       <FormItem>
-                        <FormLabel htmlFor="newdomainName">
-                          Volunteering Domain Name :
-                        </FormLabel>
+                        <FormLabel htmlFor="newdomainName">{t("volunteering_domain_name_")}</FormLabel>
                         <Input
                           id="newdomainName"
                           placeholder="Enter a name for this domain"
@@ -584,9 +572,7 @@ const EventCreationPage = () => {
                       <Button
                         variant="outline"
                         onClick={() => setShowNewDomainDialog(false)}
-                      >
-                        Cancel
-                      </Button>
+                      >{t("cancel")}</Button>
                       <Button
                         onClick={() => {
                           createDomain(
@@ -597,9 +583,7 @@ const EventCreationPage = () => {
                           );
                         }}
                         disabled={!newDomainName.trim()}
-                      >
-                        Save
-                      </Button>
+                      >{t("save")}</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -654,7 +638,7 @@ const EventCreationPage = () => {
                 rules={{ required: "Availability is required" }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="availability">Availability</FormLabel>
+                    <FormLabel htmlFor="availability">{t("availability")}</FormLabel>
                     <FormControl>
                       <MultiSelect
                         options={[
@@ -701,7 +685,7 @@ const EventCreationPage = () => {
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="capacity">Volunteer Capacity</FormLabel>
+                    <FormLabel htmlFor="capacity">{t("volunteer_capacity")}</FormLabel>
                     <FormControl>
                       <Input
                         id="capacity"
@@ -715,10 +699,9 @@ const EventCreationPage = () => {
                         }
                       />
                     </FormControl>
-                    <FormDescription>
-                      Note: Capacity will be stored separately as it's not part
-                      of the main event schema.
-                    </FormDescription>
+                    <FormDescription>{t(
+                      "note_capacity_will_be_stored_separately_as_it_s_not_part_of_the_main_event_schema_"
+                    )}</FormDescription>
                     {errors.capacity && (
                       <FormMessage>
                         <span className="flex items-center gap-2 text-red-500">
@@ -737,11 +720,8 @@ const EventCreationPage = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Volunteer Registration Form Fields</CardTitle>
-                <CardDescription>
-                  Define the fields volunteers must fill out to register for
-                  this event.
-                </CardDescription>
+                <CardTitle>{t("volunteer_registration_form_fields")}</CardTitle>
+                <CardDescription>{t("define_the_fields_volunteers_must_fill_out_to_register_for_this_event_")}</CardDescription>
               </div>
               <div className="flex gap-2">
                 <Dialog
@@ -753,22 +733,18 @@ const EventCreationPage = () => {
                       variant="outline"
                       className="flex items-center gap-2"
                     >
-                      <LayoutTemplate size={16} />
-                      Load Template
-                    </Button>
+                      <LayoutTemplate size={16} />{t("load_template")}</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Load Form Template</DialogTitle>
-                      <DialogDescription>
-                        Select a template to load predefined form fields.
-                      </DialogDescription>
+                      <DialogTitle>{t("load_form_template")}</DialogTitle>
+                      <DialogDescription>{t("select_a_template_to_load_predefined_form_fields_")}</DialogDescription>
                     </DialogHeader>
                     <div className="max-h-[400px] overflow-y-auto">
                       {isLoading ? (
-                        <div>Loading</div>
+                        <div>{t("loading")}</div>
                       ) : templates && templates.length === 0 ? (
-                        <p className="text-center py-4">No templates found.</p>
+                        <p className="text-center py-4">{t("no_templates_found_")}</p>
                       ) : (
                         <div className="space-y-4 mt-4">
                           {templates &&
@@ -786,8 +762,7 @@ const EventCreationPage = () => {
                                       </h3>
                                     </div>
                                     <p className="text-sm text-gray-500 mt-2">
-                                      {template.fields.length} field(s)
-                                    </p>
+                                      {template.fields.length}{t("field_s_")}</p>
                                   </div>
                                 );
                               }
@@ -799,9 +774,7 @@ const EventCreationPage = () => {
                       <Button
                         variant="outline"
                         onClick={() => setShowLoadTemplateDialog(false)}
-                      >
-                        Cancel
-                      </Button>
+                      >{t("cancel")}</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -810,26 +783,23 @@ const EventCreationPage = () => {
             <CardContent>
               {fields.length === 0 && (
                 <div className="text-center py-6 border-2 border-dashed border-gray-200 rounded-md mb-4">
-                  <p className="text-gray-500">
-                    No form fields added yet. Click "Add Field" to create your
-                    first form field, or load a template.
-                  </p>
+                  <p className="text-gray-500">{t(
+                    "no_form_fields_added_yet_click_add_field_to_create_your_first_form_field_or_load_a_template_"
+                  )}</p>
                 </div>
               )}
 
               {fields.map((field, index) => (
                 <div key={field.id} className="border rounded-md p-4 mb-6">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-medium">Field #{index + 1}</h3>
+                    <h3 className="font-medium">{t("field_")}{index + 1}</h3>
                     <Button
                       type="button"
                       variant="destructive"
                       size="sm"
                       onClick={() => remove(index)}
                       aria-label={`Remove field ${index + 1}`}
-                    >
-                      Remove
-                    </Button>
+                    >{t("remove")}</Button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -840,9 +810,7 @@ const EventCreationPage = () => {
                       rules={{ required: "Label is required" }}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel htmlFor={`formFields.${index}.label`}>
-                            Field Label
-                          </FormLabel>
+                          <FormLabel htmlFor={`formFields.${index}.label`}>{t("field_label")}</FormLabel>
                           <FormControl>
                             <Input
                               id={`formFields.${index}.label`}
@@ -866,9 +834,7 @@ const EventCreationPage = () => {
                       rules={{ required: "Type is required" }}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel htmlFor={`formFields.${index}.type`}>
-                            Field Type
-                          </FormLabel>
+                          <FormLabel htmlFor={`formFields.${index}.type`}>{t("field_type")}</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -906,9 +872,7 @@ const EventCreationPage = () => {
                         <FormItem>
                           <FormLabel
                             htmlFor={`formFields.${index}.placeholder`}
-                          >
-                            Placeholder Text
-                          </FormLabel>
+                          >{t("placeholder_text")}</FormLabel>
                           <FormControl>
                             <Input
                               id={`formFields.${index}.placeholder`}
@@ -926,9 +890,7 @@ const EventCreationPage = () => {
                       name={`formFields.${index}.required`}
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-center justify-between mt-8 space-x-2 space-y-0">
-                          <FormLabel htmlFor={`formFields.${index}.required`}>
-                            Required Field
-                          </FormLabel>
+                          <FormLabel htmlFor={`formFields.${index}.required`}>{t("required_field")}</FormLabel>
                           <FormControl>
                             <Switch
                               id={`formFields.${index}.required`}
@@ -998,7 +960,7 @@ const EventCreationPage = () => {
                 //     </DialogFooter>
                 //   </DialogContent>
                 // </Dialog>
-                <>
+                (<>
                   <FormField
                     control={control}
                     name="saveFormFieldsAsTemplate"
@@ -1014,9 +976,7 @@ const EventCreationPage = () => {
                               />
                             </FormControl>
                             <div className="space-y-1 ml-2 md:min-w-[120px] center flex items-center leading-none">
-                              <FormLabel htmlFor="saveAsTemplate">
-                                Save as template
-                              </FormLabel>
+                              <FormLabel htmlFor="saveAsTemplate">{t("save_as_template")}</FormLabel>
                             </div>
                           </div>
                           <div>
@@ -1043,7 +1003,7 @@ const EventCreationPage = () => {
                     )}
                   />
                   {/* <Input type="text" placeholder="Template Name" /> */}
-                </>
+                </>)
               )}
 
               <div className="flex gap-2 mt-2">
@@ -1052,20 +1012,16 @@ const EventCreationPage = () => {
                   variant="outline"
                   onClick={addNewField}
                   className="flex-1"
-                >
-                  Add Field
-                </Button>
+                >{t("add_field")}</Button>
               </div>
             </CardContent>
           </Card>
 
           <div className="flex justify-end gap-4">
             <Link to="/admin">
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">{t("cancel")}</Button>
             </Link>
-            <Button disabled={isPending} type="submit">
-              Create Event
-            </Button>
+            <Button disabled={isPending} type="submit">{t("create_event")}</Button>
           </div>
         </form>
       </Form>

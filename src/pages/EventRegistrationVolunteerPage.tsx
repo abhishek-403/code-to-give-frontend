@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Availabitity } from "@/lib/constants/server-constants";
+import useLanguage from "@/lib/hooks/useLang";
 import { cn } from "@/lib/utils";
 import { useSubmitApplicationMutation } from "@/services/event";
 import { RootState } from "@/store";
@@ -144,62 +145,54 @@ const EventRegistrationVolunteerPage = () => {
       }, 100);
     }
   };
+  const { t } = useLanguage()
 
   if (!eventData && eventId) {
     return (
       <div className="p-6 max-w-2xl mx-auto text-center">
-        <h1 className="text-3xl font-bold mb-6">Event Not Found</h1>
-        <p className="mb-6 text-gray-600">
-          We couldn't find information for the event you selected. Please go
-          back and try again.
-        </p>
+        <h1 className="text-3xl font-bold mb-6">{t("event_not_found")}</h1>
+        <p className="mb-6 text-gray-600">{t(
+          "we_couldn_t_find_information_for_the_event_you_selected_please_go_back_and_try_again_"
+        )}</p>
         <Button
           onClick={() => navigate("/")}
           className="flex items-center gap-2"
         >
-          <ArrowLeft size={16} />
-          Back to Events
-        </Button>
+          <ArrowLeft size={16} />{t("back_to_events")}</Button>
       </div>
     );
   }
   if (!eventData) {
-    return <div>Loading..</div>;
+    return <div>{t("loading_")}</div>;
   }
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
         <Link to="/" className="text-primary-600">
           <Button variant="outline" className="mb-4">
-            <ArrowLeft size={16} />
-            Back to Home
-          </Button>
+            <ArrowLeft size={16} />{t("back_to_home")}</Button>
         </Link>
 
         {eventData && (
           <div className="mb-4">
-            <h1 className="text-3xl font-bold" id="form-title">
-              Volunteer Registration: {eventData.name}
+            <h1 className="text-3xl font-bold" id="form-title">{t("volunteer_registration_")}{eventData.name}
             </h1>
             <p className="mt-2 text-gray-600">{eventData.description}</p>
             <p className="mt-1 text-sm text-gray-500">
-              <span className="font-medium">Location:</span>{" "}
-              {eventData.location} •
-              {/* <span className="font-medium ml-2">Domain:</span>{" "}
+              <span className="font-medium">{t("location_")}</span>{" "}
+              {eventData.location}{t("_")}{/* <span className="font-medium ml-2">Domain:</span>{" "}
               {eventData.volunteeringDomains[0].name} • */}
-              <span className="font-medium ml-2">Dates:</span>{" "}
-              {formatDateFromDate(eventData.startDate)} to{" "}
+              <span className="font-medium ml-2">{t("dates_")}</span>{" "}
+              {formatDateFromDate(eventData.startDate)}{t("to")}{" "}
               {formatDateFromDate(eventData.endDate)}
             </p>
           </div>
         )}
 
-        <p className="text-gray-600">
-          Fill out the form below to register as a volunteer for this event.
-          Required fields are marked with an asterisk (*).
-        </p>
+        <p className="text-gray-600">{t(
+          "fill_out_the_form_below_to_register_as_a_volunteer_for_this_event_required_fields_are_marked_with_an_asterisk_"
+        )}</p>
       </div>
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6"
@@ -208,18 +201,13 @@ const EventRegistrationVolunteerPage = () => {
       >
         {/* Personal Information Section */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">
-            Personal Information
-          </legend>
+          <legend className="text-xl font-semibold px-2">{t("personal_information")}</legend>
 
           {/* Full Name */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="name" className="text-sm font-medium">
-                Full Name{" "}
-                <span className="text-red-500" aria-hidden="true">
-                  *
-                </span>
+              <Label htmlFor="name" className="text-sm font-medium">{t("full_name")}{" "}
+                <span className="text-red-500" aria-hidden="true">{t("_")}</span>
               </Label>
               {errors.name && (
                 <p
@@ -231,9 +219,7 @@ const EventRegistrationVolunteerPage = () => {
                 </p>
               )}
             </div>
-            <p className="text-xs text-gray-500" id="name-description">
-              Please enter your first and last name
-            </p>
+            <p className="text-xs text-gray-500" id="name-description">{t("please_enter_your_first_and_last_name")}</p>
             <Controller
               name="name"
               control={control}
@@ -254,11 +240,8 @@ const EventRegistrationVolunteerPage = () => {
           </div>
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="name" className="text-sm font-medium">
-                Volunteering Domain{" "}
-                <span className="text-red-500" aria-hidden="true">
-                  *
-                </span>
+              <Label htmlFor="name" className="text-sm font-medium">{t("volunteering_domain")}{" "}
+                <span className="text-red-500" aria-hidden="true">{t("_")}</span>
               </Label>
               {errors.name && (
                 <p
@@ -270,9 +253,7 @@ const EventRegistrationVolunteerPage = () => {
                 </p>
               )}
             </div>
-            <p className="text-xs text-gray-500 mb-1" id="volunteering-domains">
-              Select your Volunteering Domain
-            </p>
+            <p className="text-xs text-gray-500 mb-1" id="volunteering-domains">{t("select_your_volunteering_domain")}</p>
             {/* <Controller
               name="volunteeringDomains"
               control={control}
@@ -333,11 +314,8 @@ const EventRegistrationVolunteerPage = () => {
           {/* Email */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email{" "}
-                <span className="text-red-500" aria-hidden="true">
-                  *
-                </span>
+              <Label htmlFor="email" className="text-sm font-medium">{t("email")}{" "}
+                <span className="text-red-500" aria-hidden="true">{t("_")}</span>
               </Label>
               {errors.email && (
                 <p
@@ -349,9 +327,7 @@ const EventRegistrationVolunteerPage = () => {
                 </p>
               )}
             </div>
-            <p className="text-xs text-gray-500" id="email-description">
-              We will use this to contact you about volunteer opportunities
-            </p>
+            <p className="text-xs text-gray-500" id="email-description">{t("we_will_use_this_to_contact_you_about_volunteer_opportunities")}</p>
             <Controller
               name="email"
               control={control}
@@ -380,11 +356,8 @@ const EventRegistrationVolunteerPage = () => {
           {/* Phone */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="phone" className="text-sm font-medium">
-                Phone Number{" "}
-                <span className="text-red-500" aria-hidden="true">
-                  *
-                </span>
+              <Label htmlFor="phone" className="text-sm font-medium">{t("phone_number")}{" "}
+                <span className="text-red-500" aria-hidden="true">{t("_")}</span>
               </Label>
               {errors.phone && (
                 <p
@@ -396,9 +369,7 @@ const EventRegistrationVolunteerPage = () => {
                 </p>
               )}
             </div>
-            <p className="text-xs text-gray-500" id="phone-description">
-              Enter a 10-digit phone number without spaces or dashes
-            </p>
+            <p className="text-xs text-gray-500" id="phone-description">{t("enter_a_10_digit_phone_number_without_spaces_or_dashes")}</p>
             <Controller
               name="phone"
               control={control}
@@ -427,7 +398,7 @@ const EventRegistrationVolunteerPage = () => {
 
         {/* Availability Section */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">Availability</legend>
+          <legend className="text-xl font-semibold px-2">{t("availability")}</legend>
 
           {/* Availability Options */}
           <div className="space-y-2">
@@ -435,11 +406,8 @@ const EventRegistrationVolunteerPage = () => {
               <Label
                 id="availability-group-label"
                 className="text-sm font-medium"
-              >
-                When are you available?{" "}
-                <span className="text-red-500" aria-hidden="true">
-                  *
-                </span>
+              >{t("when_are_you_available_")}{" "}
+                <span className="text-red-500" aria-hidden="true">{t("_")}</span>
               </Label>
               {errors.availabilityOption && (
                 <p
@@ -451,9 +419,7 @@ const EventRegistrationVolunteerPage = () => {
                 </p>
               )}
             </div>
-            <p className="text-xs text-gray-500" id="availability-description">
-              Select when you are generally available to volunteer
-            </p>
+            <p className="text-xs text-gray-500" id="availability-description">{t("select_when_you_are_generally_available_to_volunteer")}</p>
             <Controller
               name="availabilityOption"
               control={control}
@@ -499,11 +465,8 @@ const EventRegistrationVolunteerPage = () => {
             {/* Start Date */}
             <div className="space-y-2">
               <div className="flex items-baseline justify-between">
-                <Label htmlFor="startDate" className="text-sm font-medium">
-                  Start Date{" "}
-                  <span className="text-red-500" aria-hidden="true">
-                    *
-                  </span>
+                <Label htmlFor="startDate" className="text-sm font-medium">{t("start_date")}{" "}
+                  <span className="text-red-500" aria-hidden="true">{t("_")}</span>
                 </Label>
                 {errors.startDate && (
                   <p
@@ -515,9 +478,7 @@ const EventRegistrationVolunteerPage = () => {
                   </p>
                 )}
               </div>
-              <p className="text-xs text-gray-500" id="startDate-description">
-                When can you start volunteering?
-              </p>
+              <p className="text-xs text-gray-500" id="startDate-description">{t("when_can_you_start_volunteering_")}</p>
               <Controller
                 name="startDate"
                 control={control}
@@ -541,7 +502,7 @@ const EventRegistrationVolunteerPage = () => {
                         {field.value ? (
                           format(field.value, "PPP")
                         ) : (
-                          <span>Select start date</span>
+                          <span>{t("select_start_date")}</span>
                         )}
                       </Button>
                     </PopoverTrigger>
@@ -569,11 +530,8 @@ const EventRegistrationVolunteerPage = () => {
             {/* End Date */}
             <div className="space-y-2">
               <div className="flex items-baseline justify-between">
-                <Label htmlFor="endDate" className="text-sm font-medium">
-                  End Date{" "}
-                  <span className="text-red-500" aria-hidden="true">
-                    *
-                  </span>
+                <Label htmlFor="endDate" className="text-sm font-medium">{t("end_date")}{" "}
+                  <span className="text-red-500" aria-hidden="true">{t("_")}</span>
                 </Label>
                 {errors.endDate && (
                   <p
@@ -585,9 +543,7 @@ const EventRegistrationVolunteerPage = () => {
                   </p>
                 )}
               </div>
-              <p className="text-xs text-gray-500" id="endDate-description">
-                Until when can you volunteer?
-              </p>
+              <p className="text-xs text-gray-500" id="endDate-description">{t("until_when_can_you_volunteer_")}</p>
               <Controller
                 name="endDate"
                 control={control}
@@ -619,7 +575,7 @@ const EventRegistrationVolunteerPage = () => {
                         {field.value ? (
                           format(field.value, "PPP")
                         ) : (
-                          <span>Select end date</span>
+                          <span>{t("select_end_date")}</span>
                         )}
                       </Button>
                     </PopoverTrigger>
@@ -656,9 +612,7 @@ const EventRegistrationVolunteerPage = () => {
         </fieldset>
         {eventData.template?.fields && (
           <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-            <legend className="text-xl font-semibold px-2">
-              Required Fields
-            </legend>
+            <legend className="text-xl font-semibold px-2">{t("required_fields")}</legend>
 
             {eventData.template?.fields?.map((field: any) => (
               <div key={field._id} className="space-y-2">
@@ -694,19 +648,12 @@ const EventRegistrationVolunteerPage = () => {
         )}
         {/* Additional Information */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">
-            Additional Information
-          </legend>
+          <legend className="text-xl font-semibold px-2">{t("additional_information")}</legend>
 
           {/* Comments */}
           <div className="space-y-2">
-            <Label htmlFor="comments" className="text-sm font-medium">
-              Additional Comments
-            </Label>
-            <p className="text-xs text-gray-500" id="comments-description">
-              Share any skills, preferences, or other information that might be
-              helpful
-            </p>
+            <Label htmlFor="comments" className="text-sm font-medium">{t("additional_comments")}</Label>
+            <p className="text-xs text-gray-500" id="comments-description">{t("share_any_skills_preferences_or_other_information_that_might_be_helpful")}</p>
             <Controller
               name="comments"
               control={control}
@@ -746,8 +693,7 @@ const EventRegistrationVolunteerPage = () => {
 
           {/* Add help text for required fields */}
           <p className="text-xs text-gray-500" aria-hidden="true">
-            <span className="text-red-500">*</span> indicates required fields
-          </p>
+            <span className="text-red-500">{t("_")}</span>{t("indicates_required_fields")}</p>
         </div>
       </form>
     </div>

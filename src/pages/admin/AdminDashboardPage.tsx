@@ -36,6 +36,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useLanguage from "@/lib/hooks/useLang";
 
 // Register ChartJS components
 ChartJS.register(
@@ -462,11 +463,12 @@ const AdminDashboardPage = () => {
       },
     },
   };
-
+  const { t } = useLanguage()
+  
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">Admin Dashboard</h2>
+        <h2 className="text-2xl font-semibold">{t("admin_dashboard")}</h2>
         <div className="flex space-x-2">
           {/* Export Data Dropdown */}
 
@@ -481,9 +483,7 @@ const AdminDashboardPage = () => {
             <Button 
             className="flex items-center" 
             variant="outline" 
-            >
-              Manage Roles
-          </Button>
+            >{t("manage_roles")}</Button>
           </Link>
           
           
@@ -496,17 +496,11 @@ const AdminDashboardPage = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={exportDataToCSV}>
-                <FileText className="mr-2 h-4 w-4" />
-                Export Current View as CSV
-              </DropdownMenuItem>
+                <FileText className="mr-2 h-4 w-4" />{t("export_current_view_as_csv")}</DropdownMenuItem>
               <DropdownMenuItem onClick={exportAllDataToCSV}>
-                <Database className="mr-2 h-4 w-4" />
-                Export All Data as CSV
-              </DropdownMenuItem>
+                <Database className="mr-2 h-4 w-4" />{t("export_all_data_as_csv")}</DropdownMenuItem>
               <DropdownMenuItem onClick={exportToExcel}>
-                <FileText className="mr-2 h-4 w-4" />
-                Export as Excel
-              </DropdownMenuItem>
+                <FileText className="mr-2 h-4 w-4" />{t("export_as_excel")}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           
@@ -522,7 +516,6 @@ const AdminDashboardPage = () => {
           </Button>
         </div>
       </div>
-
       {/* Quick Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
@@ -530,8 +523,8 @@ const AdminDashboardPage = () => {
             <div className="rounded-full bg-blue-100 p-3 mb-2">
               <CalendarDays className="h-8 w-8 text-blue-600" />
             </div>
-            <h3 className="text-3xl font-bold">18</h3>
-            <p className="text-sm text-muted-foreground">Active Events</p>
+            <h3 className="text-3xl font-bold">{t("18")}</h3>
+            <p className="text-sm text-muted-foreground">{t("active_events")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -539,8 +532,8 @@ const AdminDashboardPage = () => {
             <div className="rounded-full bg-green-100 p-3 mb-2">
               <Activity className="h-8 w-8 text-green-600" />
             </div>
-            <h3 className="text-3xl font-bold">92%</h3>
-            <p className="text-sm text-muted-foreground">Volunteer Engagement</p>
+            <h3 className="text-3xl font-bold">{t("92_")}</h3>
+            <p className="text-sm text-muted-foreground">{t("volunteer_engagement")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -548,8 +541,8 @@ const AdminDashboardPage = () => {
             <div className="rounded-full bg-yellow-100 p-3 mb-2">
               <CheckCircle className="h-8 w-8 text-yellow-600" />
             </div>
-            <h3 className="text-3xl font-bold">78%</h3>
-            <p className="text-sm text-muted-foreground">Task Completion</p>
+            <h3 className="text-3xl font-bold">{t("78_")}</h3>
+            <p className="text-sm text-muted-foreground">{t("task_completion")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -557,36 +550,32 @@ const AdminDashboardPage = () => {
             <div className="rounded-full bg-purple-100 p-3 mb-2">
               <Star className="h-8 w-8 text-purple-600" />
             </div>
-            <h3 className="text-3xl font-bold">4.3</h3>
-            <p className="text-sm text-muted-foreground">Average Feedback</p>
+            <h3 className="text-3xl font-bold">{t("4_3")}</h3>
+            <p className="text-sm text-muted-foreground">{t("average_feedback")}</p>
           </CardContent>
         </Card>
       </div>
-
       {/* Event Management Card */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Event Management</CardTitle>
-          <CardDescription>Create and manage events.</CardDescription>
+          <CardTitle>{t("event_management")}</CardTitle>
+          <CardDescription>{t("create_and_manage_events_")}</CardDescription>
         </CardHeader>
         <CardContent className="flex space-x-4">
           <Link to="/admin/events/create">
-            <Button>Create Event</Button>
+            <Button>{t("create_event")}</Button>
           </Link>
           <Link to="/admin/events/manage">
-            <Button variant="outline">Manage Events</Button>
+            <Button variant="outline">{t("manage_events")}</Button>
           </Link>
         </CardContent>
       </Card>
-
       {/* Data Visualization Tabs */}
       <Card className="mb-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Data Visualization</CardTitle>
-            <CardDescription>
-              Metrics on engagement, task completion rates, and feedback.
-            </CardDescription>
+            <CardTitle>{t("data_visualization")}</CardTitle>
+            <CardDescription>{t("metrics_on_engagement_task_completion_rates_and_feedback_")}</CardDescription>
           </div>
           <Button 
             variant="outline" 
@@ -594,9 +583,7 @@ const AdminDashboardPage = () => {
             onClick={exportDataToCSV} 
             disabled={exportLoading}
           >
-            <Download className="mr-2 h-4 w-4" />
-            Export View
-          </Button>
+            <Download className="mr-2 h-4 w-4" />{t("export_view")}</Button>
         </CardHeader>
         <CardContent>
           <Tabs 
@@ -604,10 +591,10 @@ const AdminDashboardPage = () => {
             onValueChange={(value) => setActiveTab(value)}
           >
             <TabsList className="mb-4">
-              <TabsTrigger value="engagement">Engagement</TabsTrigger>
-              <TabsTrigger value="completion">Completion</TabsTrigger>
-              <TabsTrigger value="feedback">Feedback</TabsTrigger>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="engagement">{t("engagement")}</TabsTrigger>
+              <TabsTrigger value="completion">{t("completion")}</TabsTrigger>
+              <TabsTrigger value="feedback">{t("feedback")}</TabsTrigger>
+              <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="engagement" className="mt-0">
@@ -646,9 +633,9 @@ const AdminDashboardPage = () => {
                   <table className="w-full border-collapse">
                     <thead className="sticky top-0 z-20">
                     <tr className="bg-card shadow-sm">
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Category</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Score</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Responses</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("category")}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("score")}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("responses")}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
@@ -671,14 +658,14 @@ const AdminDashboardPage = () => {
                   <Radar data={volunteerRadarData} options={radarOptions} />
                 </div>
                 <div className="flex flex-col h-64">
-                  <h3 className="font-medium mb-2">Top Volunteers This Month</h3>
+                  <h3 className="font-medium mb-2">{t("top_volunteers_this_month")}</h3>
                   <div className="overflow-auto max-h-64 bg-card rounded-lg border">
                     <table className="w-full border-collapse">
                       <thead className="sticky top-0">
                       <tr className="bg-card shadow-sm">
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Name</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Hours</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">Tasks</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("name")}</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("hours")}</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("tasks")}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">

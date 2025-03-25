@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import useLanguage from "@/lib/hooks/useLang";
 import { useSubmitFeedBackMutation } from "@/services/event";
 import { ExperienceRating, FeedbackSchema } from "@/types/feedback-types";
 import { ArrowLeft } from "lucide-react";
@@ -27,6 +28,7 @@ interface FeedbackData {
 
 function FeedbackForm() {
   // const { eventId } = useParams();
+  const { t } = useLanguage()
   const navigate = useNavigate();
   const locate = useLocation();
   const { eventId, eventName } = locate.state || {};
@@ -97,7 +99,7 @@ function FeedbackForm() {
   }
 
   if (!eventId || !eventDetails) {
-    return <div className="text-center mt-10">Loading event details...</div>;
+    return <div className="text-center mt-10">{t("loading_event_details_")}</div>;
   }
 
   return (
@@ -109,19 +111,18 @@ function FeedbackForm() {
           className="flex items-center space-x-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>Back to Events</span>
+          <span>{t("back_to_events")}</span>
         </Button>
       </div>
-
       <Card>
         <CardHeader>
-          <CardTitle>Feedback for {eventDetails.eventName}</CardTitle>
+          <CardTitle>{t("feedback_for")}{eventDetails.eventName}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Rating Input */}
             <div>
-              <Label htmlFor="rating">Overall Experience Rating</Label>
+              <Label htmlFor="rating">{t("overall_experience_rating")}</Label>
               <RadioGroup
                 onValueChange={(value) =>
                   setFormData((prev) => ({ ...prev, rating: Number(value) }))
@@ -150,7 +151,7 @@ function FeedbackForm() {
 
             {/* Experience Details */}
             <div>
-              <Label htmlFor="experience">Describe Your Experience</Label>
+              <Label htmlFor="experience">{t("describe_your_experience")}</Label>
               <Textarea
                 id="experience"
                 name="experience"
@@ -168,7 +169,7 @@ function FeedbackForm() {
 
             {/* Learnings Input */}
             <div>
-              <Label htmlFor="learnings">What Did You Learn?</Label>
+              <Label htmlFor="learnings">{t("what_did_you_learn_")}</Label>
               <Textarea
                 id="learnings"
                 name="learnings"
@@ -181,7 +182,7 @@ function FeedbackForm() {
 
             {/* Recommendation */}
             <div>
-              <Label>Would You Recommend This Event?</Label>
+              <Label>{t("would_you_recommend_this_event_")}</Label>
               <RadioGroup
                 onValueChange={handleRecommendationChange}
                 defaultValue="yes"
@@ -189,18 +190,18 @@ function FeedbackForm() {
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="yes" id="recommend-yes" />
-                  <Label htmlFor="recommend-yes">Yes</Label>
+                  <Label htmlFor="recommend-yes">{t("yes")}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="no" id="recommend-no" />
-                  <Label htmlFor="recommend-no">No</Label>
+                  <Label htmlFor="recommend-no">{t("no")}</Label>
                 </div>
               </RadioGroup>
             </div>
 
             {/* Suggestions */}
             <div>
-              <Label htmlFor="suggestions">Additional Suggestions</Label>
+              <Label htmlFor="suggestions">{t("additional_suggestions")}</Label>
               <Textarea
                 id="suggestions"
                 name="suggestions"
@@ -212,9 +213,7 @@ function FeedbackForm() {
             </div>
 
             {/* Submit Button */}
-            <Button type="submit" className="w-full">
-              Submit Feedback
-            </Button>
+            <Button type="submit" className="w-full">{t("submit_feedback")}</Button>
           </form>
         </CardContent>
       </Card>

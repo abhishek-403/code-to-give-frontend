@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import useLanguage from '@/lib/hooks/useLang';
 
 interface User {
   id: number;
@@ -75,11 +76,12 @@ const UserProfilePage: React.FC = () => {
       [e.target.name]: e.target.value 
     });
   };
+  const { t } = useLanguage()
 
   if (isLoading) {
     return (
       <div className="container mx-auto max-w-4xl py-8 px-4" aria-live="polite" aria-busy="true">
-        <h1 className="text-3xl font-bold mb-8">User Profile</h1>
+        <h1 className="text-3xl font-bold mb-8">{t("user_profile")}</h1>
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="flex flex-col md:flex-row gap-8">
             <Skeleton className="w-32 h-32 rounded-full" />
@@ -99,13 +101,11 @@ const UserProfilePage: React.FC = () => {
       <div className="container mx-auto max-w-4xl py-8 px-4" role="alert">
         <Card className="border-red-200">
           <CardHeader>
-            <CardTitle className="text-red-600">Error</CardTitle>
+            <CardTitle className="text-red-600">{t("error")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p>{error}</p>
-            <Button onClick={() => window.location.reload()} className="mt-4">
-              Retry
-            </Button>
+            <Button onClick={() => window.location.reload()} className="mt-4">{t("retry")}</Button>
           </CardContent>
         </Card>
       </div>
@@ -117,7 +117,7 @@ const UserProfilePage: React.FC = () => {
       <div className="container mx-auto max-w-4xl py-8 px-4" role="alert">
         <Card>
           <CardContent className="py-10">
-            <p className="text-center text-gray-500">No user data available.</p>
+            <p className="text-center text-gray-500">{t("no_user_data_available_")}</p>
           </CardContent>
         </Card>
       </div>
@@ -126,8 +126,7 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <main className="container mx-auto max-w-4xl py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8">User Profile</h1>
-      
+      <h1 className="text-3xl font-bold mb-8">{t("user_profile")}</h1>
       <div className="grid gap-6">
         <Card className="overflow-hidden">          
           <div className="px-6 p-6">
@@ -150,18 +149,14 @@ const UserProfilePage: React.FC = () => {
                   variant="outline"
                   // className="ml-1"
                   aria-label="show current events"
-                >
-                  Current Events
-                </Button>
+                >{t("current_events")}</Button>
               <Button 
                   // onClick={handleEdit}
                   onClick={() => navigate("/", { state: { activeTab: "history" } })}
                   variant="outline"
                   // className="ml-1"
                   aria-label="show user events history"
-                >
-                  Events history
-                </Button>
+                >{t("events_history")}</Button>
 
               {!isEditing && (
                 <Button 
@@ -169,9 +164,7 @@ const UserProfilePage: React.FC = () => {
                   variant="outline"
                   className="bg-gray-700 text-white hover:bg-black hover:text-white"
                   aria-label="Edit profile information"
-                >
-                  Edit Profile
-                </Button>
+                >{t("edit_profile")}</Button>
               )}
               </div>
                
@@ -179,12 +172,12 @@ const UserProfilePage: React.FC = () => {
           </div>
           
           <CardContent className="border-t pt-6">
-            <h3 className="text-xl font-semibold mb-4">Personal Information</h3>
+            <h3 className="text-xl font-semibold mb-4">{t("personal_information")}</h3>
             
             {isEditing ? (
               <form className="space-y-4 max-w-md">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">{t("name")}</Label>
                   <Input 
                     type="text" 
                     id="name" 
@@ -197,7 +190,7 @@ const UserProfilePage: React.FC = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("email")}</Label>
                   <Input 
                     type="email" 
                     id="email" 
@@ -210,24 +203,22 @@ const UserProfilePage: React.FC = () => {
                 </div>
                 
                 <div className="flex gap-2 pt-2">
-                  <Button onClick={handleSave}>Save Changes</Button>
+                  <Button onClick={handleSave}>{t("save_changes")}</Button>
                   <Button 
                     variant="outline" 
                     onClick={handleCancel}
-                  >
-                    Cancel
-                  </Button>
+                  >{t("cancel")}</Button>
                 </div>
               </form>
             ) : (
               <div className="space-y-4 max-w-lg">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-y-2 border-b pb-2">
-                  <span className="text-gray-500">Name</span>
+                  <span className="text-gray-500">{t("name")}</span>
                   <span className="md:col-span-2 font-medium">{user.name}</span>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-y-2 border-b pb-2">
-                  <span className="text-gray-500">Email</span>
+                  <span className="text-gray-500">{t("email")}</span>
                   <span className="md:col-span-2 font-medium">{user.email}</span>
                 </div>
               </div>

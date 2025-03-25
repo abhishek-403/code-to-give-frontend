@@ -32,6 +32,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { EventStatus, TaskStatus } from "@/lib/constants/server-constants";
+import useLanguage from "@/lib/hooks/useLang";
 import {
   useAddTaskToEventMutation,
   useEditEventMutation,
@@ -139,18 +140,18 @@ const EventEditDialog = ({
     setOpen(false);
   };
 
+  const { t } = useLanguage()
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>Edit Event Details</DialogTitle>
+          <DialogTitle>{t("edit_event_details")}</DialogTitle>
         </DialogHeader>
         <div className="overflow-y-auto max-h-[500px] pr-16 pt-5 pb-5">
           <div className="space-y-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="title" className="text-right">
-                Event Title
-              </Label>
+              <Label htmlFor="title" className="text-right">{t("event_title")}</Label>
               <Input
                 id="title"
                 value={editedEvent.title}
@@ -161,9 +162,7 @@ const EventEditDialog = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Description
-              </Label>
+              <Label htmlFor="description" className="text-right">{t("description")}</Label>
               <Textarea
                 id="description"
                 value={editedEvent.description}
@@ -177,9 +176,7 @@ const EventEditDialog = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Status
-              </Label>
+              <Label htmlFor="description" className="text-right">{t("status")}</Label>
               <div className="relative">
                 <Button variant="outline" onClick={() => setOpen(!open)}>
                   {editedEvent.status
@@ -190,7 +187,7 @@ const EventEditDialog = ({
                 {open && (
                   <Command className="absolute z-50 h-[140px] bg-white dark:bg-black w-[300px] rounded-md border bg-popover text-popover-foreground shadow-md">
                     <CommandList>
-                      <CommandEmpty>No status found.</CommandEmpty>
+                      <CommandEmpty>{t("no_status_found_")}</CommandEmpty>
                       <CommandGroup className="bg-white dark:bg-black">
                         {Object.values(EventStatus).map((status) => (
                           <CommandItem
@@ -208,7 +205,7 @@ const EventEditDialog = ({
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Start Date</Label>
+              <Label className="text-right">{t("start_date")}</Label>
               <Calendar
                 mode="single"
                 selected={editedEvent.startDate}
@@ -222,7 +219,7 @@ const EventEditDialog = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">End Date</Label>
+              <Label className="text-right">{t("end_date")}</Label>
               <Calendar
                 mode="single"
                 selected={editedEvent.endDate}
@@ -236,9 +233,7 @@ const EventEditDialog = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="location" className="text-right">
-                Location
-              </Label>
+              <Label htmlFor="location" className="text-right">{t("location")}</Label>
               <Input
                 id="location"
                 value={editedEvent.location}
@@ -255,12 +250,8 @@ const EventEditDialog = ({
             type="button"
             variant="outline"
             onClick={() => onOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" onClick={handleSave}>
-            Save Changes
-          </Button>
+          >{t("cancel")}</Button>
+          <Button type="submit" onClick={handleSave}>{t("save_changes")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -724,24 +715,24 @@ const EventManagementPage = () => {
     const completionPercentage = calculateTaskCompletion(event);
     const taskStats = getTaskStats(event);
 
+  const { t } = useLanguage()
+
     return (
       <div key={event.id} className="border p-4 rounded-md mb-4">
         <h3 className="font-semibold text-lg">{event.name}</h3>
         <p className="text-sm text-gray-500 mb-2">{event.description}</p>
         <div className="text-sm mb-2">
-          <div>
-            📅 {format(event.startDate, "MMM dd, yyyy")} -{" "}
+          <div>{t("_")}{format(event.startDate, "MMM dd, yyyy")}{t("_")}{" "}
             {format(event.endDate, "MMM dd, yyyy")}
           </div>
-          <div>📍 {event.location}</div>
+          <div>{t("_")}{event.location}</div>
         </div>
-
         {/* Task completion indicator */}
         {event.tasks.length > 0 && (
           <div className="mt-3 mb-2">
             <div className="flex justify-between items-center text-xs mb-1">
-              <span>Task Completion</span>
-              <span>{completionPercentage}%</span>
+              <span>{t("task_completion")}</span>
+              <span>{completionPercentage}{t("_")}</span>
             </div>
             <Progress value={completionPercentage} className="h-2" />
 
@@ -774,19 +765,14 @@ const EventManagementPage = () => {
             </div>
           </div>
         )}
-
         <div className="flex space-x-2 mt-2">
-          <Button size="sm" onClick={() => handleEdit(event._id)} tabIndex={0}>
-            Details
-          </Button>
+          <Button size="sm" onClick={() => handleEdit(event._id)} tabIndex={0}>{t("details")}</Button>
           <Button
             size="sm"
             variant="destructive"
             onClick={() => handleDelete(event.id)}
             tabIndex={0}
-          >
-            Delete
-          </Button>
+          >{t("delete")}</Button>
         </div>
       </div>
     );
@@ -821,41 +807,34 @@ const EventManagementPage = () => {
     // setEvents((prevEvents) => ensureVolunteerTaskConsistency(prevEvents));
   }, []); // Run once on component mount
 
+  const { t } = useLanguage()
+
   return (
     <div className="p-4">
       <Link to="/admin" className="text-primary-600">
         <Button variant="outline" className="mb-4">
-          <ArrowLeft size={16} />
-          Back to Dashboard
-        </Button>
+          <ArrowLeft size={16} />{t("back_to_dashboard")}</Button>
       </Link>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">Event Management</h2>
+        <h2 className="text-2xl font-semibold">{t("event_management")}</h2>
         <Link to="/admin/events/create">
           <Button>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Add Event
-          </Button>
+            <PlusCircle className="h-4 w-4 mr-2" />{t("add_event")}</Button>
         </Link>
       </div>
-
       {selectedEvent ? (
         <div>
           <Button
             variant="outline"
             className="mb-4"
             onClick={() => setSelectedEvent(null)}
-          >
-            Back to Events
-          </Button>
+          >{t("back_to_events")}</Button>
 
           {selectedEvent && (
             <>
               {/* Existing event details section */}
               <div className="flex justify-end mb-4">
-                <Button onClick={() => setIsEditEventOpen(true)}>
-                  Edit Event Details
-                </Button>
+                <Button onClick={() => setIsEditEventOpen(true)}>{t("edit_event_details")}</Button>
               </div>
 
               <EventEditDialog
@@ -878,27 +857,22 @@ const EventManagementPage = () => {
                         className="h-2 w-32"
                       />
                       <span className="text-xs text-gray-500 ml-2 dark:text-white">
-                        {calculateTaskCompletion(selectedEvent)}% Complete
-                      </span>
+                        {calculateTaskCompletion(selectedEvent)}{t("_complete")}</span>
                     </div>
                   )}
                 </div>
                 <Dialog open={isEmailOpen} onOpenChange={setIsEmailOpen}>
                   <DialogTrigger asChild>
                     <Button>
-                      <Mail className="h-4 w-4 mr-2" />
-                      Send Update
-                    </Button>
+                      <Mail className="h-4 w-4 mr-2" />{t("send_update")}</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Send Update to Volunteers</DialogTitle>
+                      <DialogTitle>{t("send_update_to_volunteers")}</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="subject" className="text-right">
-                          Subject
-                        </Label>
+                        <Label htmlFor="subject" className="text-right">{t("subject")}</Label>
                         <Input
                           id="subject"
                           value={emailUpdate.subject}
@@ -912,9 +886,7 @@ const EventManagementPage = () => {
                         />
                       </div>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="message" className="text-right">
-                          Message
-                        </Label>
+                        <Label htmlFor="message" className="text-right">{t("message")}</Label>
                         <Textarea
                           id="message"
                           value={emailUpdate.message}
@@ -930,9 +902,7 @@ const EventManagementPage = () => {
                       </div>
                     </div>
                     <div className="flex justify-end">
-                      <Button onClick={handleSendUpdate}>
-                        Send to All Volunteers
-                      </Button>
+                      <Button onClick={handleSendUpdate}>{t("send_to_all_volunteers")}</Button>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -942,32 +912,28 @@ const EventManagementPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">
-                      Event Details
-                    </h3>
+                    <h3 className="text-lg font-semibold mb-2">{t("event_details")}</h3>
                     <div className="space-y-2">
                       <p>
-                        <strong>Description:</strong>{" "}
+                        <strong>{t("description_")}</strong>{" "}
                         {selectedEvent.description}
                       </p>
                       <p>
-                        <strong>Status:</strong> {selectedEvent.status}
+                        <strong>{t("status_")}</strong> {selectedEvent.status}
                       </p>
                       <p>
-                        <strong>Dates:</strong>{" "}
-                        {format(selectedEvent.startDate, "MMM dd, yyyy")} -{" "}
+                        <strong>{t("dates_")}</strong>{" "}
+                        {format(selectedEvent.startDate, "MMM dd, yyyy")}{t("_")}{" "}
                         {format(selectedEvent.endDate, "MMM dd, yyyy")}
                       </p>
                       <p>
-                        <strong>Location:</strong> {selectedEvent.location}
+                        <strong>{t("location_")}</strong> {selectedEvent.location}
                       </p>
                     </div>
                   </div>
                   {selectedEvent.applications.length > 0 && (
                     <div className="mt-8 ">
-                      <h3 className="text-lg font-semibold mb-4 ">
-                        Applications
-                      </h3>
+                      <h3 className="text-lg font-semibold mb-4 ">{t("applications")}</h3>
 
                       <div className="space-y-2 ">
                         {selectedEvent.applications.map((application: any) => {
@@ -983,7 +949,7 @@ const EventManagementPage = () => {
                   )}
                   {selectedEvent.volunteers.length > 0 && (
                     <div className="mt-8">
-                      <h3 className="text-lg font-semibold mb-4">Volunteers</h3>
+                      <h3 className="text-lg font-semibold mb-4">{t("volunteers")}</h3>
 
                       <div className="space-y-2">
                         {selectedEvent.volunteers.map((volunteer: any) => {
@@ -1020,18 +986,14 @@ const EventManagementPage = () => {
                                         volunteer.id
                                       );
                                     }}
-                                  >
-                                    "Active"
-                                    {/* {volunteer.assigned ? "Active" : "Waitlisted"} */}
+                                  >{t("_active_")}{/* {volunteer.assigned ? "Active" : "Waitlisted"} */}
                                   </Button>
                                 )}
                                 {hasAssignedTasks && !volunteer.assigned && (
                                   <Badge
                                     variant="outline"
                                     className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-300 dark:text-black"
-                                  >
-                                    Has assigned tasks
-                                  </Badge>
+                                  >{t("has_assigned_tasks")}</Badge>
                                 )}
 
                                 {/* Add this new email button */}
@@ -1049,9 +1011,7 @@ const EventManagementPage = () => {
                                     setIsVolunteerEmailOpen(true);
                                   }}
                                 >
-                                  <Mail className="h-3 w-3 mr-1" />
-                                  Email
-                                </Button>
+                                  <Mail className="h-3 w-3 mr-1" />{t("email")}</Button>
                               </div>
                             </div>
                           );
@@ -1063,26 +1023,22 @@ const EventManagementPage = () => {
 
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-lg font-semibold">Tasks</h3>
+                    <h3 className="text-lg font-semibold">{t("tasks")}</h3>
                     <Dialog
                       open={isAddTaskOpen}
                       onOpenChange={setIsAddTaskOpen}
                     >
                       <DialogTrigger asChild>
                         <Button size="sm">
-                          <PlusCircle className="h-4 w-4 mr-2" />
-                          Add Task
-                        </Button>
+                          <PlusCircle className="h-4 w-4 mr-2" />{t("add_task")}</Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Add New Task</DialogTitle>
+                          <DialogTitle>{t("add_new_task")}</DialogTitle>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="taskTitle" className="text-right">
-                              Task
-                            </Label>
+                            <Label htmlFor="taskTitle" className="text-right">{t("task")}</Label>
                             <Input
                               id="taskTitle"
                               value={newTask.title}
@@ -1100,9 +1056,7 @@ const EventManagementPage = () => {
                             <Label
                               htmlFor="taskDescription"
                               className="text-right"
-                            >
-                              Description
-                            </Label>
+                            >{t("description")}</Label>
                             <Textarea
                               id="taskDescription"
                               value={newTask.description}
@@ -1118,9 +1072,7 @@ const EventManagementPage = () => {
                             />
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="assignTo" className="text-right">
-                              Assign To
-                            </Label>
+                            <Label htmlFor="assignTo" className="text-right">{t("assign_to")}</Label>
                             <Select
                               value={newTask.assignedTo}
                               onValueChange={(value) =>
@@ -1146,9 +1098,7 @@ const EventManagementPage = () => {
                             </Select>
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="completed" className="text-right">
-                              Status
-                            </Label>
+                            <Label htmlFor="completed" className="text-right">{t("status")}</Label>
                             <div className="flex items-center space-x-2 col-span-3">
                               <Checkbox
                                 id="completed"
@@ -1163,16 +1113,12 @@ const EventManagementPage = () => {
                               <label
                                 htmlFor="completed"
                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                              >
-                                Mark as completed
-                              </label>
+                              >{t("mark_as_completed")}</label>
                             </div>
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          <Button onClick={handleAddTask} disabled={isPending}>
-                            Save Task
-                          </Button>
+                          <Button onClick={handleAddTask} disabled={isPending}>{t("save_task")}</Button>
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -1185,9 +1131,7 @@ const EventManagementPage = () => {
                         variant={taskFilter === "all" ? "default" : "outline"}
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("all")}
-                      >
-                        All ({selectedEvent.tasks.length})
-                      </Badge>
+                      >{t("all_")}{selectedEvent.tasks.length}{t("_")}</Badge>
                       <Badge
                         variant={
                           taskFilter === "completed" ? "default" : "outline"
@@ -1195,9 +1139,7 @@ const EventManagementPage = () => {
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("completed")}
                       >
-                        <CheckCircle2 className="h-3 w-3 mr-1" />
-                        Completed ({getTaskStats(selectedEvent).completed})
-                      </Badge>
+                        <CheckCircle2 className="h-3 w-3 mr-1" />{t("completed_")}{getTaskStats(selectedEvent).completed}{t("_")}</Badge>
                       <Badge
                         variant={
                           taskFilter === "pending" ? "default" : "outline"
@@ -1205,9 +1147,7 @@ const EventManagementPage = () => {
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("pending")}
                       >
-                        <Clock className="h-3 w-3 mr-1" />
-                        Pending ({getTaskStats(selectedEvent).pending})
-                      </Badge>
+                        <Clock className="h-3 w-3 mr-1" />{t("pending_")}{getTaskStats(selectedEvent).pending}{t("_")}</Badge>
                       <Badge
                         variant={
                           taskFilter === "unassigned" ? "default" : "outline"
@@ -1215,9 +1155,7 @@ const EventManagementPage = () => {
                         className="cursor-pointer"
                         onClick={() => setTaskFilter("unassigned")}
                       >
-                        <Circle className="h-3 w-3 mr-1" />
-                        Unassigned ({getTaskStats(selectedEvent).unassigned})
-                      </Badge>
+                        <Circle className="h-3 w-3 mr-1" />{t("unassigned_")}{getTaskStats(selectedEvent).unassigned}{t("_")}</Badge>
                     </div>
                   </div>
 
@@ -1260,9 +1198,7 @@ const EventManagementPage = () => {
                                       setIsTaskAssignOpen(true);
                                     }}
                                   >
-                                    <RotateCcw className="h-3 w-3 mr-1" />
-                                    Reopen
-                                  </Button>
+                                    <RotateCcw className="h-3 w-3 mr-1" />{t("reopen")}</Button>
                                 ) : task.assignedTo !== null ? (
                                   <Button
                                     variant="outline"
@@ -1275,9 +1211,7 @@ const EventManagementPage = () => {
                                       setIsTaskAssignOpen(true);
                                     }}
                                   >
-                                    <CheckCircle2 className="h-3 w-3 mr-1" />
-                                    Complete
-                                  </Button>
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />{t("complete")}</Button>
                                 ) : (
                                   <Button
                                     variant="outline"
@@ -1291,9 +1225,7 @@ const EventManagementPage = () => {
                                     }}
                                     className="text-gray-500 dark:text-black"
                                   >
-                                    <ArrowRight className="h-3 w-3 mr-1" />
-                                    Assign
-                                  </Button>
+                                    <ArrowRight className="h-3 w-3 mr-1" />{t("assign")}</Button>
                                 )}
 
                                 {/* Always show reassign button for assigned tasks */}
@@ -1355,9 +1287,7 @@ const EventManagementPage = () => {
                         )
                       )
                     ) : (
-                      <p className="text-gray-500 text-sm dark:text-gray-300">
-                        No tasks added for this event yet.
-                      </p>
+                      <p className="text-gray-500 text-sm dark:text-gray-300">{t("no_tasks_added_for_this_event_yet_")}</p>
                     )}
                   </div>
                 </div>
@@ -1389,8 +1319,7 @@ const EventManagementPage = () => {
                       </p>
                     )}
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500 dark:text-gray-300">
-                        Current status:{" "}
+                      <p className="text-sm text-gray-500 dark:text-gray-300">{t("current_status_")}{" "}
                         <Badge
                           variant="outline"
                           className={`${
@@ -1409,8 +1338,7 @@ const EventManagementPage = () => {
                         </Badge>
                       </p>
                       {taskToAssign.assignedTo && (
-                        <p className="text-sm text-gray-500 mt-1 dark:text-gray-300">
-                          Currently assigned to:{" "}
+                        <p className="text-sm text-gray-500 mt-1 dark:text-gray-300">{t("currently_assigned_to_")}{" "}
                           {selectedEvent.volunteers.find(
                             (v: any) => v.id === taskToAssign.assignedTo
                           )?.name || "Unknown"}
@@ -1422,9 +1350,7 @@ const EventManagementPage = () => {
 
                 {taskToAssign?.actionType === "reassign" && (
                   <div className="grid grid-cols-4 items-center gap-4 mb-4">
-                    <Label htmlFor="assignToVolunteer" className="text-right">
-                      Assign To
-                    </Label>
+                    <Label htmlFor="assignToVolunteer" className="text-right">{t("assign_to")}</Label>
                     <Select
                       onValueChange={(value) => handleTaskAssignment(value)}
                       defaultValue={
@@ -1437,7 +1363,7 @@ const EventManagementPage = () => {
                         <SelectValue placeholder="Select volunteer" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">Unassigned</SelectItem>
+                        <SelectItem value="none">{t("unassigned")}</SelectItem>
                         {selectedEvent?.volunteers.map((volunteer: any) => (
                           <SelectItem
                             key={volunteer.id}
@@ -1455,13 +1381,10 @@ const EventManagementPage = () => {
                 {(taskToAssign?.actionType === "complete" ||
                   taskToAssign?.actionType === "reopen") && (
                   <div className="mt-4 mb-4">
-                    <p>
-                      Are you sure you want to{" "}
+                    <p>{t("are_you_sure_you_want_to")}{" "}
                       {taskToAssign?.actionType === "complete"
                         ? "mark this task as complete"
-                        : "reopen this task"}
-                      ?
-                    </p>
+                        : "reopen this task"}{t("_")}</p>
                   </div>
                 )}
 
@@ -1469,9 +1392,7 @@ const EventManagementPage = () => {
                   <Button
                     variant="outline"
                     onClick={() => setIsTaskAssignOpen(false)}
-                  >
-                    Cancel
-                  </Button>
+                  >{t("cancel")}</Button>
 
                   {/* Conditional confirm button based on action type */}
                   {taskToAssign?.actionType === "complete" && (
@@ -1481,9 +1402,7 @@ const EventManagementPage = () => {
                           taskToAssign.assignedTo?.toString()
                         )
                       }
-                    >
-                      Mark Complete
-                    </Button>
+                    >{t("mark_complete")}</Button>
                   )}
 
                   {taskToAssign?.actionType === "reopen" && (
@@ -1493,9 +1412,7 @@ const EventManagementPage = () => {
                           taskToAssign.assignedTo?.toString()
                         )
                       }
-                    >
-                      Reopen Task
-                    </Button>
+                    >{t("reopen_task")}</Button>
                   )}
                 </div>
               </div>
@@ -1536,9 +1453,7 @@ const EventManagementPage = () => {
                 tabIndex={activeTab === "active" ? 0 : -1}
                 aria-selected={activeTab === "active"}
                 aria-controls="panel-active"
-              >
-                Active
-              </TabsTrigger>
+              >{t("active")}</TabsTrigger>
               <TabsTrigger
                 id="tab-underReview"
                 value="underReview"
@@ -1546,9 +1461,7 @@ const EventManagementPage = () => {
                 tabIndex={activeTab === "underReview" ? 0 : -1}
                 aria-selected={activeTab === "underReview"}
                 aria-controls="panel-underReview"
-              >
-                Under Review
-              </TabsTrigger>
+              >{t("under_review")}</TabsTrigger>
               <TabsTrigger
                 id="tab-history"
                 value="history"
@@ -1556,9 +1469,7 @@ const EventManagementPage = () => {
                 tabIndex={activeTab === "history" ? 0 : -1}
                 aria-selected={activeTab === "history"}
                 aria-controls="panel-history"
-              >
-                History
-              </TabsTrigger>
+              >{t("history")}</TabsTrigger>
             </TabsList>
             <TabsContent
               value="active"
@@ -1578,13 +1489,10 @@ const EventManagementPage = () => {
                   <Loader />
                 </div>
               ) : isError ? (
-                <p className="text-red-400">
-                  Error loading programs. Please try again.
-                </p>
+                <p className="text-red-400">{t("error_loading_programs_please_try_again_")}</p>
               ) : events.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
-                    Showing {events.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{events.length}{" "}
                     {events.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
@@ -1605,9 +1513,7 @@ const EventManagementPage = () => {
                 </>
               ) : (
                 !isLoading && (
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
-                    No events found matching your criteria.
-                  </p>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">{t("no_events_found_matching_your_criteria_")}</p>
                 )
               )}
             </TabsContent>
@@ -1622,7 +1528,7 @@ const EventManagementPage = () => {
                 .filter((event) => event.status === "underReview")
                 .map((event) => renderEventCard(event))}
               {events.filter((event) => event.status === "underReview")
-                .length === 0 && <p>No events under review.</p>}
+                .length === 0 && <p>{t("no_events_under_review_")}</p>}
             </TabsContent>
             <TabsContent
               value="history"
@@ -1635,20 +1541,18 @@ const EventManagementPage = () => {
                 .filter((event) => event.status === "history")
                 .map((event) => renderEventCard(event))}
               {events.filter((event) => event.status === "history").length ===
-                0 && <p>No past events.</p>}
+                0 && <p>{t("no_past_events_")}</p>}
             </TabsContent>
           </Tabs>
 
           <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add New Event</DialogTitle>
+                <DialogTitle>{t("add_new_event")}</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="title" className="text-right">
-                    Title
-                  </Label>
+                  <Label htmlFor="title" className="text-right">{t("title")}</Label>
                   <Input
                     id="title"
                     value={newEvent.title}
@@ -1659,9 +1563,7 @@ const EventManagementPage = () => {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="description" className="text-right">
-                    Description
-                  </Label>
+                  <Label htmlFor="description" className="text-right">{t("description")}</Label>
                   <Textarea
                     id="description"
                     value={newEvent.description}
@@ -1675,9 +1577,7 @@ const EventManagementPage = () => {
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="location" className="text-right">
-                    Location
-                  </Label>
+                  <Label htmlFor="location" className="text-right">{t("location")}</Label>
                   <Input
                     id="location"
                     value={newEvent.location}
@@ -1690,7 +1590,7 @@ const EventManagementPage = () => {
                 {/* Date pickers would go here */}
               </div>
               <div className="flex justify-end">
-                <Button onClick={handleAddEvent}>Add Event</Button>
+                <Button onClick={handleAddEvent}>{t("add_event")}</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -1703,19 +1603,16 @@ const EventManagementPage = () => {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              Send Email to {volunteerEmailData.volunteerName}
+            <DialogTitle>{t("send_email_to")}{volunteerEmailData.volunteerName}
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="text-sm mb-2">
-              <p>Recipient: {volunteerEmailData.volunteerName}</p>
-              <p>Email: {volunteerEmailData.volunteerEmail}</p>
+              <p>{t("recipient_")}{volunteerEmailData.volunteerName}</p>
+              <p>{t("email_")}{volunteerEmailData.volunteerEmail}</p>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="volunteer-subject" className="text-right">
-                Subject
-              </Label>
+              <Label htmlFor="volunteer-subject" className="text-right">{t("subject")}</Label>
               <Input
                 id="volunteer-subject"
                 value={volunteerEmailData.subject}
@@ -1729,9 +1626,7 @@ const EventManagementPage = () => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="volunteer-message" className="text-right">
-                Message
-              </Label>
+              <Label htmlFor="volunteer-message" className="text-right">{t("message")}</Label>
               <Textarea
                 id="volunteer-message"
                 value={volunteerEmailData.message}
@@ -1747,7 +1642,7 @@ const EventManagementPage = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleSendVolunteerEmail}>Send Email</Button>
+            <Button onClick={handleSendVolunteerEmail}>{t("send_email")}</Button>
           </div>
         </DialogContent>
       </Dialog>
