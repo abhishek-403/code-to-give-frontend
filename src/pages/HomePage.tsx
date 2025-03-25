@@ -16,7 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ApplicationStatus, Availabitity } from "@/lib/constants/server-constants";
+import {
+  ApplicationStatus,
+  Availabitity,
+} from "@/lib/constants/server-constants";
 import { auth } from "@/lib/firebaseConfig";
 import { useGetVolunteerDomains, useInfiniteEvents } from "@/services/event";
 import { useGetMyApplications } from "@/services/user";
@@ -26,11 +29,10 @@ import { Info, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+import HistoryEventCard from "@/components/HistoryEventCard";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
-import HistoryEventCard from "@/components/HistoryEventCard";
-import { cn } from "@/lib/utils";
 
 interface EventType {
   _id: string;
@@ -493,11 +495,19 @@ const HomePage = () => {
     return (
       <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
         <CardHeader>
-          <div className="flex justify-between mb-2 items-start">
-            <div>
-              <CardTitle className="text-lg font-semibold">
-                {application.eventId.name}
-              </CardTitle>
+          <div className="flex w-full justify-between mb-2 items-start">
+            <div className="w-full">
+              <div className="flex  w-full">
+                <CardTitle className="text-lg  font-semibold ">
+                  {application.eventId.name}
+                </CardTitle>
+                {application.status === ApplicationStatus.APPROVED && (
+                  <Badge className=" ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">
+                    Approved
+                  </Badge>
+                )}
+              </div>
+
               <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
                 <Badge
                   variant="outline"
@@ -536,13 +546,20 @@ const HomePage = () => {
                 {formatDateFromDate(application.willingEndDate)}
               </span>
             </p>
-            <Link
-              to={`/volunteer/event/${application._id}`}
-              state={{ applicationData: application }}
-            >
-              <Button className="w-full mt-2">View Tasks</Button>
-              
-            </Link>
+            {application.status === ApplicationStatus.APPROVED ? (
+              <Link
+                to={`/volunteer/event/${application._id}`}
+                state={{ applicationData: application }}
+              >
+                <Button className="w-full mt-2">View Tasks</Button>
+              </Link>
+            ) : (
+              <div>
+                <Button variant={"outline"} className="w-full mt-2">
+                  Approval Pending
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

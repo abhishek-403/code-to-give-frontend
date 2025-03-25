@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from "react";
-import { ArrowLeft, CheckCircle2, Clock, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { EventStatus, TaskStatus } from "@/lib/constants/server-constants";
 import { Event, Task } from "@/types/event";
+import { ArrowLeft, CheckCircle2, Clock, RefreshCw } from "lucide-react";
 import { Types } from "mongoose";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router";
 
 const VolunteerEventPage: React.FC = () => {
@@ -17,7 +18,7 @@ const VolunteerEventPage: React.FC = () => {
     location: "Community Center",
     startDate: new Date("2024-07-15"),
     endDate: new Date("2024-07-16"),
-    status: "UPCOMING", // Assuming this is from your EventStatus enum
+    status: EventStatus.ACTIVE, // Assuming this is from your EventStatus enum
     createdBy: new Types.ObjectId(),
     volunteeringDomains: [],
     availability: "ALL",
@@ -33,7 +34,7 @@ const VolunteerEventPage: React.FC = () => {
       eventId: dummyEvent._id,
       assignedTo: new Types.ObjectId(),
       assignedBy: new Types.ObjectId(),
-      status: "PENDING",
+      status: TaskStatus.INPROGRESS,
       priority: "high",
       startDate: new Date("2024-07-15"),
       endDate: new Date("2024-07-15"),
@@ -48,7 +49,7 @@ const VolunteerEventPage: React.FC = () => {
       eventId: dummyEvent._id,
       assignedTo: new Types.ObjectId(),
       assignedBy: new Types.ObjectId(),
-      status: "PENDING",
+      status: TaskStatus.INPROGRESS,
       priority: "medium",
       startDate: new Date("2024-07-15"),
       endDate: new Date("2024-07-15"),
@@ -60,13 +61,11 @@ const VolunteerEventPage: React.FC = () => {
   // State management for tasks (simulating backend interaction)
   const [event, setEvent] = useState<Event>(dummyEvent);
   const [tasks, setTasks] = useState<Task[]>(dummyTasks);
-  const [taskFilter, setTaskFilter] = useState<"all" | "COMPLETED" | "PENDING">(
-    "all"
-  );
+  const [taskFilter, setTaskFilter] = useState<TaskStatus | "all">("all");
 
   // Calculate progress
   const completedTasks = tasks.filter(
-    (task) => task.status === "COMPLETED"
+    (task) => task.status === TaskStatus.COMPLETED
   ).length;
   const totalTasks = tasks.length;
   const progress = (completedTasks / totalTasks) * 100;
@@ -85,8 +84,11 @@ const VolunteerEventPage: React.FC = () => {
         task._id.equals(taskId)
           ? {
               ...task,
-              status: task.status === "COMPLETED" ? "PENDING" : "COMPLETED",
-              completedAt: task.status === "COMPLETED" ? undefined : new Date(),
+              status: task.status,
+              completedAt:
+                task.status === TaskStatus.COMPLETED
+                  ? task.completedAt
+                  : undefined,
             }
           : task
       )
@@ -132,16 +134,16 @@ const VolunteerEventPage: React.FC = () => {
           All Tasks
         </Badge>
         <Badge
-          variant={taskFilter === "COMPLETED" ? "default" : "outline"}
-          onClick={() => setTaskFilter("COMPLETED")}
+          variant={taskFilter === TaskStatus.COMPLETED ? "default" : "outline"}
+          onClick={() => setTaskFilter(TaskStatus.COMPLETED)}
           className="cursor-pointer"
         >
           <CheckCircle2 className="h-4 w-4 mr-1" />
           Completed
         </Badge>
         <Badge
-          variant={taskFilter === "PENDING" ? "default" : "outline"}
-          onClick={() => setTaskFilter("PENDING")}
+          variant={taskFilter === TaskStatus.INPROGRESS ? "default" : "outline"}
+          onClick={() => setTaskFilter(TaskStatus.INPROGRESS)}
           className="cursor-pointer"
         >
           <Clock className="h-4 w-4 mr-1" />
@@ -159,7 +161,7 @@ const VolunteerEventPage: React.FC = () => {
               key={task._id.toString()}
               className={`
           ${
-            task.status === "COMPLETED"
+            task.status === TaskStatus.COMPLETED
               ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800"
               : "bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800"
           }
@@ -179,12 +181,14 @@ const VolunteerEventPage: React.FC = () => {
                     <Badge
                       variant="outline"
                       className={
-                        task.status === "COMPLETED"
+                        task.status === TaskStatus.COMPLETED
                           ? "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
                           : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300"
                       }
                     >
-                      {task.status === "COMPLETED" ? "Completed" : "Pending"}
+                      {task.status === TaskStatus.COMPLETED
+                        ? "Completed"
+                        : "Pending"}
                     </Badge>
                     <Button
                       size="sm"

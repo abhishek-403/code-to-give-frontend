@@ -7,11 +7,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ApplicationStatus } from "@/lib/constants/server-constants";
-import { useSubmitApplicationMutation } from "@/services/event"; // Import API call
+import { useUpdateApplicationStatusMutation } from "@/services/event"; // Import API call
 import { AlertCircle, Calendar, Check, X } from "lucide-react";
 import { useState } from "react";
 
-const ApplicationCard = ({ application }: any) => {
+const ApplicationCard = ({ application, setSelectedEvent }: any) => {
   // const [status, setStatus] = useState<ApplicationStatus>(application.status);
   const [confirmAction, setConfirmAction] = useState<{
     status: ApplicationStatus;
@@ -19,7 +19,7 @@ const ApplicationCard = ({ application }: any) => {
 
   // API Mutation Hook
   const { mutate: updateApplicationStatus, isPending } =
-    useSubmitApplicationMutation();
+    useUpdateApplicationStatusMutation();
 
   // Function to trigger confirmation dialog
   const handleConfirm = (newStatus: ApplicationStatus) => {
@@ -27,6 +27,7 @@ const ApplicationCard = ({ application }: any) => {
   };
 
   // Function to actually update status
+
   const handleStatusUpdate = () => {
     if (!confirmAction) return;
     updateApplicationStatus({
@@ -34,6 +35,8 @@ const ApplicationCard = ({ application }: any) => {
       status: confirmAction.status,
     });
     setConfirmAction(null);
+    window.location.reload();
+    setSelectedEvent(application.eventId)
   };
 
   return (

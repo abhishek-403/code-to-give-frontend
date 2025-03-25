@@ -258,7 +258,7 @@ export const useAddTaskToEventMutation = () => {
         taskData
       );
 
-      if (response.result.status === ResponseStatusType.Success) {
+      if (response.status === ResponseStatusType.Success) {
         return response.result;
       }
       throw new Error(response.result);
@@ -266,6 +266,7 @@ export const useAddTaskToEventMutation = () => {
     onSuccess: (_, __) => {
       queryClient.invalidateQueries({ queryKey: ["activeEventsAdmin"] });
       toast.success(`Task added successfully! 🎉`);
+      window.location.reload();
     },
     onError: (error) => {
       console.error("Task creation error:", error);

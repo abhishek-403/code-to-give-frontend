@@ -311,7 +311,8 @@ const EventManagementPage = () => {
   };
 
   const handleEdit = (id: any) => {
-    const eventToEdit = events.find((event) => event.id === id);
+    
+    const eventToEdit = events.find((event) => event._id === id);
     setSelectedEvent(eventToEdit);
     setTaskFilter("all"); // Reset filter when selecting a new event
   };
@@ -500,7 +501,7 @@ const EventManagementPage = () => {
 
     return (
       <div key={event.id} className="border p-4 rounded-md mb-4">
-        <h3 className="font-semibold text-lg">{event.title}</h3>
+        <h3 className="font-semibold text-lg">{event.name}</h3>
         <p className="text-sm text-gray-500 mb-2">{event.description}</p>
         <div className="text-sm mb-2">
           <div>
@@ -550,7 +551,7 @@ const EventManagementPage = () => {
         )}
 
         <div className="flex space-x-2 mt-2">
-          <Button size="sm" onClick={() => handleEdit(event.id)} tabIndex={0}>
+          <Button size="sm" onClick={() => handleEdit(event._id)} tabIndex={0}>
             Details
           </Button>
           <Button
@@ -728,7 +729,7 @@ const EventManagementPage = () => {
 
                       <div className="space-y-2 ">
                         {selectedEvent.applications.map((application: any) => {
-                          return <ApplicationCard application={application} />;
+                          return <ApplicationCard setSelectedEvent={setSelectedEvent} application={application} />;
                         })}
                       </div>
                     </div>
@@ -743,7 +744,6 @@ const EventManagementPage = () => {
                           const hasAssignedTasks = selectedEvent.tasks.some(
                             (task: any) => task.assignedTo === volunteer._id
                           );
-                          console.log(volunteer);
 
                           return (
                             <div
@@ -759,22 +759,25 @@ const EventManagementPage = () => {
                                 </p>
                               </div>
                               <div className="flex items-center space-x-2">
-                                <Button
-                                  variant="outline"
-                                  className={`${
-                                    volunteer.assigned
-                                      ? "bg-green-50 text-green-700"
-                                      : "bg-yellow-50 text-yellow-700"
-                                  }`}
-                                  onClick={() => {
-                                    handleAssignVolunteer(
-                                      selectedEvent.id,
-                                      volunteer.id
-                                    );
-                                  }}
-                                >
-                                  {volunteer.assigned ? "Active" : "Waitlisted"}
-                                </Button>
+                                {volunteer.assigned && (
+                                  <Button
+                                    variant="outline"
+                                    className={`${
+                                      volunteer.assigned
+                                        ? "bg-green-50 text-green-700"
+                                        : "bg-yellow-50 text-yellow-700"
+                                    }`}
+                                    onClick={() => {
+                                      handleAssignVolunteer(
+                                        selectedEvent.id,
+                                        volunteer.id
+                                      );
+                                    }}
+                                  >
+                                    "Active"
+                                    {/* {volunteer.assigned ? "Active" : "Waitlisted"} */}
+                                  </Button>
+                                )}
                                 {hasAssignedTasks && !volunteer.assigned && (
                                   <Badge
                                     variant="outline"
@@ -1108,7 +1111,6 @@ const EventManagementPage = () => {
                   </div>
                 </div>
               </div>
-
             </CardContent>
           </Card>
 
