@@ -10,7 +10,9 @@ const Footer = () => {
                 <Button variant="link" asChild><a href="/contact">{t("contact_us")}</a></Button>
                 <Button variant="link" asChild><a href="http://www.samarthanam.org/" target="_blank" rel="noopener noreferrer">{t("samarthanam_official")}</a></Button>
             </div>
-            <p className="mt-2 text-sm">{t("_")}{new Date().getFullYear()}{t("samarthanam_all_rights_reserved_")}</p>
+            <p className="mt-2 text-sm">
+                {t("©️")} {new Date().getFullYear()} {t("samarthanam_|_all_rights_reserved.")}
+            </p>
         </footer>
     );
 };
