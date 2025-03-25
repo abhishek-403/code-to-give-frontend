@@ -73,10 +73,6 @@ const Header = () => {
     navigate('/profile');
   }, [navigate]);
 
-  const handleSettingsClick = useCallback(() => {
-    navigate('/settings');
-  }, [navigate]);
-
   const handleLogout = useCallback(async () => {
     await auth.signOut();
     dispatch(resetUserDetails());
@@ -123,12 +119,6 @@ const Header = () => {
               className="cursor-pointer"
             >
               Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onSelect={handleSettingsClick}
-              className="cursor-pointer"
-            >
-              Settings
             </DropdownMenuItem>
             <DropdownMenuItem 
               onSelect={handleLogout}
