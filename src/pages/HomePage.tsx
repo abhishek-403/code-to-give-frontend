@@ -713,15 +713,21 @@ const HomePage = () => {
                 {formatDateFromDate(event.endDate)}
               </span>
             </p>
-            <div className="flex space-x-4">
-              <Button onClick={handleDownloadCertificate} className="w-full">
+            {/* <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+             */}
+             {/* add flex wrap to this container so buttons stay */}
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                onClick={handleDownloadCertificate} 
+                className="w-full sm:flex-1"
+              >
                 Download Certificate
               </Button>
               {!event.feedbackSubmitted && (
                 <Button
                   onClick={handleProvideFeedback}
                   variant="secondary"
-                  className="w-full"
+                  className="w-full sm:flex-1"
                 >
                   Provide Feedback
                 </Button>
