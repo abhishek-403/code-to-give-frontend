@@ -31,10 +31,13 @@ const useLanguage = () => {
   // Translation function
   const t = (key: string): string => {
     const translationEntry = (translations as unknown as TranslationMap)[key];
-    
+
     if (!translationEntry) {
       console.warn(`Translation missing for key: ${key}`);
-      return key; // Return the key as fallback
+      return key
+        .replace(/_/g, ' ')          // Replace all underscores with spaces
+        .replace(/\b\w/g, char => char.toUpperCase()) // Title case each word
+        .trim();                     // Remove any leading/trailing whitespace
     }
 
     return translationEntry[language] || translationEntry['en'] || key;
