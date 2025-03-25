@@ -171,7 +171,24 @@ const Header = () => {
         className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full"
         aria-label="Desktop Navigation Menu"
       >
-        
+        <Link
+          to="/contactus"
+          className="hover:underline"
+          aria-label="Make a Donation"
+        >
+          <Button
+            className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            variant="outline"
+            size="sm"
+          >
+            Contact Us
+          </Button>
+        </Link>
+
+        <span className="text-gray-400" aria-hidden="true">
+          |
+        </span>
+
         {/* Font Size Controls */}
         <div
           role="group"
@@ -268,19 +285,6 @@ const Header = () => {
             size="sm"
           >
             Donate Now
-          </Button>
-        </Link>
-        <Link
-          to="/contactus"
-          className="hover:underline"
-          aria-label="Make a Donation"
-        >
-          <Button
-            className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded"
-            variant="outline"
-            size="sm"
-          >
-            Contact Us
           </Button>
         </Link>
 
