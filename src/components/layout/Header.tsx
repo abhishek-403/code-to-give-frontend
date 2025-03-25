@@ -78,7 +78,7 @@ const Header = () => {
     await auth.signOut();
     dispatch(resetUserDetails());
   }, [dispatch]);
-  const { t } = useLanguage()
+  const { t, setLanguage } = useLanguage()
 
   const renderUserAuthButton = () => {
     if (loading || isLoading) {
@@ -232,18 +232,35 @@ const Header = () => {
               aria-haspopup="menu"
               aria-expanded="false"
             >
-              <Globe className="h-4 w-4 mr-2" />{t("language")}</Button>
+              <Globe className="h-4 w-4 mr-2" />
+              {t("language")}
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
             onKeyDown={handleLanguageDropdownKeyDown}
           >
-            <DropdownMenuItem aria-label="Switch to English">{t("english")}</DropdownMenuItem>
-            <DropdownMenuItem aria-label="Switch to Hindi">{t("_")}</DropdownMenuItem>
-            <DropdownMenuItem aria-label="Switch to Kannada">{t("_")}</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => { setLanguage('en'); window.location.reload() }}
+              aria-label="Switch to English"
+            >
+              English
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => { setLanguage('hi'); window.location.reload() }}
+              aria-label="Switch to Hindi"
+            >
+              हिंदी
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => { setLanguage('kn'); window.location.reload() }}
+              aria-label="Switch to Kannada"
+            >
+              ಕನ್ನಡ
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-
+        
         <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
 
         {/* Theme Switcher */}
