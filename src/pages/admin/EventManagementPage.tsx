@@ -344,40 +344,40 @@ const EventManagementPage = () => {
   const [dummyCompletedEvents, setDummyCompletedEvents] = useState([
     {
       _id: "completed-event-1",
-      name: "Annual Beach Cleanup 2023",
+      name: "Inclusive Job Drive with Barclays",
       description:
-        "Our successful beach cleanup event that removed over 500 pounds of trash from the shoreline.",
-      location: "Coastal Park Beach",
-      startDate: new Date(2023, 9, 15), // October 15, 2023
-      endDate: new Date(2023, 9, 15),
+        "Samarthanam organized an inclusive job drive for young people in Bengaluru in partnership with Barclays. The event connected youth from diverse backgrounds with potential employers.",
+      location: "Samarthanam Trust Centre, Bengaluru",
+      startDate: new Date(2022, 8, 17), // September 17, 2022
+      endDate: new Date(2022, 8, 17),
       status: EventStatus.COMPLETED,
       applications: [],
       tasks: [
         {
           _id: "c-task-1",
-          name: "Volunteer Registration",
-          description: "Register and assign volunteers",
+          name: "Candidate Registration",
+          description: "Register participants and verify documentation",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c-task-2",
-          name: "Equipment Distribution",
-          description: "Hand out gloves and bags",
+          name: "Employer Coordination",
+          description: "Set up interview booths for employers",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c-task-3",
-          name: "Area Assignment",
-          description: "Assign beach areas to teams",
+          name: "Accessibility Arrangements",
+          description: "Ensure all facilities are accessible for disabled participants",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c-task-4",
-          name: "Waste Collection",
-          description: "Collect and sort waste",
+          name: "Skills Workshop",
+          description: "Conduct pre-interview skills workshop for candidates",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
@@ -385,73 +385,73 @@ const EventManagementPage = () => {
       volunteers: [
         {
           _id: "c-vol-1",
-          displayName: "Anna Johnson",
-          email: "anna@example.com",
+          displayName: "Priya Sharma",
+          email: "priya@example.com",
           assigned: true,
         },
         {
           _id: "c-vol-2",
-          displayName: "Michael Chen",
-          email: "mchen@example.com",
+          displayName: "Rajesh Kumar",
+          email: "rajesh@example.com",
           assigned: true,
         },
         {
           _id: "c-vol-3",
-          displayName: "Sarah Williams",
-          email: "swilliams@example.com",
+          displayName: "Sneha Patel",
+          email: "sneha@example.com",
           assigned: true,
         },
       ],
       feedbacks: [
         {
           _id: "feedback-1",
-          title: "Great Experience",
+          title: "Life-Changing Opportunity",
           content:
-            "This was so well organized! I'll definitely join the next one.",
+            "This job drive helped me secure my first job. The accessibility arrangements were excellent!",
           rating: 5,
-          user: { displayName: "Anna Johnson" },
-          date: new Date(2023, 9, 16),
+          user: { displayName: "Vikram Desai" },
+          date: new Date(2022, 8, 18),
         },
         {
           _id: "feedback-2",
-          title: "Good but tiring",
+          title: "Well Organized",
           content:
-            "The event was well organized but could have used more rest breaks.",
+            "The preparation workshop before interviews was very helpful. Would recommend more such events.",
           rating: 4,
-          user: { displayName: "Michael Chen" },
-          date: new Date(2023, 9, 17),
+          user: { displayName: "Meera Jayaraman" },
+          date: new Date(2022, 8, 19),
         },
       ],
     },
     {
       _id: "completed-event-2",
-      name: "Community Garden Planting",
+      name: "Free Eye Check-up Camp with Shankara Eye Hospital",
       description:
-        "We successfully planted 200 native plants in the community garden.",
-      location: "Downtown Community Garden",
-      startDate: new Date(2023, 7, 10), // August 10, 2023
-      endDate: new Date(2023, 7, 10),
+        "Free eye check-up camp organized at Primary Health Center Varthur. 151 people were assessed and 74 received referrals for free eye surgery at Shankara Eye Hospital.",
+      location: "Primary Health Center, Varthur",
+      startDate: new Date(2021, 9, 29), // October 29, 2021
+      endDate: new Date(2021, 9, 29),
       status: EventStatus.COMPLETED,
       applications: [],
       tasks: [
         {
           _id: "c2-task-1",
-          name: "Site Preparation",
-          description: "Prepare planting sites",
+          name: "Patient Registration",
+          description: "Register patients and collect basic health information",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c2-task-2",
-          name: "Plant Distribution",
-          description: "Hand out plants to volunteers",
+          name: "Medical Support",
+          description: "Assist medical staff with equipment and patient management",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c2-task-3",
-          name: "Planting Guidance",
-          description: "Guide volunteers on planting techniques",
+          name: "Referral Coordination",
+          description: "Coordinate surgery referrals with Shankara Eye Hospital",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
@@ -459,64 +459,65 @@ const EventManagementPage = () => {
       volunteers: [
         {
           _id: "c2-vol-1",
-          displayName: "Robert Garcia",
-          email: "rgarcia@example.com",
+          displayName: "Anand Venkatesh",
+          email: "anand@example.com",
           assigned: true,
         },
         {
           _id: "c2-vol-2",
-          displayName: "Emma Wilson",
-          email: "ewilson@example.com",
+          displayName: "Lakshmi Narayanan",
+          email: "lakshmi@example.com",
           assigned: true,
         },
       ],
       feedbacks: [
         {
           _id: "c2-feedback-1",
-          title: "Educational and Fun",
+          title: "Essential Service",
           content:
-            "I learned so much about native plants. The instructors were very knowledgeable.",
+            "My mother received free cataract surgery through this camp. Eternally grateful to Samarthanam and Shankara Hospital.",
           rating: 5,
-          user: { displayName: "Emma Wilson" },
-          date: new Date(2023, 7, 11),
+          user: { displayName: "Ramesh Gowda" },
+          date: new Date(2021, 9, 30),
         },
       ],
     },
     {
       _id: "completed-event-3",
-      name: "Youth Mentorship Workshop",
-      description: "A successful workshop connecting mentors with local youth.",
-      location: "Community Center",
-      startDate: new Date(2023, 5, 25), // June 25, 2023
-      endDate: new Date(2023, 5, 25),
+      name: "Smart Classroom Inauguration with DXC Technology",
+      description: 
+        "Smart Classroom inauguration at Government High School, Saneguruvanahalli. This DXC Technology-supported initiative aims to enhance education through digital tools.",
+      location: "Government High School, Saneguruvanahalli, Bangalore",
+      startDate: new Date(2022, 9, 9), // October 9, 2022
+      endDate: new Date(2022, 9, 9),
       status: EventStatus.COMPLETED,
       applications: [],
       tasks: [
         {
           _id: "c3-task-1",
-          name: "Registration",
-          description: "Register attendees",
+          name: "Equipment Setup",
+          description: "Install and test digital classroom equipment",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c3-task-2",
-          name: "Workshop Setup",
-          description: "Prepare workshop materials",
+          name: "Teacher Training",
+          description: "Train teachers on using digital education tools",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c3-task-3",
-          name: "Session Facilitation",
-          description: "Facilitate workshop sessions",
+          name: "Inauguration Ceremony",
+          description: "Organize ceremony with dignitaries",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
         {
           _id: "c3-task-4",
-          name: "Networking Session",
-          description: "Organize networking break",
+          name: "Media Coordination",
+          description: "Coordinate with press and handle documentation",
           status: TaskStatus.COMPLETED,
           assignedTo: null,
         },
@@ -524,50 +525,50 @@ const EventManagementPage = () => {
       volunteers: [
         {
           _id: "c3-vol-1",
-          displayName: "David Kumar",
-          email: "dkumar@example.com",
+          displayName: "Karthik Subramanian",
+          email: "karthik@example.com",
           assigned: true,
         },
         {
           _id: "c3-vol-2",
-          displayName: "Jessica Patel",
-          email: "jpatel@example.com",
+          displayName: "Divya Mohan",
+          email: "divya@example.com",
           assigned: true,
         },
         {
           _id: "c3-vol-3",
-          displayName: "Marcus Johnson",
-          email: "mjohnson@example.com",
+          displayName: "Prakash Rao",
+          email: "prakash@example.com",
           assigned: true,
         },
       ],
       feedbacks: [
         {
           _id: "c3-feedback-1",
-          title: "Life-Changing",
+          title: "Transformative Initiative",
           content:
-            "The connection I made with my mentee has been incredible. Thank you for organizing this!",
+            "The smart classroom will make learning more accessible for students with disabilities. Proud to be associated with this project.",
           rating: 5,
-          user: { displayName: "Jessica Patel" },
-          date: new Date(2023, 5, 26),
+          user: { displayName: "Principal, Govt High School" },
+          date: new Date(2022, 9, 10),
         },
         {
           _id: "c3-feedback-2",
-          title: "Well Organized",
+          title: "Excellent Implementation",
           content:
-            "The workshop was structured perfectly. Great job to the organizers.",
+            "The technical setup was top-notch. Looking forward to seeing how it enhances learning for the students.",
           rating: 4,
-          user: { displayName: "David Kumar" },
-          date: new Date(2023, 5, 27),
+          user: { displayName: "DXC Technology Representative" },
+          date: new Date(2022, 9, 11),
         },
         {
           _id: "c3-feedback-3",
-          title: "Needs More Time",
+          title: "Needs More Training Sessions",
           content:
-            "Great concept but would be better if it was a full-day workshop rather than half-day.",
+            "Great initiative but we would benefit from additional training sessions for teachers to fully utilize the technology.",
           rating: 3,
-          user: { displayName: "Marcus Johnson" },
-          date: new Date(2023, 5, 28),
+          user: { displayName: "Sanjay Patel, Teacher" },
+          date: new Date(2022, 9, 12),
         },
       ],
     },
@@ -963,37 +964,39 @@ const EventManagementPage = () => {
   const renderEventCard = (event: any) => {
     const completionPercentage = calculateTaskCompletion(event);
     const taskStats = getTaskStats(event);
-
-
+  
     return (
-      <div key={event.id} className="border p-4 rounded-md mb-4">
+      <div 
+        key={event.id} 
+        className="border p-4 rounded-md mb-4 bg-gray-50 dark:bg-gray-800"
+      >
         <h3 className="font-semibold text-lg">{event.name}</h3>
-        <p className="text-sm text-gray-500 mb-2">{event.description}</p>
-        <div className="text-sm mb-2">
-          <div>📅 {t("_")}{format(event.startDate, "MMM dd, yyyy")}
+        <p className="text-sm text-gray-500 mb-2 dark:text-gray-400">
+          {event.description || "No description"}
+        </p>
+        <div className="text-sm mb-2 mt-4">
+          <div className="pb-2">
+            📅 {t("_")}{format(event.startDate, "MMM dd, yyyy")} - {format(event.endDate, "MMM dd, yyyy")}
           </div>
-          <div>
-            {format(event.endDate, "MMM dd, yyyy")}
-          </div>
-          <div>{t("_")}📍 {event.location}</div>
+          <div>📍 {event.location || "No location specified"}</div>
         </div>
+        
         {/* Task completion indicator */}
         {event.tasks.length > 0 && (
           <div className="mt-3 mb-2">
             <div className="flex justify-between items-center text-xs mb-1">
               <span>{t("task_completion")}</span>
-              <span>{completionPercentage}{t("_")}</span>
+              <span>{completionPercentage}%{t("_")}</span>
             </div>
             <Progress value={completionPercentage} className="h-2" />
-
+  
             <div className="flex gap-2 mt-2">
               {taskStats.completed > 0 && (
                 <Badge
                   variant="outline"
                   className="bg-green-50 text-green-700 border-green-200 dark:bg-green-300 dark:text-black"
                 >
-                  <CheckCircle2 className="h-3 w-3 mr-1" />{" "}
-                  {taskStats.completed}
+                  <CheckCircle2 className="h-3 w-3 mr-1" /> {taskStats.completed}
                 </Badge>
               )}
               {taskStats.pending > 0 && (
@@ -1015,6 +1018,7 @@ const EventManagementPage = () => {
             </div>
           </div>
         )}
+        
         <div className="flex space-x-2 mt-2">
           <Button size="sm" onClick={() => handleEdit(event._id)} tabIndex={0}>{t("details")}</Button>
           <Button
@@ -1041,11 +1045,11 @@ const EventManagementPage = () => {
         className="border p-4 rounded-md mb-4 bg-gray-50 dark:bg-gray-800"
       >
         <h3 className="font-semibold text-lg">{event.name}</h3>
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="text-sm text-gray-500 mb-2 dark:text-gray-400">
           {event.description || "No description"}
         </p>
-        <div className="text-sm mb-2">
-          <div>
+        <div className="text-sm mb-2 mt-4">
+          <div className="pb-2">
             📅 {format(new Date(event.startDate), "MMM dd, yyyy")} -{" "}
             {format(new Date(event.endDate), "MMM dd, yyyy")}
           </div>
@@ -1086,199 +1090,253 @@ const EventManagementPage = () => {
   };
 
   const CompletedEventDetailView = ({
-    event,
-    onBack,
-  }: {
-    event: any;
-    onBack: () => void;
-  }) => {
-    return (
-      <div>
-        <Button variant="outline" className="mb-4" onClick={onBack}>
-          Back to Events
-        </Button>
+  event,
+  onBack,
+}: {
+  event: any;
+  onBack: () => void;
+}) => {
+  return (
+    <div className="max-w-5xl mx-auto">
+      <Button 
+        variant="outline" 
+        className="mb-6 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        onClick={onBack}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        Back to Events
+      </Button>
 
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle>
-                  {event.name}{" "}
-                  <Badge variant="outline" className="ml-2 bg-green-300 dark:bg-green-500 dark:text-black">
-                    Completed
-                  </Badge>
-                </CardTitle>
-                <div className="mt-2 text-black dark:text-white">
-                  Completed on{" "}
-                  {format(new Date(event.endDate), "MMMM dd, yyyy")}
-                </div>
+      <Card className="shadow-sm border-gray-200 dark:border-gray-700">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+            <div>
+              <CardTitle className="text-xl md:text-2xl font-bold">
+                {event.name}
+                <Badge variant="outline" className="ml-2 bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100 font-medium">
+                  Completed
+                </Badge>
+              </CardTitle>
+              <div className="mt-2 text-gray-600 dark:text-gray-300 font-medium">
+                Completed on {format(new Date(event.endDate), "MMMM dd, yyyy")}
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Event Details</h3>
-                <div className="space-y-2">
-                  <p>
-                    <strong>Description:</strong> {event.description}
-                  </p>
-                  <p>
-                    <strong>Dates:</strong>{" "}
-                    {format(new Date(event.startDate), "MMM dd, yyyy")} -{" "}
-                    {format(new Date(event.endDate), "MMM dd, yyyy")}
-                  </p>
-                  <p>
-                    <strong>Location:</strong> {event.location}
-                  </p>
+          </div>
+        </CardHeader>
+
+        <CardContent className="pt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4 pb-1 border-b dark:border-gray-700">Event Details</h3>
+              <div className="space-y-3">
+                <div className="flex flex-col">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Description</span>
+                  <span className="mt-1">{event.description}</span>
                 </div>
+                <div className="flex flex-col">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Dates</span>
+                  <span className="mt-1">
+                    {format(new Date(event.startDate), "MMM dd, yyyy")} - {format(new Date(event.endDate), "MMM dd, yyyy")}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Location</span>
+                  <span className="mt-1">{event.location}</span>
+                </div>
+              </div>
 
-                {/* Volunteer Summary */}
-                {event.volunteers && event.volunteers.length > 0 && (
-                  <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Volunteer Summary
-                    </h3>
-                    <p className="text-sm">
-                      Total Volunteers:{" "}
-                      <span className="font-medium">
-                        {event.volunteers.length}
-                      </span>
-                    </p>
-                    <div className="mt-3 space-y-2">
-                      {event.volunteers.slice(0, 3).map((volunteer: any) => (
-                        <div key={volunteer._id} className="text-sm">
-                          <span className="font-medium">
-                            {volunteer.displayName}
-                          </span>{" "}
-                          - {volunteer.email}
-                        </div>
-                      ))}
-                      {event.volunteers.length > 3 && (
-                        <p className="text-sm text-black dark:text-white">
-                          And {event.volunteers.length - 3} more volunteers
-                        </p>
-                      )}
+              {/* Volunteer Summary */}
+              {event.volunteers && event.volunteers.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4 pb-1 border-b dark:border-gray-700">
+                    Volunteer Summary
+                  </h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="p-1.5 rounded-full bg-blue-100 dark:bg-blue-900">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-600 dark:text-blue-300">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                      </svg>
                     </div>
+                    <span className="font-medium">
+                      Total Volunteers: {event.volunteers.length}
+                    </span>
                   </div>
-                )}
-
-                {/* Feedback Section */}
-                {event.feedbacks && event.feedbacks.length > 0 ? (
-                  <div className="mt-7">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Feedback Summary
-                    </h3>
-                    <div className="space-y-3">
-                      {event.feedbacks.map((feedback: any, index: number) => (
-                        <div
-                          key={index}
-                          className="p-3 border rounded-lg bg-gray-50 dark:bg-gray-800"
-                        >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium">
-                                {feedback.title || "Feedback"}
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                {feedback.content}
-                              </p>
-                            </div>
-                            {feedback.rating && (
-                              <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                  <svg
-                                    key={i}
-                                    className={`w-4 h-4 ${
-                                      i < feedback.rating
-                                        ? "text-yellow-400 fill-yellow-400"
-                                        : "text-gray-300 fill-gray-300"
-                                    }`}
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                                  </svg>
-                                ))}
-                              </div>
-                            )}
+                  <div className="space-y-2">
+                    {event.volunteers.slice(0, 3).map((volunteer: any) => (
+                      <div key={volunteer._id} className="flex items-center p-2 rounded-md bg-gray-50 dark:bg-gray-800">
+                        <div className="flex-1">
+                          <div className="font-medium">
+                            {volunteer.displayName}
                           </div>
-                          <div className="flex items-center mt-2 text-xs text-gray-500">
-                            <span>
-                              From: {feedback.user?.displayName || "Anonymous"}
-                            </span>
-                            {feedback.date && (
-                              <span className="ml-3">
-                                {format(
-                                  new Date(feedback.date),
-                                  "MMM dd, yyyy"
-                                )}
-                              </span>
-                            )}
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {volunteer.email}
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
+                    {event.volunteers.length > 3 && (
+                      <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                        And {event.volunteers.length - 3} more volunteers
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Feedback Section */}
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-4 pb-1 border-b dark:border-gray-700">
+                  Feedback Summary
+                </h3>
+                {event.feedbacks && event.feedbacks.length > 0 ? (
+                  <div className="space-y-4">
+                    {event.feedbacks.map((feedback: any, index: number) => (
+                      <div
+                        key={index}
+                        className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">
+                              {feedback.title || "Feedback"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-300 mt-2">
+                              {feedback.content}
+                            </p>
+                          </div>
+                          {feedback.rating && (
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <svg
+                                  key={i}
+                                  className={`w-5 h-5 ${
+                                    i < feedback.rating
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-gray-300 fill-gray-300"
+                                  }`}
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                </svg>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center mt-3 text-xs text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1">
+                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                              <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            {feedback.user?.displayName || "Anonymous"}
+                          </div>
+                          {feedback.date && (
+                            <div className="flex items-center ml-4">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                              </svg>
+                              {format(
+                                new Date(feedback.date),
+                                "MMM dd, yyyy"
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ) : (
-                  <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-2">Feedback</h3>
-                    <p className="text-sm text-black dark:text-white">
+                  <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 text-center">
+                    <p className="text-gray-500 dark:text-gray-400">
                       No feedback has been submitted for this event.
                     </p>
                   </div>
                 )}
               </div>
+            </div>
 
-              {/* Task Summary */}
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Task Summary</h3>
-                {event.tasks && event.tasks.length > 0 ? (
-                  <>
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center text-sm mb-1">
-                        <span>Overall Completion</span>
-                        <span>100%</span>
-                      </div>
-                      <Progress value={100} className="h-2" />
+            {/* Task Summary */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 pb-1 border-b dark:border-gray-700">Task Summary</h3>
+              {event.tasks && event.tasks.length > 0 ? (
+                <>
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">Overall Completion</span>
+                      <span className="text-green-600 dark:text-green-400 font-medium">100%</span>
                     </div>
+                    <div className="h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-500 rounded-full" style={{ width: "100%" }}></div>
+                    </div>
+                  </div>
 
-                    <div className="space-y-2 mt-4">
-                      <h4 className="font-medium">Tasks Breakdown</h4>
-                      {event.tasks.map((task: any, i: number) => (
-                        <div
-                          key={i}
-                          className="p-3 border rounded-md bg-green-50 border-green-200 dark:bg-green-800 dark:border-green-700"
-                        >
-                          <div className="flex items-center justify-between">
-                            <p className="font-medium">{task.name}</p>
-                            <Badge
-                              variant="outline"
-                              className="bg-green-100 text-green-800 dark:bg-green-300 dark:text-black"
-                            >
-                              Completed
-                            </Badge>
+                  <div className="space-y-4 mt-4">
+                    <h4 className="font-medium text-gray-700 dark:text-gray-300">Tasks Breakdown</h4>
+                    {event.tasks.map((task: any, i: number) => (
+                      <div
+                        key={i}
+                        className="p-4 border rounded-md bg-green-50 border-green-200 dark:bg-green-900/30 dark:border-green-800"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-600 dark:text-green-400 mr-2">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">{task.name}</p>
                           </div>
-                          {task.description && (
-                            <p className="text-sm mt-1">
-                              {task.description}
-                            </p>
-                          )}
+                          <Badge
+                            variant="outline"
+                            className="bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100 font-medium"
+                          >
+                            Completed
+                          </Badge>
                         </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-sm text-gray-500">
+                        {task.description && (
+                          <p className="mt-2 text-gray-600 dark:text-gray-300 ml-6">
+                            {task.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800 text-center">
+                  <p className="text-gray-500 dark:text-gray-400">
                     No tasks were recorded for this event.
                   </p>
-                )}
+                </div>
+              )}
+              
+              {/* Impact Section - New Addition */}
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-4 pb-1 border-b dark:border-gray-700">Event Impact</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 text-center">
+                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-300">151</p>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">People Assessed</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 text-center">
+                    <p className="text-2xl font-bold text-purple-600 dark:text-purple-300">74</p>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">Referrals Made</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  };
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
   // Add this function to your component
   const ensureVolunteerTaskConsistency = (eventsList: any) => {
