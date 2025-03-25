@@ -116,7 +116,7 @@ const EventEditDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Event Details</DialogTitle>
         </DialogHeader>
-        <div className="overflow-y-auto max-h-[500px] pr-4">
+        <div className="overflow-y-auto max-h-[500px] pr-16 pt-5 pb-5">
           <div className="space-y-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="title" className="text-right">
