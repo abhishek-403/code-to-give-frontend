@@ -8,48 +8,48 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router";
 import { ArrowLeft } from "lucide-react";
 
-interface DonateNowFormData {
+interface SpectatorRegistrationFormData {
   name: string;
   email: string;
   phone: string;
-  amount: number;
+  event: string;
   message?: string;
 }
 
-const DonateNowForm: React.FC = () => {
+const SpectatorRegistrationForm: React.FC = () => {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<DonateNowFormData>({
+  } = useForm<SpectatorRegistrationFormData>({
     defaultValues: {
       name: "",
       email: "",
       phone: "",
-      amount: 0,
+      event: "",
       message: "",
     },
   });
 
-  const onSubmit = (data: DonateNowFormData) => {
-    console.log("Donation Data:", data);
-    alert(`Thank you for donating ₹${data.amount}!`);
+  const onSubmit = (data: SpectatorRegistrationFormData) => {
+    console.log("Spectator Registration Data:", data);
+    alert(`Thank you for registering as a spectator for the event: ${data.event}!`);
   };
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
-        <Link to="/" className="mb-4 text-gray-800 dark:text-gray-200 border-gray-800 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+        <Link to="/" className="text-primary-600">
           <Button variant="outline" className="mb-4">
             <ArrowLeft size={16} />
             Back to Home
           </Button>
         </Link>
 
-        <h1 className="text-3xl font-bold mb-4">Donate Now</h1>
-        <p className="mb-4 text-gray-800 dark:text-gray-200 border-gray-800 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-          Fill out the form below to make a donation. Required fields are marked
-          with an asterisk (*).
+        <h1 className="text-3xl font-bold mb-4">Spectator Registration</h1>
+        <p className="text-gray-600">
+          Fill out the form below to register as a spectator for this event.
+          Required fields are marked with an asterisk (*).
         </p>
       </div>
 
@@ -60,7 +60,7 @@ const DonateNowForm: React.FC = () => {
         aria-labelledby="form-title"
       >
         {/* Personal Information Section */}
-        <fieldset className="space-y-4 border border-black dark:border-white rounded p-4">
+        <fieldset className="space-y-4 border border-gray-200 rounded p-4">
           <legend className="text-xl font-semibold px-2">Personal Information</legend>
 
           {/* Full Name */}
@@ -163,39 +163,33 @@ const DonateNowForm: React.FC = () => {
           </div>
         </fieldset>
 
-        {/* Donation Information Section */}
+        {/* Event Information Section */}
         <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-          <legend className="text-xl font-semibold px-2">Donation Information</legend>
+          <legend className="text-xl font-semibold px-2">Event Information</legend>
 
-          {/* Donation Amount */}
+          {/* Event Name */}
           <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-              <Label htmlFor="amount" className="text-sm font-medium">
-                Donation Amount (₹) <span className="text-red-500">*</span>
+              <Label htmlFor="event" className="text-sm font-medium">
+                Event Name <span className="text-red-500">*</span>
               </Label>
-              {errors.amount && (
-                <p className="text-sm text-red-500" id="amount-error" aria-live="assertive">
-                  {errors.amount.message}
+              {errors.event && (
+                <p className="text-sm text-red-500" id="event-error" aria-live="assertive">
+                  {errors.event.message}
                 </p>
               )}
             </div>
             <Controller
-              name="amount"
+              name="event"
               control={control}
-              rules={{
-                required: "Donation amount is required",
-                min: {
-                  value: 1,
-                  message: "Amount must be at least ₹1",
-                },
-              }}
+              rules={{ required: "Event name is required" }}
               render={({ field }) => (
                 <Input
-                  type="number"
-                  id="amount"
-                  placeholder="Enter amount"
-                  className={cn(errors.amount && "border-red-500")}
-                  aria-invalid={!!errors.amount}
+                  type="text"
+                  id="event"
+                  placeholder="Enter the event name"
+                  className={cn(errors.event && "border-red-500")}
+                  aria-invalid={!!errors.event}
                   {...field}
                 />
               )}
@@ -210,7 +204,7 @@ const DonateNowForm: React.FC = () => {
           {/* Message */}
           <div className="space-y-2">
             <Label htmlFor="message" className="text-sm font-medium">
-              Message (Optional)
+              Additional Comments
             </Label>
             <Controller
               name="message"
@@ -234,7 +228,7 @@ const DonateNowForm: React.FC = () => {
             className="w-full bg-gray-800 hover:bg-black text-white font-bold py-2 px-4 rounded"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Donate Now"}
+            {isSubmitting ? "Submitting..." : "Register Now"}
           </Button>
           <p className="text-xs text-gray-500">
             <span className="text-red-500">*</span> indicates required fields
@@ -245,4 +239,4 @@ const DonateNowForm: React.FC = () => {
   );
 };
 
-export default DonateNowForm;
+export default SpectatorRegistrationForm;

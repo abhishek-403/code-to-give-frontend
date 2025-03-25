@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --bg-light: #ffffff;
   --bg-dark: #171717;
@@ -21,3 +22,6 @@ body {
   font-weight: bold;
 } */
 
+/* * {
+  font-family: "Domine", sans-serif
+} */

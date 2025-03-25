@@ -749,7 +749,7 @@ const EventManagementPage = () => {
               {taskStats.completed > 0 && (
                 <Badge
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200"
+                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-300 dark:text-black"
                 >
                   <CheckCircle2 className="h-3 w-3 mr-1" />{" "}
                   {taskStats.completed}
@@ -758,7 +758,7 @@ const EventManagementPage = () => {
               {taskStats.pending > 0 && (
                 <Badge
                   variant="outline"
-                  className="bg-yellow-50 text-yellow-700 border-yellow-200"
+                  className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-300 dark:text-black"
                 >
                   <Clock className="h-3 w-3 mr-1" /> {taskStats.pending}
                 </Badge>
@@ -766,7 +766,7 @@ const EventManagementPage = () => {
               {taskStats.unassigned > 0 && (
                 <Badge
                   variant="outline"
-                  className="bg-gray-50 text-gray-700 border-gray-200"
+                  className="bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-300 dark:text-black"
                 >
                   <Circle className="h-3 w-3 mr-1" /> {taskStats.unassigned}
                 </Badge>
@@ -877,7 +877,7 @@ const EventManagementPage = () => {
                         value={calculateTaskCompletion(selectedEvent)}
                         className="h-2 w-32"
                       />
-                      <span className="text-xs text-gray-500 ml-2">
+                      <span className="text-xs text-gray-500 ml-2 dark:text-white">
                         {calculateTaskCompletion(selectedEvent)}% Complete
                       </span>
                     </div>
@@ -1001,7 +1001,7 @@ const EventManagementPage = () => {
                                 <p className="font-medium">
                                   {volunteer.displayName}
                                 </p>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-gray-500 dark: text-white">
                                   {volunteer.email}
                                 </p>
                               </div>
@@ -1028,7 +1028,7 @@ const EventManagementPage = () => {
                                 {hasAssignedTasks && !volunteer.assigned && (
                                   <Badge
                                     variant="outline"
-                                    className="bg-yellow-50 text-yellow-700"
+                                    className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-300 dark:text-black"
                                   >
                                     Has assigned tasks
                                   </Badge>
@@ -1230,10 +1230,10 @@ const EventManagementPage = () => {
                             key={i}
                             className={`border p-3 rounded-md ${
                               task.status === TaskStatus.COMPLETED
-                                ? "bg-green-100 border-green-200"
+                                ? "bg-green-50 border-green-200 dark:bg-green-300 dark:border-green-400"
                                 : task.assignedTo === null
-                                ? "bg-gray-50 border-gray-200"
-                                : "bg-yellow-50 border-yellow-200"
+                                ? "bg-gray-50 border-gray-200 dark:bg-gray-300 dark:border-gray-400"
+                                : "bg-yellow-50 border-yellow-200 dark:bg-yellow-800 dark:border-yellow-400"
                             }`}
                           >
                             <div className="flex items-center justify-between mb-1">
@@ -1289,6 +1289,7 @@ const EventManagementPage = () => {
                                       });
                                       setIsTaskAssignOpen(true);
                                     }}
+                                    className="text-gray-500 dark:text-black"
                                   >
                                     <ArrowRight className="h-3 w-3 mr-1" />
                                     Assign
@@ -1307,6 +1308,7 @@ const EventManagementPage = () => {
                                       });
                                       setIsTaskAssignOpen(true);
                                     }}
+                                    className="text-gray-500 dark:text-black"
                                   >
                                     <ArrowRightLeft className="h-3 w-3 mr-1" />
                                     Reassign
@@ -1317,13 +1319,13 @@ const EventManagementPage = () => {
 
                             {/* Task description - will only show if description exists */}
                             {task.description && (
-                              <p className="text-sm text-gray-600 mb-2">
+                              <p className="text-sm text-gray-600 mb-2 dark:text-gray-300">
                                 {task.description}
                               </p>
                             )}
 
                             <div className="flex justify-between items-center">
-                              <p className="text-xs">
+                              <p className="text-xs text-gray-500 dark:text-black">
                                 {task.assignedTo
                                   ? `Assigned to: ${
                                       selectedEvent.volunteers.find(
@@ -1338,8 +1340,8 @@ const EventManagementPage = () => {
                                   task.status === TaskStatus.COMPLETED
                                     ? "bg-green-100 text-geen-800"
                                     : task.assignedTo === null
-                                    ? "bg-gray-100 text-gray-800"
-                                    : "bg-yellow-100 text-yellow-800"
+                                    ? "bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-black"
+                                    : "bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-black"
                                 }`}
                               >
                                 {task.status === TaskStatus.COMPLETED
@@ -1353,7 +1355,7 @@ const EventManagementPage = () => {
                         )
                       )
                     ) : (
-                      <p className="text-gray-500 text-sm">
+                      <p className="text-gray-500 text-sm dark:text-gray-300">
                         No tasks added for this event yet.
                       </p>
                     )}
@@ -1387,7 +1389,7 @@ const EventManagementPage = () => {
                       </p>
                     )}
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-300">
                         Current status:{" "}
                         <Badge
                           variant="outline"
@@ -1395,8 +1397,8 @@ const EventManagementPage = () => {
                             taskToAssign.status === TaskStatus.COMPLETED
                               ? "bg-green-100 text-green-800"
                               : taskToAssign.assignedTo === null
-                              ? "bg-gray-100 text-gray-800"
-                              : "bg-yellow-100 text-yellow-800"
+                              ? "bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-gray-800"
+                              : "bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-yellow-800"
                           }`}
                         >
                           {taskToAssign.status === TaskStatus.COMPLETED
@@ -1407,7 +1409,7 @@ const EventManagementPage = () => {
                         </Badge>
                       </p>
                       {taskToAssign.assignedTo && (
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1 dark:text-gray-300">
                           Currently assigned to:{" "}
                           {selectedEvent.volunteers.find(
                             (v: any) => v.id === taskToAssign.assignedTo
