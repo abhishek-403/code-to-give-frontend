@@ -169,21 +169,17 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = useState("active");
 
   const location = useLocation(); // Access navigation state
- useEffect(() => {
+  useEffect(() => {
     // Check if navigation state contains an activeTab value
     if (location.state?.activeTab) {
       setActiveTab(location.state.activeTab);
     }
   }, [location.state]);
 
-
-
-
-  const [user, _] = useAuthState(auth);
+  // const [user, _] = useAuthState(auth);
   // const [user, loading] = useAuthState(auth);
 
-<!--   const [user, _, loading] = useAuthState(auth); -->
-
+  const [user, _, loading] = useAuthState(auth);
 
   const navigate = useNavigate();
   const tabRefs = {
@@ -517,9 +513,7 @@ const HomePage = () => {
               </Link>
             </div>
 
-          
             {!user ? (
-              
               <Button
                 className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
                 aria-label={`Apply to volunteer with ${ev.name}`}
@@ -541,9 +535,7 @@ const HomePage = () => {
                 >
                   Apply Now
                 </Button>
-                </Link>
-                
-                
+              </Link>
             )}
           </div>
         </CardContent>
@@ -1208,95 +1200,94 @@ const HomePage = () => {
                     Showing {DUMMY_HISTORY_EVENTS.length}{" "}
                     {DUMMY_HISTORY_EVENTS.length === 1 ? "event" : "events"}
                   </div>
-                 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
-    <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
-      <CardHeader>
-        <div className="flex justify-between mb-2 items-start">
-          <div className="w-full">
-            <div className="flex w-full items-center">
-              <CardTitle className="text-lg font-semibold flex-grow">
-                {eachEvent.name}
-              </CardTitle>
-              {eachEvent.feedbackSubmitted && (
-                <Badge 
-                  variant="default"
-                  className="ml-2 bg-green-500 hover:bg-green-600 text-white text-xs px-2 py-1 rounded-full inline-flex items-center justify-center text-center"
-                >
-                  Feedback Done
-                </Badge>
-              )}
-            </div>
-            <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
-              <Badge
-                variant="outline"
-                className="border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-              >
-                {eachEvent.volunteeringDomains[0].name}
-              </Badge>
-              {eachEvent.location && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                >
-                  {eachEvent.location}
-                </Badge>
-              )}
-              {eachEvent.availability && (
-                <Badge
-                  variant="outline"
-                  className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
-                >
-                  {eachEvent.availability[0]}
-                </Badge>
-              )}
-            </CardDescription>
-          </div>
-        </div>
-        {eachEvent.description && (
-          <p className="text-sm text-gray-800 dark:text-gray-200">
-            {eachEvent.description}
-          </p>
-        )}
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3 ">
-          <p className="text-sm font-medium">
-            <span
-              className="text-gray-700 dark:text-gray-300"
-              aria-hidden="true"
-            >
-              📅{" "}
-            </span>
-            <span className="text-gray-800 dark:text-gray-200">
-              {formatDateFromDate(eachEvent.startDate)} to{" "}
-              {formatDateFromDate(eachEvent.endDate)}
-            </span>
-          </p>
-          {eachEvent.feedbackSubmitted ? (
-            <Button
-              className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
-              aria-label={`View feedback for ${eachEvent.name}`}
-              tabIndex={0}
-            >
-              View Feedback
-            </Button>
-          ) : (
-            <Button
-              className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
-              aria-label={`Submit feedback for ${eachEvent.name}`}
-              tabIndex={0}
-            >
-              Submit Feedback
-            </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  ))}
-</div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
+                      <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
+                        <CardHeader>
+                          <div className="flex justify-between mb-2 items-start">
+                            <div className="w-full">
+                              <div className="flex w-full items-center">
+                                <CardTitle className="text-lg font-semibold flex-grow">
+                                  {eachEvent.name}
+                                </CardTitle>
+                                {eachEvent.feedbackSubmitted && (
+                                  <Badge
+                                    variant="default"
+                                    className="ml-2 bg-green-500 hover:bg-green-600 text-white text-xs px-2 py-1 rounded-full inline-flex items-center justify-center text-center"
+                                  >
+                                    Feedback Done
+                                  </Badge>
+                                )}
+                              </div>
+                              <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
+                                <Badge
+                                  variant="outline"
+                                  className="border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                                >
+                                  {eachEvent.volunteeringDomains[0].name}
+                                </Badge>
+                                {eachEvent.location && (
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                                  >
+                                    {eachEvent.location}
+                                  </Badge>
+                                )}
+                                {eachEvent.availability && (
+                                  <Badge
+                                    variant="outline"
+                                    className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
+                                  >
+                                    {eachEvent.availability[0]}
+                                  </Badge>
+                                )}
+                              </CardDescription>
+                            </div>
+                          </div>
+                          {eachEvent.description && (
+                            <p className="text-sm text-gray-800 dark:text-gray-200">
+                              {eachEvent.description}
+                            </p>
+                          )}
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3 ">
+                            <p className="text-sm font-medium">
+                              <span
+                                className="text-gray-700 dark:text-gray-300"
+                                aria-hidden="true"
+                              >
+                                📅{" "}
+                              </span>
+                              <span className="text-gray-800 dark:text-gray-200">
+                                {formatDateFromDate(eachEvent.startDate)} to{" "}
+                                {formatDateFromDate(eachEvent.endDate)}
+                              </span>
+                            </p>
+                            {eachEvent.feedbackSubmitted ? (
+                              <Button
+                                className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
+                                aria-label={`View feedback for ${eachEvent.name}`}
+                                tabIndex={0}
+                              >
+                                View Feedback
+                              </Button>
+                            ) : (
+                              <Button
+                                className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
+                                aria-label={`Submit feedback for ${eachEvent.name}`}
+                                tabIndex={0}
+                              >
+                                Submit Feedback
+                              </Button>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
                 </>
               ) : (
                 <div

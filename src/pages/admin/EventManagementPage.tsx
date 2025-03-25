@@ -1171,13 +1171,8 @@ const EventManagementPage = () => {
                           <div
                             key={i}
                             className={`border p-3 rounded-md ${
-<<<<<<< HEAD
-                              task.completed
-                                ? "bg-green-50 border-green-200 dark:bg-green-300 dark:border-green-400"
-=======
                               task.status === TaskStatus.COMPLETED
-                                ? "bg-green-100 border-green-200"
->>>>>>> 201d17e402f66af8f5138524e64c4e1c6b05e236
+                                ? "bg-green-50 border-green-200 dark:bg-green-300 dark:border-green-400"
                                 : task.assignedTo === null
                                 ? "bg-gray-50 border-gray-200 dark:bg-gray-300 dark:border-gray-400"
                                 : "bg-yellow-50 border-yellow-200 dark:bg-yellow-800 dark:border-yellow-400"
@@ -1186,13 +1181,9 @@ const EventManagementPage = () => {
                             <div className="flex items-center justify-between mb-1">
                               <p
                                 className={`font-medium ${
-<<<<<<< HEAD
-                                  task.completed ? "text-black" : ""
-=======
                                   task.status === TaskStatus.COMPLETED
                                     ? "text-gray-500"
                                     : ""
->>>>>>> 201d17e402f66af8f5138524e64c4e1c6b05e236
                                 }`}
                               >
                                 {task.name}
@@ -1288,13 +1279,8 @@ const EventManagementPage = () => {
                               {/* <Badge
                                 variant="outline"
                                 className={`${
-<<<<<<< HEAD
-                                  task.completed
-                                    ? "bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-800"
-=======
                                   task.status === TaskStatus.COMPLETED
                                     ? "bg-green-100 text-geen-800"
->>>>>>> 201d17e402f66af8f5138524e64c4e1c6b05e236
                                     : task.assignedTo === null
                                     ? "bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-black"
                                     : "bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-black"
@@ -1350,13 +1336,8 @@ const EventManagementPage = () => {
                         <Badge
                           variant="outline"
                           className={`${
-<<<<<<< HEAD
-                            taskToAssign.completed
-                              ? "bg-green-100 text-green-800 dark:bg-green-300 dark:text-green-800"
-=======
                             taskToAssign.status === TaskStatus.COMPLETED
                               ? "bg-green-100 text-green-800"
->>>>>>> 201d17e402f66af8f5138524e64c4e1c6b05e236
                               : taskToAssign.assignedTo === null
                               ? "bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-gray-800"
                               : "bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-yellow-800"
