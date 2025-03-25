@@ -179,8 +179,7 @@ const HomePage = () => {
 
 
 
-  const [user, _] = useAuthState(auth);
-  const [user, loading] = useAuthState(auth);
+  const [user, _, loading] = useAuthState(auth);
 
   const navigate = useNavigate();
   const tabRefs = {
