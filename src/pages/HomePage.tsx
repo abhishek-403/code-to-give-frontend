@@ -180,8 +180,11 @@ const HomePage = () => {
 
   // const [user, _] = useAuthState(auth);
   // const [user, loading] = useAuthState(auth);
+  // const [user, _, loading] = useAuthState(auth);
+
 
   const [user, _, loading] = useAuthState(auth);
+
 
   const navigate = useNavigate();
   const tabRefs = {
@@ -522,7 +525,7 @@ const HomePage = () => {
                 tabIndex={0}
                 onClick={() => navigate("/login")}
               >
-                {loading ? <Loader /> : "Login To apply"}
+                {isLoading ? <Loader /> : "Login To apply"}
               </Button>
             ) : (
               <Link
