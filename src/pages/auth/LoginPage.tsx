@@ -129,7 +129,7 @@ const LoginPage = () => {
 
     // <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div
-  className=" flex justify-end items-center relative min-h-screen bg-cover bg-center"
+  className=" flex justify-end items-center relative min-h-screen bg-cover bg-center pr-10"
   style={{
     backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'cover', // Ensures the image covers the entire screen
@@ -142,14 +142,14 @@ const LoginPage = () => {
   <div className="absolute inset-0 bg-black bg-opacity-60"></div>
 
   {/* Login Form */}
-  <div className="relative mr-20 z-10 flex flex-col rounded-3xl items-center justify-center w-min h-min bg-white p-4">
+  <div className="relative mr-20 z-10 flex flex-col rounded-3xl items-center justify-center w-min h-min bg-white p-12 pt-6 pb-6">
     <Link to="/">
       <img src={Logo} alt="Samarthanam Logo" className="h-20 w-auto mb-4" />
     </Link>
     <h2 className="text-2xl font-semibold mb-6 text-black">{t("login")}</h2>
     <form
       onSubmit={handleLogin}
-      className="flex flex-col space-y-4 w-80 bg-white p-6 rounded-lg shadow-lg border"
+      className="flex flex-col space-y-4 w-80 bg-white p-9 pr-8 pl-8 rounded-lg shadow-lg border"
       aria-labelledby="login-heading"
     >
       {/* Email Input */}
