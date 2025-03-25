@@ -1864,7 +1864,7 @@ const EventManagementPage = () => {
                         >
                           {t("all_")}
                           {selectedEvent.tasks.length}
-                          {t("_")}
+                          {t(")")}
                         </Badge>
                         <Badge
                           variant={
@@ -1876,7 +1876,7 @@ const EventManagementPage = () => {
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           {t("completed_")}
                           {getTaskStats(selectedEvent).completed}
-                          {t("_")}
+                          {t(")")}
                         </Badge>
                         <Badge
                           variant={
@@ -1888,7 +1888,7 @@ const EventManagementPage = () => {
                           <Clock className="h-3 w-3 mr-1" />
                           {t("pending_")}
                           {getTaskStats(selectedEvent).pending}
-                          {t("_")}
+                          {t(")")}
                         </Badge>
                         <Badge
                           variant={
@@ -1900,7 +1900,7 @@ const EventManagementPage = () => {
                           <Circle className="h-3 w-3 mr-1" />
                           {t("unassigned_")}
                           {getTaskStats(selectedEvent).unassigned}
-                          {t("_")}
+                          {t(")")}
                         </Badge>
                       </div>
                     </div>
