@@ -9,6 +9,8 @@ import { GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
+import useLanguage from "@/lib/hooks/useLang";
+
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
@@ -20,6 +22,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [user, loading, authError] = useAuthState(auth);
   const { mutate: signIn, isPending } = useSignUpWithGoogleMutation();
+  const { t } = useLanguage()
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);

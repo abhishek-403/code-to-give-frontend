@@ -55,13 +55,12 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
       state: {
         eventId: event._id,
         eventName: event.name,
-        
       },
     });
   };
 
-  const { t } = useLanguage()
-  
+  const { t } = useLanguage();
+
   return (
     <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
       <CardHeader>
@@ -72,7 +71,9 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
                 {event.name}
               </CardTitle>
               {event.feedbackSubmitted && (
-                <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">{t("feedback_done")}</Badge>
+                <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">
+                  {t("feedback_done")}
+                </Badge>
               )}
             </div>
 
@@ -112,21 +113,26 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
             <span
               className="text-gray-700 dark:text-gray-300"
               aria-hidden="true"
-            >{t("_")}{" "}
+            >
+              {t("_")}{" "}
             </span>
             <span className="text-gray-800 dark:text-gray-200">
-              {formatDateFromDate(event.startDate)}{t("to")}{" "}
+              {formatDateFromDate(event.startDate)} {t("to")}{" "}
               {formatDateFromDate(event.endDate)}
             </span>
           </p>
-          <div className="flex  space-x-4 w-auto">
-            <Button onClick={handleDownloadCertificate} className="w-full">{t("download_certificate")}</Button>
+          <div className="flex flex-wrap gap-4 w-full">
+            <Button onClick={handleDownloadCertificate} className="flex-grow">
+              {t("download_certificate")}
+            </Button>
             {!event.feedbackSubmitted && (
               <Button
                 onClick={handleProvideFeedback}
                 variant="secondary"
-                className="w-full"
-              >{t("provide_feedback")}</Button>
+                className="flex-grow"
+              >
+                {t("provide_feedback")}
+              </Button>
             )}
           </div>
         </div>

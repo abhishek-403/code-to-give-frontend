@@ -80,6 +80,7 @@ const EventEditDialog = ({
   onOpenChange: (open: boolean) => void;
   onSave: (updatedDetails: any) => void;
 }) => {
+  const { t } = useLanguage()
   const [editedEvent, setEditedEvent] = useState({
     title: event?.name || "", // Use empty string as fallback
     description: event?.description || "",
@@ -140,7 +141,6 @@ const EventEditDialog = ({
     setOpen(false);
   };
 
-  const { t } = useLanguage()
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -721,7 +721,9 @@ const EventManagementPage = () => {
         <h3 className="font-semibold text-lg">{event.name}</h3>
         <p className="text-sm text-gray-500 mb-2">{event.description}</p>
         <div className="text-sm mb-2">
-          <div>{t("_")}{format(event.startDate, "MMM dd, yyyy")}{t("_")}{" "}
+          <div>{t("_")}{format(event.startDate, "MMM dd, yyyy")}
+          </div>
+          <div>
             {format(event.endDate, "MMM dd, yyyy")}
           </div>
           <div>{t("_")}{event.location}</div>
