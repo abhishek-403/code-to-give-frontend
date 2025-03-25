@@ -4,9 +4,11 @@ import {
   ApiResponseFormat,
   ResponseStatusType,
 } from "@/lib/constants/response-types";
-import { useAppDispatch } from "@/store";
+import { TaskStatus } from "@/lib/constants/server-constants";
+import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import { setEventDetails } from "@/store/slices/evet-slice";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
@@ -93,7 +95,102 @@ export const useInfiniteEvents = ({
     initialPageParam: 1,
   });
 };
+export const useInfiniteEventsForAdmin = ({
+  activeTab,
+  city,
+  domain,
+  availability,
+  startDate,
+  endDate,
+  searchQuery,
+}: any) => {
+  // Define the query function with the correct parameter type
 
+  const user = useAppSelector((state: RootState) => state.user);
+  const fetchPrograms = async (context: {
+    pageParam: number;
+    queryKey: (string | undefined)[];
+  }): Promise<ProgramsResponse> => {
+    const { pageParam } = context;
+
+    // Build the query parameters
+    const params = new URLSearchParams();
+    params.set("page", pageParam.toString());
+    params.set("limit", "6");
+
+    // Add all filters
+    // if (activeTab && activeTab !== "all") params.set("activeTab", activeTab);
+    if (city) params.set("city", city);
+    if (domain) params.set("domain", domain);
+    if (availability) params.set("availability", availability);
+    if (startDate) params.set("startDate", startDate);
+    if (endDate) params.set("endDate", endDate);
+    if (searchQuery) params.set("searchQuery", searchQuery);
+
+    // Make the API call with all filters
+    const res: ApiResponseFormat = await axiosClient.get(
+      `/event-admin?${params}`
+    );
+
+    if (res.status === ResponseStatusType.Success) {
+      return {
+        events: res.result.events,
+        pagination: res.result.pagination,
+      };
+    }
+
+    return {
+      events: [],
+      pagination: { total: 0, page: 1, limit: 6, hasMore: false },
+    };
+  };
+
+  useEffect(() => {
+    if (user) {
+      queryClient.invalidateQueries({ queryKey: ["activeEventsAdmin"] });
+    }
+  }, [user, queryClient]);
+  return useInfiniteQuery({
+    queryKey: [
+      "activeEventsAdmin",
+      activeTab,
+      searchQuery,
+      city,
+      domain,
+      availability,
+      startDate,
+      endDate,
+    ],
+    queryFn: fetchPrograms,
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.hasMore ? lastPage.pagination.page + 1 : undefined,
+    initialPageParam: 1,
+    enabled: !!user,
+  });
+};
+export const useUpdateApplicationStatusMutation = () => {
+  return useMutation({
+    mutationFn: async (applicationData: any) => {
+      const res: ApiResponseFormat = await axiosClient.post(
+        `/application/${applicationData.applicationId}/status`,
+        { status: applicationData.status }
+      );
+
+      if (res.status === ResponseStatusType.Success) {
+        return res.result;
+      }
+      throw new Error(res.result);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeEventsAdmin"] });
+      toast.success("Application status updated!!");
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};
 export const useSubmitApplicationMutation = () => {
   const navigate = useNavigate();
   return useMutation({
@@ -106,6 +203,7 @@ export const useSubmitApplicationMutation = () => {
       if (res.status === ResponseStatusType.Success) {
         return res.result;
       }
+      throw new Error(res.result);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myApplications"] });
@@ -136,7 +234,46 @@ interface EventFormData {
   }[];
 }
 
-// Define the API response type (adjust based on your backend response)
+interface CreateEventResponse {
+  eventId: string;
+  msg: string;
+}
+export interface TaskFormData {
+  eventId: string;
+  name: string;
+  description?: string;
+  assignedTo: string;
+  assignedBy: string;
+  startDate?: string;
+  endDate?: string;
+  status: TaskStatus;
+  priority?: "low" | "medium" | "high";
+}
+
+export const useAddTaskToEventMutation = () => {
+  return useMutation<any, Error, TaskFormData>({
+    mutationFn: async (taskData: TaskFormData) => {
+      const response: ApiResponseFormat = await axiosClient.post(
+        `/event/${taskData.eventId}/task`,
+        taskData
+      );
+
+      if (response.status === ResponseStatusType.Success) {
+        return response.result;
+      }
+      throw new Error(response.result);
+    },
+    onSuccess: (_, __) => {
+      queryClient.invalidateQueries({ queryKey: ["activeEventsAdmin"] });
+      toast.success(`Task added successfully! 🎉`);
+      window.location.reload();
+    },
+    onError: (error) => {
+      console.error("Task creation error:", error);
+      toast.error(error.message ?? "Failed");
+    },
+  });
+};
 interface CreateEventResponse {
   eventId: string;
   msg: string;
@@ -153,12 +290,10 @@ export const useCreateEventMutation = () => {
         eventData
       );
 
-      // Check if the response indicates success
-      console.log("dd", response);
-
       if (response.result.status === ResponseStatusType.Success) {
         return response.result;
       }
+      throw new Error(response.result);
     },
     onSuccess: (_, __) => {
       toast.success(`Event created successfully! 🎉`);

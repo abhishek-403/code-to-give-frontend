@@ -17,9 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Availabitity } from "@/lib/constants/server-constants";
+import {
+  ApplicationStatus,
+  Availabitity,
+} from "@/lib/constants/server-constants";
 import { auth } from "@/lib/firebaseConfig";
-import { useInfiniteEvents } from "@/services/event";
+import { useGetVolunteerDomains, useInfiniteEvents } from "@/services/event";
 import { useGetMyApplications } from "@/services/user";
 import { formatDateFromDate } from "@/utils/formattedDate";
 import Loader from "@/utils/loader";
@@ -27,10 +30,10 @@ import { Info, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+import HistoryEventCard from "@/components/HistoryEventCard";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
-import HistoryEventCard from '@/components/HistoryEventCard';
 
 interface EventType {
   _id: string;
@@ -160,10 +163,12 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFiltersApplied, setIsFiltersApplied] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const { data: volunteerArray } = useGetVolunteerDomains({ isEnabled: true });
 
   // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
   const [activeTab, setActiveTab] = useState("active");
+
   const location = useLocation(); // Access navigation state
  useEffect(() => {
     // Check if navigation state contains an activeTab value
@@ -175,6 +180,8 @@ const HomePage = () => {
 
 
   const [user, _] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
+
   const navigate = useNavigate();
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
@@ -434,7 +441,7 @@ const HomePage = () => {
                     variant="outline"
                     className=" bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
                   >
-                    {ev.availability}
+                    {ev.availability[0]}
                   </Badge>
                 )}
               </CardDescription>
@@ -467,7 +474,7 @@ const HomePage = () => {
                 tabIndex={0}
                 onClick={() => navigate("/login")}
               >
-                Login To apply
+                {loading ? <Loader /> : "Login To apply"}
               </Button>
             ) : (
               <Link
@@ -502,11 +509,19 @@ const HomePage = () => {
     return (
       <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
         <CardHeader>
-          <div className="flex justify-between mb-2 items-start">
-            <div>
-              <CardTitle className="text-lg font-semibold">
-                {application.eventId.name}
-              </CardTitle>
+          <div className="flex w-full justify-between mb-2 items-start">
+            <div className="w-full">
+              <div className="flex  w-full">
+                <CardTitle className="text-lg  font-semibold ">
+                  {application.eventId.name}
+                </CardTitle>
+                {application.status === ApplicationStatus.APPROVED && (
+                  <Badge className=" ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">
+                    Approved
+                  </Badge>
+                )}
+              </div>
+
               <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
                 <Badge
                   variant="outline"
@@ -526,11 +541,10 @@ const HomePage = () => {
               </CardDescription>
             </div>
           </div>
-          {application.notes && (
-            <p className="text-sm text-gray-800 dark:text-gray-200">
-              {application.eventId.description}
-            </p>
-          )}
+
+          <p className="text-sm text-gray-800 dark:text-gray-200">
+            {application.eventId.description}
+          </p>
         </CardHeader>
         <CardContent>
           <div className="space-y-3 ">
@@ -546,18 +560,20 @@ const HomePage = () => {
                 {formatDateFromDate(application.willingEndDate)}
               </span>
             </p>
-            <Link
-              to={`/volunteer/register/${application._id}`}
-              className="w-full flex mt-auto justify-center"
-              state={{ applicationData: application }}
-            >
-              <Button
-                className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
-                tabIndex={0}
+            {application.status === ApplicationStatus.APPROVED ? (
+              <Link
+                to={`/volunteer/event/${application._id}`}
+                state={{ applicationData: application }}
               >
-                {application.status}
-              </Button>
-            </Link>
+                <Button className="w-full mt-2">View Tasks</Button>
+              </Link>
+            ) : (
+              <div>
+                <Button variant={"outline"} className="w-full mt-2">
+                  Approval Pending
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -566,28 +582,28 @@ const HomePage = () => {
 
   const DUMMY_HISTORY_EVENTS: HistoryEventType[] = [
     {
-      _id: 'hist1',
-      name: 'Community Cleanup Drive',
-      location: 'City Park',
-      startDate: new Date('2024-01-15'),
-      endDate: new Date('2024-01-16'),
-      dateRange: '15/01/24 to 16/01/24',
-      volunteeringDomains: [{ name: 'Environmental' }],
-      description: 'A community event to clean up local park areas',
+      _id: "hist1",
+      name: "Community Cleanup Drive",
+      location: "City Park",
+      startDate: new Date("2024-01-15"),
+      endDate: new Date("2024-01-16"),
+      dateRange: "15/01/24 to 16/01/24",
+      volunteeringDomains: [{ name: "Environmental" }],
+      description: "A community event to clean up local park areas",
       availability: [Availabitity.WEEKENDS],
-      feedbackSubmitted: false
+      feedbackSubmitted: false,
     },
     {
-      _id: 'hist2',
-      name: 'Teaching Underprivileged Children',
-      location: 'XYZ School',
-      startDate: new Date('2024-02-01'),
-      endDate: new Date('2024-02-28'),
-      dateRange: '01/02/24 to 28/02/24',
-      volunteeringDomains: [{ name: 'Education' }],
-      description: 'Teaching basic skills to underprivileged children',
+      _id: "hist2",
+      name: "Teaching Underprivileged Children",
+      location: "XYZ School",
+      startDate: new Date("2024-02-01"),
+      endDate: new Date("2024-02-28"),
+      dateRange: "01/02/24 to 28/02/24",
+      volunteeringDomains: [{ name: "Education" }],
+      description: "Teaching basic skills to underprivileged children",
       availability: [Availabitity.WEEKDAYS],
-      feedbackSubmitted: true
+      feedbackSubmitted: true,
     },
   ];
 
@@ -601,7 +617,7 @@ const HomePage = () => {
       </a>
 
       {/*Filters */}
-      <div className="sticky  self-start top-[10px]">
+      <div className="md:sticky self-start top-[10px] z-10">
         <Card className="shadow-md h-fit">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Find events</CardTitle>
@@ -704,8 +720,8 @@ const HomePage = () => {
                     <SelectItem value="Both">
                       Both Weekdays & Weekends
                     </SelectItem>
-                    <SelectItem value="Weekdays">Weekdays Only</SelectItem>
-                    <SelectItem value="Weekends">Weekends Only</SelectItem>
+                    <SelectItem value="Week days">Weekdays</SelectItem>
+                    <SelectItem value="Week ends">Weekends</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -944,46 +960,46 @@ const HomePage = () => {
             >
               Active
             </button>
-            <button
-              ref={tabRefs.myApplications}
-              role="tab"
-              id="myApplications-tab-trigger"
-              aria-controls="myApplications-tab"
-              aria-selected={activeTab === "myApplications"}
-              className={`tab-trigger ${
-                activeTab === "myApplications"
-                  ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-              onClick={() => {
-                if (!user) {
-                  navigate("/login");
-                  return;
-                }
-                setActiveTab("myApplications");
-              }}
-              onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
-              tabIndex={0}
-            >
-              My Applications
-            </button>
-            <button
-              ref={tabRefs.history}
-              role="tab"
-              id="history-tab-trigger"
-              aria-controls="history-tab"
-              aria-selected={activeTab === "history"}
-              className={`tab-trigger ${
-                activeTab === "history"
-                  ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
-                  : "text-gray-600 dark:text-gray-300"
-              }`}
-              onClick={() => setActiveTab("history")}
-              onKeyDown={(e) => handleTabKeyDown(e, "history")}
-              tabIndex={0}
-            >
-              History
-            </button>
+            {user && (
+              <button
+                ref={tabRefs.myApplications}
+                role="tab"
+                id="myApplications-tab-trigger"
+                aria-controls="myApplications-tab"
+                aria-selected={activeTab === "myApplications"}
+                className={`tab-trigger ${
+                  activeTab === "myApplications"
+                    ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
+                    : "text-gray-600 dark:text-gray-300"
+                }`}
+                onClick={() => {
+                  setActiveTab("myApplications");
+                }}
+                onKeyDown={(e) => handleTabKeyDown(e, "myApplications")}
+                tabIndex={0}
+              >
+                My Applications
+              </button>
+            )}
+            {user && (
+              <button
+                ref={tabRefs.history}
+                role="tab"
+                id="history-tab-trigger"
+                aria-controls="history-tab"
+                aria-selected={activeTab === "history"}
+                className={`tab-trigger ${
+                  activeTab === "history"
+                    ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400"
+                    : "text-gray-600 dark:text-gray-300"
+                }`}
+                onClick={() => setActiveTab("history")}
+                onKeyDown={(e) => handleTabKeyDown(e, "history")}
+                tabIndex={0}
+              >
+                History
+              </button>
+            )}
           </div>
 
           <div
@@ -1123,8 +1139,8 @@ const HomePage = () => {
             hidden={activeTab !== "history"}
             tabIndex={0}
           >
-            {activeTab === "history" && (
-              isLoading ? (
+            {activeTab === "history" &&
+              (isLoading ? (
                 <div className="flex justify-center">
                   <Loader />
                 </div>
@@ -1136,9 +1152,7 @@ const HomePage = () => {
                 <>
                   <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
                     Showing {DUMMY_HISTORY_EVENTS.length}{" "}
-                    {DUMMY_HISTORY_EVENTS.length === 1
-                      ? "event"
-                      : "events"}
+                    {DUMMY_HISTORY_EVENTS.length === 1 ? "event" : "events"}
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
                     {DUMMY_HISTORY_EVENTS.map((eachEvent: HistoryEventType) => (
@@ -1166,8 +1180,7 @@ const HomePage = () => {
                     Clear filters and try again
                   </Button>
                 </div>
-              )
-            )}
+              ))}
           </div>
         </div>
       </div>

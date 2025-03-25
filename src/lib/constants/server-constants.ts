@@ -25,6 +25,12 @@ export enum TaskStatus {
   CANCELLED = "Cancelled",
   ASSIGNED = "Assigned",
 }
+export enum EventStatus {
+  ACTIVE = "Active",
+  COMPLETED = "Completed",
+  CANCELLED = "Cancelled",
+  POSTPONED = "Postponed",
+}
 export enum Availabitity {
   WEEKENDS = "Week ends",
   WEEKDAYS = "Week days",

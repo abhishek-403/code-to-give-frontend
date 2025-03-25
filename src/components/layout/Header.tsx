@@ -1,3 +1,4 @@
+import React, { useRef, useCallback } from "react";
 import SamarthanamLogo from "@/assets/samarthanam_logo_nobg.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { useFontSize } from "@/contexts/FontSizeContext";
 import {
   AArrowDown,
@@ -19,7 +20,7 @@ import {
   Menu,
   Search,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { auth } from "@/lib/firebaseConfig";
 import { useGetUserProfile } from "@/services/user";
@@ -31,11 +32,13 @@ import ThemeSwitcher from "./ThemeSwitcher";
 
 const Header = () => {
   const { fontSize, setFontSize } = useFontSize();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [u, loading] = useAuthState(auth);
-  const { data: user, isLoading } = useGetUserProfile({
-    isEnabled: !!u && !loading,
-  });
+  const { data: user, isLoading } = useGetUserProfile({ isEnabled: !!u });
+  const languageDropdownRef = useRef<HTMLButtonElement>(null);
+  const profileDropdownRef = useRef<HTMLButtonElement>(null);
+
   const increaseFontSize = () => {
     if (fontSize < 20) {
       setFontSize(fontSize + 2);
@@ -52,9 +55,109 @@ const Header = () => {
     setFontSize(16);
   };
 
+  const handleLanguageDropdownKeyDown = (e: React.KeyboardEvent) => {
+    // If Escape is pressed, close the dropdown and refocus the trigger
+    if (e.key === "Escape") {
+      languageDropdownRef.current?.focus();
+    }
+  };
+
+  const handleProfileDropdownKeyDown = (e: React.KeyboardEvent) => {
+    // If Escape is pressed, close the dropdown and refocus the trigger
+    if (e.key === 'Escape') {
+      profileDropdownRef.current?.focus();
+    }
+  };
+
+  const handleProfileClick = useCallback(() => {
+    navigate('/profile');
+  }, [navigate]);
+
+  const handleLogout = useCallback(async () => {
+    await auth.signOut();
+    dispatch(resetUserDetails());
+  }, [dispatch]);
+
+  const renderUserAuthButton = () => {
+    if (loading || isLoading) {
+      return <Loader aria-label="Loading user information" />;
+    }
+
+    if (u && user) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger 
+            asChild 
+            ref={profileDropdownRef}
+            aria-label={`User Profile: ${user.displayName}`}
+          >
+            <Avatar 
+              className="cursor-pointer" 
+              tabIndex={0}
+            >
+              <AvatarImage 
+                src={user.profileImage} 
+                alt={`Profile picture of ${user.displayName}`} 
+              />
+              <AvatarFallback 
+                className="border border-neutral-400"
+                aria-label="User Initials"
+              >
+                {user.displayName
+                  ?.split(" ")
+                  .map((n: string) => n[0])
+                  .join("")}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent 
+            align="end" 
+            onKeyDown={handleProfileDropdownKeyDown}
+          >
+            <DropdownMenuItem 
+              onSelect={handleProfileClick}
+              className="cursor-pointer"
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onSelect={handleLogout}
+              className="cursor-pointer"
+            >
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    return (
+      <Link 
+        to="/login" 
+        className="hover:underline"
+        aria-label="Log In to Your Account"
+      >
+        <Button 
+          variant="outline" 
+          size="sm"
+          tabIndex={0}
+        >
+          Login
+        </Button>
+      </Link>
+    );
+  };
+
   return (
-    <header className="select-none bg-background border-b p-4 pl-8 pr-8 flex items-center justify-between">
-      <Link to="/" className="flex items-center h-16 w-60">
+    <header
+      className="select-none bg-background border-b p-4 pl-8 pr-8 flex items-center justify-between"
+      aria-label="Main Navigation and Site Controls"
+    >
+      <Link
+        to="/"
+        className="flex items-center h-16 w-60"
+        aria-label="Samarthanam Home Page"
+      >
         <img
           src={SamarthanamLogo}
           alt="Samarthanam Logo"
@@ -63,144 +166,146 @@ const Header = () => {
       </Link>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full">
-        <div className="flex items-center border rounded-lg p-1 h-8 mr-16">
-          <Input
-            placeholder="Search..."
-            className="border-none shadow-none focus-visible:ring-0 h-5 w-25"
-          />
-          <Button variant="ghost" size="sm">
-            <Search className="h-4 w-4" />
+      <nav
+        className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full"
+        aria-label="Desktop Navigation Menu"
+      >
+        {/* Font Size Controls */}
+        <div
+          role="group"
+          aria-label="Text Size Adjustment"
+          className="flex items-center space-x-2"
+        >
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={decreaseFontSize}
+            aria-label="Decrease Text Size"
+          >
+            <AArrowDown className="h-4 w-4" />
+            <span className="sr-only">Decrease Text Size</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={resetFontSize}
+            aria-label="Reset Text Size to Default"
+          >
+            <Baseline className="h-4 w-4" />
+            <span className="sr-only">Reset Text Size</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={increaseFontSize}
+            aria-label="Increase Text Size"
+          >
+            <AArrowUp className="h-4 w-4" />
+            <span className="sr-only">Increase Text Size</span>
           </Button>
         </div>
 
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Contact2 className="h-4 w-4 mr-2" /> Contact Us
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Link to="/contact-form" className="w-full block">
-                Contact Form
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="/contact-details" className="w-full block">
-                Contact Details
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
+        <span className="text-gray-400" aria-hidden="true">
+          |
+        </span>
 
-        <span className="text-gray-400">|</span>
-
-        <Button variant="outline" size="sm" onClick={decreaseFontSize}>
-          <AArrowDown className="h-4 w-4" />
-        </Button>
-        <Button variant="outline" size="sm" onClick={resetFontSize}>
-          <Baseline className="h-4 w-4" />
-        </Button>
-        <Button variant="outline" size="sm" onClick={increaseFontSize}>
-          <AArrowUp className="h-4 w-4" />
-        </Button>
-
-        <span className="text-gray-400">|</span>
-
+        {/* Language Selector */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+          <DropdownMenuTrigger asChild ref={languageDropdownRef}>
+            <Button
+              variant="outline"
+              size="sm"
+              aria-label="Select Language"
+              aria-haspopup="menu"
+              aria-expanded="false"
+            >
               <Globe className="h-4 w-4 mr-2" />
               Language
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>English</DropdownMenuItem>
-            <DropdownMenuItem>हिन्दी</DropdownMenuItem>
-            <DropdownMenuItem>ಕನ್ನಡ</DropdownMenuItem>
+          <DropdownMenuContent
+            align="end"
+            onKeyDown={handleLanguageDropdownKeyDown}
+          >
+            <DropdownMenuItem aria-label="Switch to English">
+              English
+            </DropdownMenuItem>
+            <DropdownMenuItem aria-label="Switch to Hindi">
+              हिन्दी
+            </DropdownMenuItem>
+            <DropdownMenuItem aria-label="Switch to Kannada">
+              ಕನ್ನಡ
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <span className="text-gray-400">|</span>
+        <span className="text-gray-400" aria-hidden="true">
+          |
+        </span>
 
-        <ThemeSwitcher />
+        {/* Theme Switcher */}
+        <div aria-label="Theme Switcher">
+          <ThemeSwitcher />
+        </div>
 
+        <span className="text-gray-400" aria-hidden="true">
+          |
+        </span>
 
-        <span className="text-gray-400">|</span>
+        {/* Donation Button */}
+        <Link
+          to="/donate"
+          className="hover:underline"
+          aria-label="Make a Donation"
+        >
+          <Button
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+            variant="outline"
+            size="sm"
+          >
+            Donate Now
+          </Button>
+        </Link>
 
-         <Link to="/donate" className="hover:underline">
-              <Button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" variant="outline" size="sm">
-                Donate Now
-              </Button>
-            </Link>
+        <span className="text-gray-400" aria-hidden="true">
+          |
+        </span>
 
-        <span className="text-gray-400">|</span>
+        {/* User Authentication Area */}
+        <div 
+          aria-live="polite" 
+          aria-relevant="additions removals"
+          className="flex items-center"
+        >
+          {renderUserAuthButton()}
+        </div>
+      </nav>
 
-        {loading || isLoading ? (
-          <Loader />
-        ) : u && user ? (
-          <>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.profileImage} alt="@shadcn" />
-                  <AvatarFallback className="border border-neutral-400">
-                    {user.displayName
-                      ?.split(" ")
-                      .map((n: string) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link to="/profile" className="w-full block">
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/settings" className="w-full block">
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <button
-                    className="w-full text-left"
-                    onClick={async () => {
-                      await auth.signOut();
-                      dispatch(resetUserDetails());
-                    }}
-                  >
-                    Logout
-                  </button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {/* <Button variant="outline" size="sm">
-              <Bell className="h-4 w-4 mr-2" /> Notifications
-            </Button> */}
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="hover:underline">
-              <Button variant="outline" size="sm">
-                Login
-              </Button>
-            </Link>
-            {/* <Link to="/signup" className="hover:underline">
-              <Button variant="outline" size="sm">
-                Register
-              </Button>
-            </Link> */}
-          </>
-        )}
-      </div>
-
-      <div className="md:hidden">
+      {/* Mobile Menu */}
+      <div
+        className="md:hidden flex items-center gap-2"
+        aria-label="Mobile Navigation Menu"
+      >
+        <Link
+          to="/donate"
+          className="hover:underline"
+          aria-label="Make a Donation"
+        >
+          <Button
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+            variant="outline"
+            size="sm"
+          >
+            Donate Now
+          </Button>
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button
+              variant="outline"
+              size="icon"
+              aria-label="Open Navigation Menu"
+            >
               <Menu className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -210,38 +315,34 @@ const Header = () => {
             sideOffset={5}
             alignOffset={0}
           >
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-              <div
-                className="flex items-center border rounded-lg p-1 h-9 w-full"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Input
-                  placeholder="Search..."
-                  className="border-none shadow-none focus-visible:ring-0 h-5 w-full"
-                  onClick={(e) => e.stopPropagation()}
-                  onKeyDown={(e) => e.stopPropagation()}
-                />
-                <Search className="h-4 w-4 mr-1" />
-              </div>
-            </DropdownMenuItem>
-
+            {/* Mobile Menu Items with Improved Accessibility */}
             <DropdownMenuItem>
-              <Link to="/contact-form" className="w-full flex items-center">
+              <Link
+                to="/contact-form"
+                className="w-full flex items-center"
+                aria-label="Go to Contact Form"
+              >
                 <Contact2 className="h-4 w-4 mr-2" /> Contact Form
               </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem>
-              <Link to="/contact-details" className="w-full flex items-center">
+              <Link
+                to="/contact-details"
+                className="w-full flex items-center"
+                aria-label="View Contact Details"
+              >
                 <Contact2 className="h-4 w-4 mr-2" /> Contact Details
               </Link>
             </DropdownMenuItem>
 
+            {/* Font Size Controls for Mobile */}
             <DropdownMenuItem
               onSelect={(e) => {
                 e.preventDefault();
                 decreaseFontSize();
               }}
+              aria-label="Decrease Text Size"
             >
               <AArrowDown className="h-4 w-4 mr-2" /> Reduce Text
             </DropdownMenuItem>
@@ -251,6 +352,7 @@ const Header = () => {
                 e.preventDefault();
                 resetFontSize();
               }}
+              aria-label="Reset Text Size to Default"
             >
               <Baseline className="h-4 w-4 mr-2" /> Reset Text
             </DropdownMenuItem>
@@ -260,65 +362,33 @@ const Header = () => {
                 e.preventDefault();
                 increaseFontSize();
               }}
+              aria-label="Increase Text Size"
             >
               <AArrowUp className="h-4 w-4 mr-2" /> Increase Text
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            {/* Language Selector for Mobile */}
+            <DropdownMenuItem aria-label="Select English Language">
               <Globe className="h-4 w-4 mr-2" /> English
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem aria-label="Select Hindi Language">
               <Globe className="h-4 w-4 mr-2" /> हिन्दी
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem aria-label="Select Kannada Language">
               <Globe className="h-4 w-4 mr-2" /> ಕನ್ನಡ
             </DropdownMenuItem>
 
-            {/* {user && u ? (
-              <>
-                <DropdownMenuItem>
-                  <Link to="/profile" className="w-full flex items-center">
-                    <Avatar className="h-5 w-5 mr-2">
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="@shadcn"
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/settings" className="w-full flex items-center">
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <button className="w-full text-left">Logout</button>
-                </DropdownMenuItem>
-              </>
-            ) : (
-              <>
-                <DropdownMenuItem>
-                  <Link to="/login" className="w-full block">
-                    Login
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/signup" className="w-full block">
-                    Register
-                  </Link>
-                </DropdownMenuItem>
-              </>
-            )} */}
-
-            <DropdownMenuItem>
+            {/* Notifications and Theme Switcher */}
+            <DropdownMenuItem aria-label="View Notifications">
               <Bell className="h-4 w-4 mr-2" /> Notifications
             </DropdownMenuItem>
 
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              aria-label="Switch Website Theme"
+            >
               <div className="flex items-center w-full">
                 <ThemeSwitcher />
               </div>

@@ -29,7 +29,6 @@ import {
   Filler,
 } from "chart.js";
 import { Bar, Line, Doughnut, Radar } from "react-chartjs-2";
-import * as d3 from "d3";
 import { CalendarDays, Activity, CheckCircle, Star, RefreshCw, Download, FileText, Database } from "lucide-react";
 import {
   DropdownMenu,
