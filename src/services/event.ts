@@ -373,3 +373,57 @@ export const useCreateNewVolunteeringDomainMutation = () => {
   });
 };
 
+export const useEditEventMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      eventData,
+      eventId,
+    }: {
+      eventData: any;
+      eventId: any;
+    }) => {
+      const response: ApiResponseFormat = await axiosClient.put(
+        `/event/${eventId}`,
+        eventData
+      );
+
+      if (response.status === ResponseStatusType.Success) {
+        return response.result;
+      }
+      throw new Error(response.result);
+    },
+    onSuccess: (_, __) => {
+      queryClient.invalidateQueries({ queryKey: ["activeEventsAdmin"] });
+      toast.success(`Event edited successfully! 🎉`);
+      window.location.reload();
+    },
+    onError: (error) => {
+      console.error("Event edit failed ", error);
+      toast.error(error.message ?? "Failed");
+    },
+  });
+};
+
+
+export const useSubmitFeedBackMutation = () => {
+  return useMutation({
+    mutationFn: async (feedbackData: any) => {
+      const res: ApiResponseFormat = await axiosClient.post(
+        `/volunteer/event-feedback`,
+        feedbackData
+      );
+
+      if (res.status === ResponseStatusType.Success) {
+        return res.result;
+      }
+      throw new Error(res.result);
+    },
+    onSuccess: () => {
+      toast.success("Feedback Submitted Succesfully!!");
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};

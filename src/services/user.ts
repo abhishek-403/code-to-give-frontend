@@ -93,3 +93,22 @@ export const useUpdateVolunteerEventTasksStatus = () => {
     },
   });
 };
+
+export const useGetVolunteerHistoryEvents = ({
+  isEnabled,
+}: {
+  isEnabled: boolean;
+}) => {
+  return useQuery({
+    queryKey: ["myHistoryApplications"],
+    queryFn: async () => {
+      const response: ApiResponseFormat = await axiosClient.get("/volunteer/event-history");
+      if (response.status === ResponseStatusType.Success) {
+        return response.result;
+      }
+      
+      return [];
+    },
+    enabled: isEnabled,
+  });
+};

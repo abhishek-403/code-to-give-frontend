@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowLeft } from 'lucide-react';
-import { FeedbackSchema, ExperienceRating } from '@/types/feedback-types';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { useSubmitFeedBackMutation } from "@/services/event";
+import { ExperienceRating, FeedbackSchema } from "@/types/feedback-types";
+import { ArrowLeft } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 // TODO: Replace with actual backend API call
 interface EventDetails {
-	name: string;
-	date: string;
-}
-
-async function fetchEventDetails(eventId: string): Promise<EventDetails> {
-  // TODO: Replace with actual API call using the eventId
-  console.log(`Fetching details for event: ${eventId}`);
-  return {
-    name: `Event ${eventId}`,
-    date: new Date().toDateString()
-  };
+  eventName: string;
+  eventId: string;
 }
 
 interface FeedbackData {
@@ -33,89 +25,75 @@ interface FeedbackData {
   suggestions?: string;
 }
 
-async function submitFeedback(data: FeedbackData): Promise<void> {
-	try {
-		// TODO: Replace with actual API endpoint
-		console.log("Submitting feedback:", data);
-		// const response = await fetch('/api/feedback', {
-		//   method: 'POST',
-		//   headers: { 'Content-Type': 'application/json' },
-		//   body: JSON.stringify(data),
-		// });
-		// if (!response.ok) throw new Error('Failed to submit feedback');
-	} catch (error) {
-		console.error('Error submitting feedback:', error);
-	}
-}
-
 function FeedbackForm() {
-  const { eventId } = useParams();
+  // const { eventId } = useParams();
   const navigate = useNavigate();
-
-  const [eventDetails, setEventDetails] = useState<EventDetails | null>(null);
-  const [formData, setFormData] = useState({
-    eventId: eventId || '',
-    rating: 3,
-    experience: '',
-    wouldRecommend: true,
-    learnings: '',
-    suggestions: ''
+  const locate = useLocation();
+  const { eventId, eventName } = locate.state || {};
+  const [eventDetails, setEventDetails] = useState<EventDetails | null>({
+    eventId,
+    eventName,
   });
-  const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
+  const [formData, setFormData] = useState({
+    eventId: eventId,
+    rating: 3,
+    experience: "",
+    wouldRecommend: true,
+    learnings: "",
+    suggestions: "",
+  });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof typeof formData, string>>
+  >({});
 
   useEffect(() => {
-    async function loadEventDetails() {
-      if (eventId) {
-        try {
-          const details = await fetchEventDetails(eventId);
-          setEventDetails(details);
-        } catch (error) {
-          console.error('Failed to fetch event details', error);
-          navigate('/');
-        }
-      }
-    }
-    loadEventDetails();
-  }, [eventId, navigate]);
+    setEventDetails({ eventId, eventName });
+  }, [eventId, eventName]);
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'rating' ? Number(value) : value
+      [name]: name === "rating" ? Number(value) : value,
     }));
   }
 
-function handleRecommendationChange(value: string): void {
-	setFormData(prev => ({
-		...prev,
-		wouldRecommend: value === 'yes'
-	}));
-}
+  function handleRecommendationChange(value: string): void {
+    setFormData((prev) => ({
+      ...prev,
+      wouldRecommend: value === "yes",
+    }));
+  }
 
+  const { mutate } = useSubmitFeedBackMutation();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
       const validatedData = FeedbackSchema.parse(formData);
       setErrors({});
-      await submitFeedback(validatedData);
-      navigate('/');
+
+      mutate(validatedData);
+
+      navigate("/");
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const errorMessages = error.errors.reduce<Record<string, string>>((acc, curr) => {
-          const path = curr.path[0];
-          if (typeof path === 'string') {
-            acc[path] = curr.message;
-          }
-          return acc;
-        }, {});
+        const errorMessages = error.errors.reduce<Record<string, string>>(
+          (acc, curr) => {
+            const path = curr.path[0];
+            if (typeof path === "string") {
+              acc[path] = curr.message;
+            }
+            return acc;
+          },
+          {}
+        );
         setErrors(errorMessages);
       }
     }
   }
 
   function handleGoBack() {
-    navigate('/');
+    navigate("/");
   }
 
   if (!eventId || !eventDetails) {
@@ -125,7 +103,11 @@ function handleRecommendationChange(value: string): void {
   return (
     <div className="max-w-2xl mx-auto mt-10 px-4">
       <div className="flex items-center mb-4">
-        <Button variant="outline" onClick={handleGoBack} className="flex items-center space-x-2">
+        <Button
+          variant="outline"
+          onClick={handleGoBack}
+          className="flex items-center space-x-2"
+        >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Events</span>
         </Button>
@@ -133,8 +115,7 @@ function handleRecommendationChange(value: string): void {
 
       <Card>
         <CardHeader>
-          <CardTitle>Feedback for {eventDetails.name}</CardTitle>
-          <p className="text-muted-foreground">Event Date: {eventDetails.date}</p>
+          <CardTitle>Feedback for {eventDetails.eventName}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -142,7 +123,9 @@ function handleRecommendationChange(value: string): void {
             <div>
               <Label htmlFor="rating">Overall Experience Rating</Label>
               <RadioGroup
-                onValueChange={value => setFormData(prev => ({ ...prev, rating: Number(value) }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, rating: Number(value) }))
+                }
                 defaultValue="3"
                 className="flex flex-wrap space-x-4 mt-2"
               >
@@ -150,12 +133,19 @@ function handleRecommendationChange(value: string): void {
                   .filter(([key]) => isNaN(Number(key)))
                   .map(([label, value]) => (
                     <div key={value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={value.toString()} id={`rating-${value}`} />
+                      <RadioGroupItem
+                        value={value.toString()}
+                        id={`rating-${value}`}
+                      />
                       <Label htmlFor={`rating-${value}`}>{label}</Label>
                     </div>
                   ))}
               </RadioGroup>
-              {errors.rating && <p className="text-red-500" aria-live="polite">{errors.rating}</p>}
+              {errors.rating && (
+                <p className="text-red-500" aria-live="polite">
+                  {errors.rating}
+                </p>
+              )}
             </div>
 
             {/* Experience Details */}
@@ -169,7 +159,11 @@ function handleRecommendationChange(value: string): void {
                 placeholder="Share details about your event experience"
                 className="mt-2"
               />
-              {errors.experience && <p className="text-red-500" aria-live="polite">{errors.experience}</p>}
+              {errors.experience && (
+                <p className="text-red-500" aria-live="polite">
+                  {errors.experience}
+                </p>
+              )}
             </div>
 
             {/* Learnings Input */}
