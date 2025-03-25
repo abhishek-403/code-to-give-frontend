@@ -44,7 +44,6 @@ const LoginPage = () => {
   }
 
   if (authError) {
-    console.log(authError.message);
     
     return (
       <div className="text-red-500 text-center p-4">{t("error_")}{formatFirebaseError(authError.message)}

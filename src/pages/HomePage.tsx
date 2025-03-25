@@ -19,9 +19,10 @@ import {
 import {
   ApplicationStatus,
   Availabitity,
+  UserRole,
 } from "@/lib/constants/server-constants";
 import { auth } from "@/lib/firebaseConfig";
-import { useInfiniteEvents } from "@/services/event";
+import { useGetVolunteerDomains, useInfiniteEvents } from "@/services/event";
 import {
   useGetMyApplications,
   useGetVolunteerHistoryEvents,
@@ -39,7 +40,7 @@ import { useInView } from "react-intersection-observer";
 import { Link, useNavigate } from "react-router-dom";
 
 import useLanguage from "@/lib/hooks/useLang";
-import { generateVolunteerCertificate } from "@/utils/certificateGenerator";
+import { useAppSelector } from "@/store";
 
 interface EventType {
   _id: string;
@@ -66,10 +67,10 @@ interface MyApplicationType {
   willingEndDate: Date;
   willingStartDate: Date;
 }
-interface HistoryEventType extends EventType {
-  // Additional fields specific to history events if needed
-  feedbackSubmitted?: boolean;
-}
+// interface HistoryEventType extends EventType {
+//   // Additional fields specific to history events if needed
+//   feedbackSubmitted?: boolean;
+// }
 
 interface FilterParams {
   city?: string;
@@ -183,8 +184,8 @@ const HomePage = () => {
     }
   }, [location.state]);
 
-  const [user, _] = useAuthState(auth);
-
+  const [user, loading] = useAuthState(auth);
+  const u = useAppSelector((a) => a.user);
   const navigate = useNavigate();
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
@@ -199,46 +200,6 @@ const HomePage = () => {
     isEnabled: activeTab === "myApplications",
   });
 
-  // const events = React.useMemo<EventType[]>(
-  //   () => [
-  //     {
-  //       id: 1,
-  //       organization: "XYZ Event",
-  //       domain: "Rehabilitation",
-  //       dateRange: "20/02/25 to 20/03/25",
-  //       startDate: new Date(2025, 1, 20),
-  //       endDate: new Date(2025, 2, 20),
-  //       description:
-  //         "Help with rehabilitation activities for people with disabilities",
-  //       location: "Delhi",
-  //       availability: "Weekdays",
-  //     },
-  //     {
-  //       id: 2,
-  //       organization: "ABC Event",
-  //       domain: "Community Support",
-  //       dateRange: "15/03/25 to 30/03/25",
-  //       startDate: new Date(2025, 2, 15),
-  //       endDate: new Date(2025, 2, 30),
-  //       description:
-  //         "Provide community support services to underprivileged families",
-  //       location: "Mumbai",
-  //       availability: "Both",
-  //     },
-  //     {
-  //       id: 3,
-  //       organization: "PQR Event",
-  //       domain: "Education",
-  //       dateRange: "01/04/25 to 15/04/25",
-  //       startDate: new Date(2025, 3, 1),
-  //       endDate: new Date(2025, 3, 15),
-  //       description: "Teach basic skills to children with special needs",
-  //       location: "Bangalore",
-  //       availability: "Weekends",
-  //     },
-  //   ],
-  //   []
-  // );
   const filterParams = React.useMemo<FilterParams>(() => {
     if (!isFiltersApplied) {
       // Only include the search query if filters are not applied
@@ -274,6 +235,7 @@ const HomePage = () => {
     isFetchingNextPage,
     isLoading,
     isError,
+    isFetching,
     refetch,
   } = useInfiniteEvents({
     activeTab,
@@ -293,66 +255,7 @@ const HomePage = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
-  // const parseDate = (dateString: string): Date | null => {
-  //   if (!dateString) return null;
-  //   return new Date(dateString);
-  // };
-
-  // useEffect(() => {
-  //   const filtered = events.filter((event) => {
-  //     const matchesSearch =
-  //       !searchQuery ||
-  //       event.organization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       event.domain.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //       (event.description &&
-  //         event.description.toLowerCase().includes(searchQuery.toLowerCase()));
-
-  //     const matchesCity =
-  //       !city ||
-  //       city === "" ||
-  //       city === "all_cities" ||
-  //       event.location === city;
-
-  //     const matchesDomain =
-  //       !domain ||
-  //       domain === "" ||
-  //       domain === "all_domains" ||
-  //       event.domain === domain;
-
-  //     const matchesAvailability =
-  //       !availability ||
-  //       availability === "" ||
-  //       availability === "all_availability" ||
-  //       event.availability === availability ||
-  //       (event.availability === "Both" && availability !== "");
-
-  //     let matchesDate = true;
-  //     const filterStartDate = parseDate(startDate);
-  //     const filterEndDate = parseDate(endDate);
-
-  //     if (filterStartDate) {
-  //       matchesDate = matchesDate && event.endDate >= filterStartDate;
-  //     }
-
-  //     if (filterEndDate) {
-  //       matchesDate = matchesDate && event.startDate <= filterEndDate;
-  //     }
-
-  //     return (
-  //       matchesSearch &&
-  //       matchesCity &&
-  //       matchesDomain &&
-  //       matchesAvailability &&
-  //       matchesDate
-  //     );
-  //   });
-
-  //   setFilteredEvents(filtered);
-  // }, [searchQuery, city, domain, availability, startDate, endDate, events]);
-
-  // useEffect(() => {
-  //   setFilteredEvents(events);
-  // }, [events]);
+  const { data: volDomains } = useGetVolunteerDomains();
 
   useEffect(() => {
     // Only trigger refetch if the debounced value has changed
@@ -470,41 +373,16 @@ const HomePage = () => {
                 {t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(ev.startDate)}{" "}{t("to")}{" "}
+                {formatDateFromDate(ev.startDate)} {t("to")}{" "}
                 {formatDateFromDate(ev.endDate)}
               </span>
             </p>
-            {/* <div className="flex w-full gap-0">
-                <Link to="/participant/register"
-                      className="hover:underline"
-                      aria-label="Make a Donation"
-                    >
-                      <Button
-                        className="bg-red-500  hover:bg-red-600 text-white py-2 px-4 rounded"
-                        variant="outline"
-                        size="sm"
-                      >
-                        Participant
-                      </Button>
-                    </Link>
-            <Link to="/spectator/register"
-                      className="hover:underline"
-                      aria-label="Make a Donation"
-                    >
-                      <Button
-                        className="bg-red-500  hover:bg-red-600 text-white py-2 px-4 rounded "
-                        variant="outline"
-                        size="sm"
-                      >
-                        Spectator
-                      </Button>
-                    </Link>
-            </div> */}
+
             <div className="flex gap-2 w-full">
               <Link to="/participant/register" className="w-1/2">
                 <Button
                   className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  variant="default"
+                  variant="outline"
                   size="sm"
                 >
                   {t("participant")}
@@ -513,7 +391,7 @@ const HomePage = () => {
               <Link to="/spectator/register" className="w-1/2">
                 <Button
                   className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-                  variant="default"
+                  variant="outline"
                   size="sm"
                 >
                   {t("spectator")}
@@ -555,11 +433,6 @@ const HomePage = () => {
   }: {
     application: MyApplicationType;
   }) => {
-    // ev = {
-    //   ...ev,
-    //   startDate:new Date(ev.startDate),
-    //   endDate:new Date(ev.endDate);
-    // }
     return (
       <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
         <CardHeader>
@@ -610,7 +483,7 @@ const HomePage = () => {
                 {t("_")}{" "}
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(application.willingEndDate)}{" "}{t("to")}{" "}
+                {formatDateFromDate(application.willingEndDate)} {t("to")}{" "}
                 {formatDateFromDate(application.willingEndDate)}
               </span>
             </p>
@@ -634,143 +507,8 @@ const HomePage = () => {
     );
   };
 
-  const HistoryCard = ({ event }: { event: HistoryEventType }) => {
-    const navigate = useNavigate();
-    const handleDownloadCertificate = () => {
-      // TODO: Replace with actual user data from backend
-      const mockUserData = {
-        name: "John Doe",
-        email: "john.doe@example.com",
-        eventName: event.name,
-        eventDate: formatDateFromDate(event.endDate),
-      };
-      generateVolunteerCertificate(mockUserData);
-    };
-
-    const handleProvideFeedback = () => {
-      // Navigate to feedback page with event details
-      navigate(`/feedback/${event._id}`, {
-        state: {
-          eventId: event._id,
-          eventName: event.name,
-        },
-      });
-    };
-    return (
-      <Card className="w-full flex flex-col justify-between shadow-md transition-all hover:shadow-lg">
-        <CardHeader>
-          <div className="flex w-full justify-between mb-2 items-start">
-            <div className="w-full">
-              <div className="flex w-full">
-                <CardTitle className="text-lg font-semibold">
-                  {event.name}
-                </CardTitle>
-                {event.feedbackSubmitted && (
-                  <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600 text-center">
-                    {t("feedback_done")}
-                  </Badge>
-                )}
-              </div>
-
-              <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
-                {event.volunteeringDomains &&
-                  event.volunteeringDomains.map((domain) => (
-                    <Badge
-                      key={domain.id}
-                      variant="outline"
-                      className="border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-                    >
-                      {domain.name}
-                    </Badge>
-                  ))}
-
-                {event.availability &&
-                  event.availability.map((avail) => (
-                    <Badge
-                      key={avail}
-                      variant="outline"
-                      className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 border-blue-300 dark:border-blue-600"
-                    >
-                      {avail}
-                    </Badge>
-                  ))}
-              </CardDescription>
-            </div>
-          </div>
-
-          <p className="text-sm text-gray-800 dark:text-gray-200">
-            {event.description || event.location}
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <p className="text-sm font-medium">
-              <span
-                className="text-gray-700 dark:text-gray-300"
-                aria-hidden="true"
-              >
-                {t("_")}{" "}
-              </span>
-              <span className="text-gray-800 dark:text-gray-200">
-                {formatDateFromDate(event.startDate)}{" "}{t("to")}{" "}
-                {formatDateFromDate(event.endDate)}
-              </span>
-            </p>
-            {/* <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-             */}
-            {/* add flex wrap to this container so buttons stay */}
-            <div className="flex flex-wrap gap-2">
-              <Button
-                onClick={handleDownloadCertificate}
-                className="w-full sm:flex-1"
-              >
-                {t("download_certificate")}
-              </Button>
-              {!event.feedbackSubmitted && (
-                <Button
-                  onClick={handleProvideFeedback}
-                  variant="secondary"
-                  className="w-full sm:flex-1"
-                >
-                  {t("provide_feedback")}
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
-
   const { data: historyEvents, isLoading: isHistoryLoading } =
     useGetVolunteerHistoryEvents({ isEnabled: activeTab === "history" });
-
-  const DUMMY_HISTORY_EVENTS: HistoryEventType[] = [
-    {
-      _id: "hist1",
-      name: "Community Cleanup Drive",
-      location: "City Park",
-      startDate: new Date("2024-01-15"),
-      endDate: new Date("2024-01-16"),
-      dateRange: "15/01/24 to 16/01/24",
-      volunteeringDomains: [{ name: "Environmental" }],
-      description: "A community event to clean up local park areas",
-      availability: [Availabitity.WEEKENDS],
-      feedbackSubmitted: false,
-    },
-    {
-      _id: "hist2",
-      name: "Teaching Underprivileged Children",
-      location: "XYZ School",
-      startDate: new Date("2024-02-01"),
-      endDate: new Date("2024-02-28"),
-      dateRange: "01/02/24 to 28/02/24",
-      volunteeringDomains: [{ name: "Education" }],
-      description: "Teaching basic skills to underprivileged children",
-      availability: [Availabitity.WEEKDAYS],
-      feedbackSubmitted: true,
-    },
-  ];
 
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
@@ -850,9 +588,14 @@ const HomePage = () => {
                     <SelectValue placeholder="Select domain" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all_domains">
-                      {t("all_domains")}
-                    </SelectItem>
+                    {volDomains &&
+                      volDomains.map((domain: any) => (
+                        <SelectItem value={domain.value}>
+                          {domain.label}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                  {/* <SelectContent>
                     <SelectItem value="Rehabilitation">
                       {t("rehabilitation")}
                     </SelectItem>
@@ -860,7 +603,7 @@ const HomePage = () => {
                     <SelectItem value="Community Support">
                       {t("community_support")}
                     </SelectItem>
-                  </SelectContent>
+                  </SelectContent> */}
                 </Select>
               </div>
 
@@ -1022,30 +765,6 @@ const HomePage = () => {
                 )}
 
                 {/* Domain badge */}
-                {domain && (
-                  <Badge
-                    variant="secondary"
-                    className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  >
-                    {t("domain_")}
-                    {domain === "all_domains" ? "All Domains" : domain}
-                    <button
-                      className="ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-                      onClick={() => {
-                        setDomain("");
-                        if (isFiltersApplied) {
-                          setIsFiltersApplied(true);
-                          refetch();
-                        }
-                      }}
-                      aria-label={`Clear domain filter: ${
-                        domain === "all_domains" ? "All Domains" : domain
-                      }`}
-                    >
-                      {t("_")}
-                    </button>
-                  </Badge>
-                )}
 
                 {/* Availability badge */}
                 {availability && (
@@ -1180,7 +899,7 @@ const HomePage = () => {
             className=" overflow-auto"
           >
             {activeTab === "active" &&
-              (isLoading ? (
+              (isLoading || isFetching || loading ? (
                 <div className="flex justify-center">
                   <Loader />
                 </div>
@@ -1190,8 +909,25 @@ const HomePage = () => {
                 </p>
               ) : events.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing") }{" "}{events.length}{" "}
-                    {events.length === 1 ? "event" : "events"}
+                  <div className="mb-4 w-full flex justify-between text-sm text-gray-700 dark:text-gray-300">
+                    <div>
+                      {t("showing")} {events.length}{" "}
+                      {events.length === 1 ? "event" : "events"}
+                    </div>
+                    <div>
+                      {u && u.role === UserRole.ADMIN ? (
+                        <Button variant={"default"} onClick={()=>navigate("/admin")} className="ml-auto">
+                          Edit as Admin
+                        </Button>
+                      ) : (
+                        u &&
+                        u.role === UserRole.WEBMASTER && (
+                          <Button variant={"default"}  onClick={()=>navigate("/admin")} className="ml-auto">
+                            Edit as webmaster
+                          </Button>
+                        )
+                      )}
+                    </div>
                   </div>
                   <div className=" grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
                     {events.map((eachEvent: EventType) => (
@@ -1251,7 +987,8 @@ const HomePage = () => {
                 </p>
               ) : myApplicationData.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t("showing")}{" "}{myApplicationData.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    {t("showing")} {myApplicationData.length}{" "}
                     {myApplicationData.length === 1
                       ? "application"
                       : "applications"}
@@ -1317,7 +1054,9 @@ const HomePage = () => {
                 </p>
               ) : historyEvents && historyEvents.length > 0 ? (
                 <>
-                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">{" "}{t("showing")}{" "}{historyEvents.length}{" "}
+                  <div className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                    {" "}
+                    {t("showing")} {historyEvents.length}{" "}
                     {historyEvents.length === 1 ? "event" : "events"}
                   </div>
 

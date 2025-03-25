@@ -23,7 +23,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import useLanguage from "@/lib/hooks/useLang";
 import { cn } from "@/lib/utils";
-import useLanguage from "@/lib/hooks/useLang";
 
 /**
  * Variants for the multi-select component to handle different styles.
@@ -135,7 +134,6 @@ export const MultiSelect = React.forwardRef<
     },
     ref
   ) => {
-    const { t } = useLanguage()
     const [selectedValues, setSelectedValues] =
       React.useState<string[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);

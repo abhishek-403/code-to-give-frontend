@@ -33,7 +33,6 @@ const DonateNowForm: React.FC = () => {
   });
 
   const onSubmit = (data: DonateNowFormData) => {
-    console.log("Donation Data:", data);
     alert(`Thank you for donating ₹${data.amount}!`);
   };
 

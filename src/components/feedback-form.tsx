@@ -17,14 +17,14 @@ interface EventDetails {
   eventId: string;
 }
 
-interface FeedbackData {
-  eventId: string;
-  rating: number;
-  experience: string;
-  wouldRecommend: boolean;
-  learnings?: string;
-  suggestions?: string;
-}
+// interface FeedbackData {
+//   eventId: string;
+//   rating: number;
+//   experience: string;
+//   wouldRecommend: boolean;
+//   learnings?: string;
+//   suggestions?: string;
+// }
 
 function FeedbackForm() {
   // const { eventId } = useParams();

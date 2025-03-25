@@ -193,3 +193,24 @@ export const useChangeUserRoleMutation = () => {
     },
   });
 };
+export const useUpdateUserProfileMutation = () => {
+  return useMutation({
+    mutationFn: async (userProfile: any) => {
+      const response: ApiResponseFormat = await axiosClient.put(
+        `/user`,
+        userProfile
+      );
+
+      if (response.status !== ResponseStatusType.Success) {
+        toast.error(response.result);
+        throw new Error();
+      }
+      toast.success(response.result);
+
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+    },
+  });
+};

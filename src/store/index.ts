@@ -4,7 +4,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import eventsReducer from "./slices/evet-slice";
+import eventsReducer from "./slices/event-slice";
 import userReducer from "./slices/user-slice";
 
 const eventPersistConfig = {
@@ -12,7 +12,7 @@ const eventPersistConfig = {
   storage,
 };
 const rootReducer = combineReducers({
-  user: userReducer,
+  user: persistReducer(eventPersistConfig, userReducer),
   eventDetails: persistReducer(eventPersistConfig, eventsReducer),
 });
 

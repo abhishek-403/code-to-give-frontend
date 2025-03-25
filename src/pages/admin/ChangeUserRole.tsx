@@ -27,12 +27,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
 
-interface User {
-  _id: string;
-  displayName: string;
-  email: string;
-  role: string;
-}
 
 const ChangeUserRole: React.FC = () => {
   // const [users, setUsers] = useState<User[]>([
@@ -64,7 +58,7 @@ const ChangeUserRole: React.FC = () => {
   const [search, setSearch] = useState<string>("");
   const debouncedSearchQuery = useDebounce(search, 500);
   const { t } = useLanguage();
-  const { data, fetchNextPage, hasNextPage, refetch, isLoading, error } =
+  const { data, fetchNextPage, hasNextPage, refetch, isLoading } =
     useInfiniteUsers({ searchQuery: debouncedSearchQuery });
   const { ref } = useInView({
     threshold: 1,

@@ -33,7 +33,6 @@ const ParticipantRegistrationForm: React.FC = () => {
   });
 
   const onSubmit = (data: ParticipantRegistrationFormData) => {
-    console.log("Participant Registration Data:", data);
     alert(`Thank you for registering for the event: ${data.event}!`);
   };
   const { t } = useLanguage()

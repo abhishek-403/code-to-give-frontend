@@ -11,7 +11,6 @@ import {
 } from "@/services/user";
 import { Event, Task } from "@/types/event";
 import Loader from "@/utils/loader";
-import LoadingPage from "@/utils/loading-page";
 import { ArrowLeft, CheckCircle2, Clock, RefreshCw } from "lucide-react";
 import { Types } from "mongoose";
 import React, { useEffect, useState } from "react";
@@ -76,13 +75,13 @@ const VolunteerEventPage: React.FC = () => {
   } = useVolunteerEventTasks(eventId, !!user);
   const { mutate: updateTaskStatus, isPending } =
     useUpdateVolunteerEventTasksStatus();
-  const [event, setEvent] = useState<Event>(dummyEvent);
+  const [event, _] = useState<Event>(dummyEvent);
   const [tasks, setTasks] = useState<Task[] | undefined>(dummyTasks);
   const [taskFilter, setTaskFilter] = useState<TaskStatus | "all">("all");
   useEffect(() => {
     setTasks(tsk);
   }, [tsk]);
-  const { t } = useLanguage()
+  const { t } = useLanguage();
 
   if (!tasks) {
     <div>{t("no_tasks")}</div>;
@@ -110,7 +109,6 @@ const VolunteerEventPage: React.FC = () => {
     id: Types.ObjectId;
     status: TaskStatus;
   }) => {
-    console.log(id);
     updateTaskStatus(
       {
         taskId: id,
@@ -141,7 +139,9 @@ const VolunteerEventPage: React.FC = () => {
   if (isLoading || isPending)
     return (
       <div className="w-full mt-24 flex items-center justify-center ">
-        <Loader />{t("_")}</div>
+        <Loader />
+        {t("_")}
+      </div>
     );
 
   return (
@@ -163,7 +163,11 @@ const VolunteerEventPage: React.FC = () => {
           <div className="flex items-center space-x-4">
             <Progress value={progress} className="flex-grow" />
             <span className="text-sm text-gray-600">
-              {completedTasks}{t("_")}{totalTasks}{t("tasks")}</span>
+              {completedTasks}
+              {t("_")}
+              {totalTasks}
+              {t("tasks")}
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -173,19 +177,25 @@ const VolunteerEventPage: React.FC = () => {
           variant={taskFilter === "all" ? "default" : "outline"}
           onClick={() => setTaskFilter("all")}
           className="cursor-pointer"
-        >{t("all_tasks")}</Badge>
+        >
+          {t("all_tasks")}
+        </Badge>
         <Badge
           variant={taskFilter === TaskStatus.COMPLETED ? "default" : "outline"}
           onClick={() => setTaskFilter(TaskStatus.COMPLETED)}
           className="cursor-pointer"
         >
-          <CheckCircle2 className="h-4 w-4 mr-1" />{t("completed")}</Badge>
+          <CheckCircle2 className="h-4 w-4 mr-1" />
+          {t("completed")}
+        </Badge>
         <Badge
           variant={taskFilter === TaskStatus.ASSIGNED ? "default" : "outline"}
           onClick={() => setTaskFilter(TaskStatus.ASSIGNED)}
           className="cursor-pointer"
         >
-          <Clock className="h-4 w-4 mr-1" />{t("pending")}</Badge>
+          <Clock className="h-4 w-4 mr-1" />
+          {t("pending")}
+        </Badge>
       </div>
       {/* Tasks List */}
       <div className="space-y-3">
@@ -239,11 +249,15 @@ const VolunteerEventPage: React.FC = () => {
                         })
                       }
                     >
-                      <RefreshCw className="h-4 w-4 mr-2" />{t("toggle_status")}</Button>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      {t("toggle_status")}
+                    </Button>
                   </div>
                 </div>
                 {task.startDate && (
-                  <p className="text-xs text-gray-500 mt-2">{t("due_")}{task.startDate.toLocaleDateString()}
+                  <p className="text-xs text-gray-500 mt-2">
+                    {t("due_")}
+                    {task.startDate.toLocaleDateString()}
                   </p>
                 )}
               </CardContent>

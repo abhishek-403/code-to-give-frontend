@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,35 +7,42 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-  LineElement,
-  PointElement,
-  RadialLinearScale,
-  ArcElement,
-  Filler,
-} from "chart.js";
-import { Bar, Line, Doughnut, Radar } from "react-chartjs-2";
-import { CalendarDays, Activity, CheckCircle, Star, RefreshCw, Download, FileText, Database } from "lucide-react";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserRole } from "@/lib/constants/server-constants";
 import useLanguage from "@/lib/hooks/useLang";
+import { useAppSelector } from "@/store";
+import {
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  RadialLinearScale,
+  Title,
+  Tooltip,
+} from "chart.js";
+import {
+  Activity,
+  CalendarDays,
+  CheckCircle,
+  Database,
+  Download,
+  FileText,
+  RefreshCw,
+  Star,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bar, Doughnut, Line, Radar } from "react-chartjs-2";
+import { Link } from "react-router-dom";
 
 // Register ChartJS components
 ChartJS.register(
@@ -128,16 +134,20 @@ class DashboardService {
   }
 
   // Export endpoints - will be replaced with actual API calls
-  static async exportToCSV(dataType: string): Promise<Blob> {
+  static async exportToCSV(_: string): Promise<Blob> {
     // In a real implementation, this would call the backend API
     // For now, we'll generate the CSV on the client side
     return Promise.resolve(new Blob([""], { type: "text/csv" }));
   }
 
-  static async exportToExcel(dataType: string): Promise<Blob> {
+  static async exportToExcel(_: string): Promise<Blob> {
     // In a real implementation, this would call the backend API
     // For now, we'll generate the Excel file on the client side
-    return Promise.resolve(new Blob([""], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+    return Promise.resolve(
+      new Blob([""], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      })
+    );
   }
 }
 
@@ -145,30 +155,35 @@ class DashboardService {
 const convertToCSV = (data: any[], fields: string[]): string => {
   // Create header row
   let csv = fields.join(",") + "\n";
-  
+
   // Add each row of data
-  data.forEach(item => {
-    const row = fields.map(field => {
-      const value = item[field];
-      // Handle values that might contain commas by wrapping in quotes
-      return typeof value === 'string' && value.includes(',') 
-        ? `"${value}"` 
-        : String(value);
-    }).join(",");
+  data.forEach((item) => {
+    const row = fields
+      .map((field) => {
+        const value = item[field];
+        // Handle values that might contain commas by wrapping in quotes
+        return typeof value === "string" && value.includes(",")
+          ? `"${value}"`
+          : String(value);
+      })
+      .join(",");
     csv += row + "\n";
   });
-  
+
   return csv;
 };
 
 // Utility function to download a file
-const downloadFile = (content: string | Blob, fileName: string, mimeType: string): void => {
-  const blob = content instanceof Blob 
-    ? content 
-    : new Blob([content], { type: mimeType });
-  
+const downloadFile = (
+  content: string | Blob,
+  fileName: string,
+  mimeType: string
+): void => {
+  const blob =
+    content instanceof Blob ? content : new Blob([content], { type: mimeType });
+
   const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
   link.download = fileName;
   document.body.appendChild(link);
@@ -201,7 +216,7 @@ const AdminDashboardPage = () => {
         DashboardService.getFeedbackData(),
         DashboardService.getTopVolunteers(),
       ]);
-      
+
       setEngagementData(engagement);
       setCompletionData(completion);
       setFeedbackData(feedback);
@@ -223,19 +238,36 @@ const AdminDashboardPage = () => {
       // Export appropriate data based on active tab
       switch (activeTab) {
         case "engagement":
-          csvContent = convertToCSV(engagementData, ["date", "volunteers", "events"]);
+          csvContent = convertToCSV(engagementData, [
+            "date",
+            "volunteers",
+            "events",
+          ]);
           fileName = "volunteer-engagement-data.csv";
           break;
         case "completion":
-          csvContent = convertToCSV(completionData, ["project", "completion", "target"]);
+          csvContent = convertToCSV(completionData, [
+            "project",
+            "completion",
+            "target",
+          ]);
           fileName = "project-completion-data.csv";
           break;
         case "feedback":
-          csvContent = convertToCSV(feedbackData, ["category", "score", "count"]);
+          csvContent = convertToCSV(feedbackData, [
+            "category",
+            "score",
+            "count",
+          ]);
           fileName = "feedback-data.csv";
           break;
         case "overview":
-          csvContent = convertToCSV(topVolunteers, ["name", "hours", "tasks", "events"]);
+          csvContent = convertToCSV(topVolunteers, [
+            "name",
+            "hours",
+            "tasks",
+            "events",
+          ]);
           fileName = "top-volunteers-data.csv";
           break;
         default:
@@ -256,23 +288,39 @@ const AdminDashboardPage = () => {
     try {
       // Create a zip file with all data sets
       // For now, we'll just download each dataset separately
-      
+
       // Engagement data
-      const engagementCSV = convertToCSV(engagementData, ["date", "volunteers", "events"]);
+      const engagementCSV = convertToCSV(engagementData, [
+        "date",
+        "volunteers",
+        "events",
+      ]);
       downloadFile(engagementCSV, "volunteer-engagement-data.csv", "text/csv");
-      
+
       // Completion data
-      const completionCSV = convertToCSV(completionData, ["project", "completion", "target"]);
+      const completionCSV = convertToCSV(completionData, [
+        "project",
+        "completion",
+        "target",
+      ]);
       downloadFile(completionCSV, "project-completion-data.csv", "text/csv");
-      
+
       // Feedback data
-      const feedbackCSV = convertToCSV(feedbackData, ["category", "score", "count"]);
+      const feedbackCSV = convertToCSV(feedbackData, [
+        "category",
+        "score",
+        "count",
+      ]);
       downloadFile(feedbackCSV, "feedback-data.csv", "text/csv");
-      
+
       // Top volunteers data
-      const volunteersCSV = convertToCSV(topVolunteers, ["name", "hours", "tasks", "events"]);
+      const volunteersCSV = convertToCSV(topVolunteers, [
+        "name",
+        "hours",
+        "tasks",
+        "events",
+      ]);
       downloadFile(volunteersCSV, "top-volunteers-data.csv", "text/csv");
-      
     } catch (error) {
       console.error("Failed to export all data:", error);
     } finally {
@@ -287,7 +335,11 @@ const AdminDashboardPage = () => {
       // In real implementation, this would call the backend API to generate Excel file
       // For demonstration, we're just showing the integration point
       const blob = await DashboardService.exportToExcel(activeTab);
-      downloadFile(blob, `${activeTab}-data.xlsx`, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      downloadFile(
+        blob,
+        `${activeTab}-data.xlsx`,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
     } catch (error) {
       console.error("Failed to export Excel data:", error);
     } finally {
@@ -297,11 +349,11 @@ const AdminDashboardPage = () => {
 
   // Prepare chart configurations
   const volunteerEngagementChartData = {
-    labels: engagementData.map(item => item.date),
+    labels: engagementData.map((item) => item.date),
     datasets: [
       {
         label: "Volunteer Participation",
-        data: engagementData.map(item => item.volunteers),
+        data: engagementData.map((item) => item.volunteers),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         tension: 0.4,
@@ -309,7 +361,7 @@ const AdminDashboardPage = () => {
       },
       {
         label: "Events",
-        data: engagementData.map(item => item.events * 15), // Scaled for visualization
+        data: engagementData.map((item) => item.events * 15), // Scaled for visualization
         borderColor: "rgba(153, 102, 255, 1)",
         backgroundColor: "rgba(153, 102, 255, 0.2)",
         tension: 0.4,
@@ -347,16 +399,16 @@ const AdminDashboardPage = () => {
   };
 
   const completionChartData = {
-    labels: completionData.map(item => item.project),
+    labels: completionData.map((item) => item.project),
     datasets: [
       {
         label: "Completed Tasks",
-        data: completionData.map(item => item.completion),
+        data: completionData.map((item) => item.completion),
         backgroundColor: "rgba(54, 162, 235, 0.6)",
       },
       {
         label: "Target",
-        data: completionData.map(item => item.target),
+        data: completionData.map((item) => item.target),
         backgroundColor: "rgba(255, 206, 86, 0.6)",
       },
     ],
@@ -385,11 +437,11 @@ const AdminDashboardPage = () => {
   };
 
   const feedbackChartData = {
-    labels: feedbackData.map(item => item.category),
+    labels: feedbackData.map((item) => item.category),
     datasets: [
       {
         label: "Average Score",
-        data: feedbackData.map(item => item.score),
+        data: feedbackData.map((item) => item.score),
         backgroundColor: [
           "rgba(255, 99, 132, 0.6)",
           "rgba(54, 162, 235, 0.6)",
@@ -409,27 +461,27 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const feedbackOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "Average Feedback Scores",
-      },
-    },
-    scales: {
-      r: {
-        min: 0,
-        max: 5,
-        ticks: {
-          stepSize: 1,
-        },
-      },
-    },
-  };
+  // const feedbackOptions = {
+  //   responsive: true,
+  //   plugins: {
+  //     legend: {
+  //       position: "top" as const,
+  //     },
+  //     title: {
+  //       display: true,
+  //       text: "Average Feedback Scores",
+  //     },
+  //   },
+  //   scales: {
+  //     r: {
+  //       min: 0,
+  //       max: 5,
+  //       ticks: {
+  //         stepSize: 1,
+  //       },
+  //     },
+  //   },
+  // };
 
   // Volunteer activity radar chart
   const volunteerRadarData = {
@@ -463,8 +515,8 @@ const AdminDashboardPage = () => {
       },
     },
   };
-  const { t } = useLanguage()
-  
+  const { t } = useLanguage();
+  const u = useAppSelector((a) => a.user);
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
@@ -472,21 +524,21 @@ const AdminDashboardPage = () => {
         <div className="flex space-x-2">
           {/* Export Data Dropdown */}
 
-            {/* <Link to="/changeroles" className="hover:underline">
+          {/* <Link to="/changeroles" className="hover:underline">
               <Button  className="flex items-center" 
             variant="outline" size="sm">
                 Change Roles
               </Button>
           </Link> */}
 
-          <Link to="/admin/changeroles">
-            <Button 
-            className="flex items-center" 
-            variant="outline" 
-            >{t("manage_roles")}</Button>
-          </Link>
-          
-          
+          {u.role === UserRole.ADMIN && (
+            <Link to="/admin/changeroles">
+              <Button className="flex items-center" variant="outline">
+                {t("manage_roles")}
+              </Button>
+            </Link>
+          )}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={exportLoading}>
@@ -496,19 +548,25 @@ const AdminDashboardPage = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={exportDataToCSV}>
-                <FileText className="mr-2 h-4 w-4" />{t("export_current_view_as_csv")}</DropdownMenuItem>
+                <FileText className="mr-2 h-4 w-4" />
+                {t("export_current_view_as_csv")}
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={exportAllDataToCSV}>
-                <Database className="mr-2 h-4 w-4" />{t("export_all_data_as_csv")}</DropdownMenuItem>
+                <Database className="mr-2 h-4 w-4" />
+                {t("export_all_data_as_csv")}
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={exportToExcel}>
-                <FileText className="mr-2 h-4 w-4" />{t("export_as_excel")}</DropdownMenuItem>
+                <FileText className="mr-2 h-4 w-4" />
+                {t("export_as_excel")}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
+
           {/* Refresh Button */}
-          <Button 
-            className="flex items-center" 
-            variant="outline" 
-            onClick={loadData} 
+          <Button
+            className="flex items-center"
+            variant="outline"
+            onClick={loadData}
             disabled={loading}
           >
             <RefreshCw className="mr-2 h-4 w-4" />
@@ -524,7 +582,9 @@ const AdminDashboardPage = () => {
               <CalendarDays className="h-8 w-8 text-blue-600" />
             </div>
             <h3 className="text-3xl font-bold">{t("18")}</h3>
-            <p className="text-sm text-muted-foreground">{t("active_events")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("active_events")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -533,7 +593,9 @@ const AdminDashboardPage = () => {
               <Activity className="h-8 w-8 text-green-600" />
             </div>
             <h3 className="text-3xl font-bold">{t("92_")}</h3>
-            <p className="text-sm text-muted-foreground">{t("volunteer_engagement")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("volunteer_engagement")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -542,7 +604,9 @@ const AdminDashboardPage = () => {
               <CheckCircle className="h-8 w-8 text-yellow-600" />
             </div>
             <h3 className="text-3xl font-bold">{t("78_")}</h3>
-            <p className="text-sm text-muted-foreground">{t("task_completion")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("task_completion")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -551,7 +615,9 @@ const AdminDashboardPage = () => {
               <Star className="h-8 w-8 text-purple-600" />
             </div>
             <h3 className="text-3xl font-bold">{t("4_3")}</h3>
-            <p className="text-sm text-muted-foreground">{t("average_feedback")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("average_feedback")}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -575,19 +641,23 @@ const AdminDashboardPage = () => {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>{t("data_visualization")}</CardTitle>
-            <CardDescription>{t("metrics_on_engagement_task_completion_rates_and_feedback_")}</CardDescription>
+            <CardDescription>
+              {t("metrics_on_engagement_task_completion_rates_and_feedback_")}
+            </CardDescription>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={exportDataToCSV} 
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={exportDataToCSV}
             disabled={exportLoading}
           >
-            <Download className="mr-2 h-4 w-4" />{t("export_view")}</Button>
+            <Download className="mr-2 h-4 w-4" />
+            {t("export_view")}
+          </Button>
         </CardHeader>
         <CardContent>
-          <Tabs 
-            defaultValue="engagement" 
+          <Tabs
+            defaultValue="engagement"
             onValueChange={(value) => setActiveTab(value)}
           >
             <TabsList className="mb-4">
@@ -596,24 +666,27 @@ const AdminDashboardPage = () => {
               <TabsTrigger value="feedback">{t("feedback")}</TabsTrigger>
               <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="engagement" className="mt-0">
               <div className="h-80">
-                <Line options={engagementOptions} data={volunteerEngagementChartData} />
+                <Line
+                  options={engagementOptions}
+                  data={volunteerEngagementChartData}
+                />
               </div>
             </TabsContent>
-            
+
             <TabsContent value="completion" className="mt-0">
               <div className="h-80">
                 <Bar options={completionOptions} data={completionChartData} />
               </div>
             </TabsContent>
-            
+
             <TabsContent value="feedback" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="h-64">
-                  <Doughnut 
-                    data={feedbackChartData} 
+                  <Doughnut
+                    data={feedbackChartData}
                     options={{
                       responsive: true,
                       plugins: {
@@ -625,25 +698,40 @@ const AdminDashboardPage = () => {
                           text: "Feedback Distribution",
                         },
                       },
-                    }} 
+                    }}
                   />
                 </div>
                 <div className="overflow-auto max-h-64 bg-card rounded-lg border">
                   {/* Table with proper dark mode styling */}
                   <table className="w-full border-collapse">
                     <thead className="sticky top-0 z-20">
-                    <tr className="bg-card shadow-sm">
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("category")}</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("score")}</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("responses")}</th>
+                      <tr className="bg-card shadow-sm">
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                          {t("category")}
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                          {t("score")}
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                          {t("responses")}
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
                       {feedbackData.map((item, index) => (
-                        <tr key={index} className="hover:bg-muted/50 transition-colors">
-                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">{item.category}</td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm">{item.score.toFixed(1)}</td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm">{item.count}</td>
+                        <tr
+                          key={index}
+                          className="hover:bg-muted/50 transition-colors"
+                        >
+                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                            {item.category}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            {item.score.toFixed(1)}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            {item.count}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -651,29 +739,46 @@ const AdminDashboardPage = () => {
                 </div>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="overview" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="h-64">
                   <Radar data={volunteerRadarData} options={radarOptions} />
                 </div>
                 <div className="flex flex-col h-64">
-                  <h3 className="font-medium mb-2">{t("top_volunteers_this_month")}</h3>
+                  <h3 className="font-medium mb-2">
+                    {t("top_volunteers_this_month")}
+                  </h3>
                   <div className="overflow-auto max-h-64 bg-card rounded-lg border">
                     <table className="w-full border-collapse">
                       <thead className="sticky top-0">
-                      <tr className="bg-card shadow-sm">
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("name")}</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("hours")}</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">{t("tasks")}</th>
+                        <tr className="bg-card shadow-sm">
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                            {t("name")}
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                            {t("hours")}
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted">
+                            {t("tasks")}
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
                         {topVolunteers.map((volunteer, index) => (
-                          <tr key={index} className="hover:bg-muted/50 transition-colors">
-                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">{volunteer.name}</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm">{volunteer.hours}</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm">{volunteer.tasks}</td>
+                          <tr
+                            key={index}
+                            className="hover:bg-muted/50 transition-colors"
+                          >
+                            <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                              {volunteer.name}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm">
+                              {volunteer.hours}
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm">
+                              {volunteer.tasks}
+                            </td>
                           </tr>
                         ))}
                       </tbody>

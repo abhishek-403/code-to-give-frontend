@@ -79,7 +79,7 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
 
             <CardDescription className="text-sm flex gap-1 flex-wrap text-gray-700 dark:text-gray-300 mt-2">
               {event.volunteeringDomains &&
-                event.volunteeringDomains.map((domain) => (
+                event.volunteeringDomains.slice(3).map((domain) => (
                   <Badge
                     key={domain.id}
                     variant="outline"
@@ -121,15 +121,15 @@ const HistoryEventCard = ({ event }: { event: HistoryEventType }) => {
               {formatDateFromDate(event.endDate)}
             </span>
           </p>
-          <div className="flex flex-wrap gap-4 w-full">
-            <Button onClick={handleDownloadCertificate} className="flex-grow">
+          <div className="grid md:grid-cols-2 grid-cols-1 flex-wrap gap-4 w-full">
+            <Button onClick={handleDownloadCertificate} className="">
               {t("download_certificate")}
             </Button>
             {!event.feedbackSubmitted && (
               <Button
                 onClick={handleProvideFeedback}
                 variant="secondary"
-                className="flex-grow"
+                className="flex-"
               >
                 {t("provide_feedback")}
               </Button>

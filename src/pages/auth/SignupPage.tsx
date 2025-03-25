@@ -4,6 +4,7 @@ import Logo from "@/assets/samarthanam_logo_nobg.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/lib/firebaseConfig";
+import useLanguage from "@/lib/hooks/useLang";
 import {
   useSignUpWithEmailPasswordMutation,
   useSignUpWithGoogleMutation,
@@ -27,6 +28,7 @@ const SignupPage = () => {
   const [user, loading, authError] = useAuthState(auth);
   const { mutate: signIn, isPending } = useSignUpWithGoogleMutation();
   const { mutate: signInWithEmailPass } = useSignUpWithEmailPasswordMutation();
+  const {t }= useLanguage()
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -47,7 +49,9 @@ const SignupPage = () => {
 
   if (authError) {
     return (
-      <div className="text-red-500 text-center p-4">{t("error_")}{formatFirebaseError(authError.message)}
+      <div className="text-red-500 text-center p-4">
+        {t("error_")}
+        {formatFirebaseError(authError.message)}
       </div>
     );
   }
@@ -69,7 +73,9 @@ const SignupPage = () => {
         aria-labelledby="signup-heading"
       >
         {/* Email Input */}
-        <label htmlFor="email" className="sr-only">{t("name")}</label>
+        <label htmlFor="email" className="sr-only">
+          {t("name")}
+        </label>
         <Input
           id="name"
           type="text"
@@ -79,7 +85,9 @@ const SignupPage = () => {
           required
           aria-required="true"
         />
-        <label htmlFor="email" className="sr-only">{t("email")}</label>
+        <label htmlFor="email" className="sr-only">
+          {t("email")}
+        </label>
         <Input
           id="email"
           type="email"
@@ -91,7 +99,9 @@ const SignupPage = () => {
         />
 
         {/* Password Input */}
-        <label htmlFor="password" className="sr-only">{t("password")}</label>
+        <label htmlFor="password" className="sr-only">
+          {t("password")}
+        </label>
         <Input
           id="password"
           type="password"
@@ -113,7 +123,9 @@ const SignupPage = () => {
           disabled={loading || isPending}
           aria-label="Sign up with Google"
         >
-          <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />{t("sign_up_with_google")}</Button>
+          <img src={googleLogo} alt="Google Logo" className="h-6 w-6 mr-2" />
+          {t("sign_up_with_google")}
+        </Button>
       </form>
       {/* Error message (Accessible) */}
       {error && (
@@ -123,7 +135,11 @@ const SignupPage = () => {
       )}
       {/* Navigation Options */}
       <div className="mt-4 flex flex-col items-center space-y-2">
-        <p>{t("already_have_an_account_")}<Button variant="link" onClick={() => navigate("/login")}>{t("login")}</Button>
+        <p>
+          {t("already_have_an_account_")}
+          <Button variant="link" onClick={() => navigate("/login")}>
+            {t("login")}
+          </Button>
         </p>
 
         {/* 🔹 Return to Home Button */}
@@ -132,7 +148,9 @@ const SignupPage = () => {
           onClick={() => navigate("/")}
           className="text-blue-600 underline"
           aria-label="Return to Home"
-        >{t("return_to_home")}</Button>
+        >
+          {t("return_to_home")}
+        </Button>
       </div>
     </div>
   );

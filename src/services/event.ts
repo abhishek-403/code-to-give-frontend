@@ -6,7 +6,7 @@ import {
 } from "@/lib/constants/response-types";
 import { TaskStatus } from "@/lib/constants/server-constants";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
-import { setEventDetails } from "@/store/slices/evet-slice";
+import { setEventDetails } from "@/store/slices/event-slice";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -306,11 +306,7 @@ export const useCreateEventMutation = () => {
   });
 };
 
-export const useGetVolunteerDomains = ({
-  isEnabled = true,
-}: {
-  isEnabled: boolean;
-}) => {
+export const useGetVolunteerDomains = () => {
   const dispatch = useAppDispatch();
 
   return useQuery({
@@ -320,12 +316,16 @@ export const useGetVolunteerDomains = ({
         "/event-volunteering-domain"
       );
       if (response.status === ResponseStatusType.Success) {
+        const formatted = response.result.map((e: any) => ({
+          label: e.name,
+          value: e._id,
+        }));
         dispatch(
           setEventDetails(
             response.result.map((e: any) => ({ label: e.name, value: e._id }))
           )
         );
-        return response.result;
+        return formatted;
       }
 
       return null;
@@ -349,7 +349,7 @@ export const useGetEventTemplates = () => {
 };
 
 export const useCreateNewVolunteeringDomainMutation = () => {
-  const { refetch } = useGetVolunteerDomains({ isEnabled: true });
+  const { refetch } = useGetVolunteerDomains();
   return useMutation({
     mutationFn: async ({ name }: { name: string }) => {
       const response: ApiResponseFormat = await axiosClient.post(
@@ -404,7 +404,6 @@ export const useEditEventMutation = () => {
     },
   });
 };
-
 
 export const useSubmitFeedBackMutation = () => {
   return useMutation({

@@ -8,6 +8,7 @@ export interface UserState {
   uid: string | null;
   role: UserRole | UserRole.USER;
   _id: string | null;
+  volunteeringInterests?: string[];
 }
 
 const initialState: UserState = {
@@ -29,8 +30,18 @@ export const userSlice = createSlice({
         displayName: action.payload.displayName,
         profileImage: action.payload.profileImage,
         email: action.payload.email,
+        role: action.payload.role,
         uid: action.payload.uid,
         _id: action.payload._id,
+        // volunteeringInterests: action.payload.volunteeringInterests?.map(
+        //   (domain: any) => ({
+        //     label: domain.name,
+        //     value: domain._id,
+        //   })
+        // ),
+        volunteeringInterests: action.payload.volunteeringInterests?.map(
+          (domain: any) => domain._id
+        ),
       };
     },
     resetUserDetails: (_) => {
@@ -41,6 +52,7 @@ export const userSlice = createSlice({
         email: null,
         uid: null,
         _id: null,
+        volunteeringInterests: [],
       };
     },
     setAccessToken: (state, action) => ({

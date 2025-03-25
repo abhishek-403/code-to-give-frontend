@@ -18,7 +18,6 @@ import {
   Contact2,
   Globe,
   Menu,
-  Search,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
