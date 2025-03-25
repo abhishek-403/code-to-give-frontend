@@ -34,6 +34,7 @@ import {
   Activity,
   CalendarDays,
   CheckCircle,
+  ChevronDown,
   Database,
   Download,
   FileText,
@@ -121,6 +122,16 @@ class DashboardService {
       { category: "Overall", score: 4.3, count: 90 },
     ]);
   }
+  static async getTaskCompletionByEvent(): Promise<any[]> {
+    // Dummy data for task completion by event
+    return Promise.resolve([
+      { event: "Annual Inclusive Sports Day", completion: 95, total: 100 },
+      { event: "Blind Cricket Tournament", completion: 88, total: 100 },
+      { event: "Disability Awareness Marathon", completion: 86, total: 100 },
+      { event: "Art & Talent Fest", completion: 72, total: 100 },
+      { event: "Free Eye Camp & Health Drive", completion: 70, total: 100 },
+    ]);
+  }
 
   static async getTopVolunteers(): Promise<VolunteerActivity[]> {
     // TODO: Replace with actual API call
@@ -153,6 +164,52 @@ class DashboardService {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       })
     );
+  }
+  static async getEventFeedback(): Promise<any[]> {
+    // Dummy data for event feedback
+    return Promise.resolve([
+      { event: "Annual Inclusive Sports Day", score: 4.8, responses: 45 },
+      { event: "Blind Cricket Tournament", score: 4.6, responses: 38 },
+      { event: "Disability Awareness Marathon", score: 4.5, responses: 42 },
+      { event: "Community Cleanup Day", score: 3.2, responses: 28 },
+      { event: "Virtual Fundraiser", score: 3.0, responses: 25 },
+    ]);
+  }
+
+  static async getRecentEvents(): Promise<any[]> {
+    // TODO: Replace with actual API call
+    return Promise.resolve([
+      {
+        id: 1,
+        title: "Annual Inclusive Sports Day",
+        date: "2025-03-18",
+        status: "Active",
+      },
+      {
+        id: 2,
+        title: "Blind Cricket Tournament",
+        date: "2025-03-15",
+        status: "Active",
+      },
+      {
+        id: 3,
+        title: "Disability Awareness Marathon",
+        date: "2025-03-10",
+        status: "Active",
+      },
+      {
+        id: 4,
+        title: "Art & Talent Fest",
+        date: "2025-03-05",
+        status: "Active",
+      },
+      {
+        id: 5,
+        title: "Free Eye Camp & Health Drive",
+        date: "2025-03-01",
+        status: "Active",
+      },
+    ]);
   }
 }
 
@@ -206,26 +263,69 @@ const AdminDashboardPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [exportLoading, setExportLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("engagement");
+  const [recentEvents, setRecentEvents] = useState([]);
+  const [taskCompletionByEvent, setTaskCompletionByEvent] = useState([
+    { event: "Annual Inclusive Sports Day", completion: 95, total: 100 },
+    { event: "Blind Cricket Tournament", completion: 88, total: 100 },
+    { event: "Disability Awareness Marathon", completion: 86, total: 100 },
+    { event: "Art & Talent Fest", completion: 72, total: 100 },
+    { event: "Free Eye Camp & Health Drive", completion: 70, total: 100 },
+  ]);
+  const [eventFeedback, setEventFeedback] = useState([
+    { event: "Annual Inclusive Sports Day", score: 4.8, responses: 45 },
+    { event: "Blind Cricket Tournament", score: 4.6, responses: 38 },
+    { event: "Disability Awareness Marathon", score: 4.5, responses: 42 },
+    { event: "Community Cleanup Day", score: 3.2, responses: 28 },
+    { event: "Virtual Fundraiser", score: 3.0, responses: 25 },
+  ]);
 
   useEffect(() => {
     loadData();
+
+    // Initialize with dummy data in case API calls aren't implemented
+    if (!taskCompletionByEvent.length) {
+      setTaskCompletionByEvent([
+        { event: "Annual Inclusive Sports Day", completion: 95, total: 100 },
+        { event: "Blind Cricket Tournament", completion: 88, total: 100 },
+        { event: "Disability Awareness Marathon", completion: 86, total: 100 },
+        { event: "Art & Talent Fest", completion: 72, total: 100 },
+        { event: "Free Eye Camp & Health Drive", completion: 70, total: 100 },
+      ]);
+    }
+
+    if (!eventFeedback.length) {
+      setEventFeedback([
+        { event: "Annual Inclusive Sports Day", score: 4.8, responses: 45 },
+        { event: "Blind Cricket Tournament", score: 4.6, responses: 38 },
+        { event: "Disability Awareness Marathon", score: 4.5, responses: 42 },
+        { event: "Community Cleanup Day", score: 3.2, responses: 28 },
+        { event: "Virtual Fundraiser", score: 3.0, responses: 25 },
+      ]);
+    }
   }, []);
 
   // Load all dashboard data
   const loadData = async () => {
     setLoading(true);
     try {
-      const [engagement, completion, feedback, volunteers] = await Promise.all([
-        DashboardService.getEngagementData(),
-        DashboardService.getCompletionData(),
-        DashboardService.getFeedbackData(),
-        DashboardService.getTopVolunteers(),
-      ]);
+      const [engagement, completion, feedback, volunteers, recent] =
+        await Promise.all([
+          DashboardService.getEngagementData(),
+          DashboardService.getCompletionData(),
+          DashboardService.getFeedbackData(),
+          DashboardService.getTopVolunteers(),
+          DashboardService.getRecentEvents(),
+          DashboardService.getTaskCompletionByEvent(),
+          DashboardService.getEventFeedback(),
+        ]);
 
       setEngagementData(engagement);
       setCompletionData(completion);
       setFeedbackData(feedback);
       setTopVolunteers(volunteers);
+      setRecentEvents(recent);
+      setTaskCompletionByEvent(taskEvents);
+      setEventFeedback(eventFeedbackData);
       setLoading(false);
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
@@ -780,6 +880,52 @@ const AdminDashboardPage = () => {
             <p className="text-sm text-muted-foreground">
               {t("Active_Events")}
             </p>
+
+            {/* Expandable section for recent events */}
+            <div className="w-full mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center text-xs"
+                onClick={() =>
+                  document
+                    .getElementById("recent-events-dropdown")
+                    .classList.toggle("hidden")
+                }
+              >
+                View Recent Events
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+
+              <div
+                id="recent-events-dropdown"
+                className="hidden mt-3 text-sm w-full max-h-48 overflow-y-auto rounded-md border shadow-sm"
+              >
+                <div className="bg-white dark:bg-gray-800 px-3 py-2 border-b border-border sticky top-0 z-20">
+                  <h4 className="font-medium text-sm">Recent Active Events</h4>
+                </div>
+                <ul className="divide-y divide-border">
+                  {recentEvents.map((event) => (
+                    <li
+                      key={event.id}
+                      className="px-3 py-3 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="font-medium truncate mb-1">
+                        {event.title}
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(event.date).toLocaleDateString()}
+                        </span>
+                        <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded-full font-medium">
+                          {event.status}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </CardContent>
         </Card>
         <Card className="transition-all hover:shadow-md">
@@ -794,6 +940,60 @@ const AdminDashboardPage = () => {
             <p className="text-sm text-muted-foreground">
               {t("Volunteer_Engagement")}
             </p>
+
+            {/* Top engaged volunteers */}
+            <div className="w-full mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center text-xs"
+                onClick={() =>
+                  document
+                    .getElementById("top-volunteers-dropdown")
+                    .classList.toggle("hidden")
+                }
+              >
+                Top Engaged Volunteers
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+
+              <div
+                id="top-volunteers-dropdown"
+                className="hidden mt-3 text-sm w-full max-h-48 overflow-y-auto rounded-md border shadow-sm"
+              >
+                <div className="bg-white dark:bg-gray-800 px-3 py-2 border-b border-border sticky top-0 z-20">
+                  <h4 className="font-medium text-sm">
+                    Most Engaged Volunteers
+                  </h4>
+                </div>
+                <ul className="divide-y divide-border">
+                  {topVolunteers.slice(0, 5).map((volunteer, index) => (
+                    <li
+                      key={index}
+                      className="px-3 py-3 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-medium">{volunteer.name}</span>
+                        <span className="text-green-600 dark:text-green-400 font-medium">
+                          {volunteer.hours} hrs
+                        </span>
+                      </div>
+                      <div className="flex items-center text-xs text-muted-foreground">
+                        <span className="flex items-center">
+                          <CheckCircle className="h-3 w-3 mr-1" />{" "}
+                          {volunteer.tasks} tasks
+                        </span>
+                        <span className="mx-1.5">•</span>
+                        <span className="flex items-center">
+                          <CalendarDays className="h-3 w-3 mr-1" />{" "}
+                          {volunteer.events} events
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </CardContent>
         </Card>
         <Card className="transition-all hover:shadow-md">
@@ -808,6 +1008,59 @@ const AdminDashboardPage = () => {
             <p className="text-sm text-muted-foreground">
               {t("Task_Completion")}
             </p>
+
+            {/* Events with highest completion rates */}
+            <div className="w-full mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center text-xs mt-4 bg-muted/20 hover:bg-muted/40 transition-colors"
+                onClick={() =>
+                  document
+                    .getElementById("task-completion-dropdown")
+                    .classList.toggle("hidden")
+                }
+              >
+                <span>View Completion Details</span>
+                <ChevronDown className="ml-1.5 h-3.5 w-3.5" />
+              </Button>
+
+              <div
+                id="task-completion-dropdown"
+                className="hidden mt-3 text-sm w-full max-h-48 overflow-y-auto rounded-md border shadow-sm"
+              >
+                <div className="bg-white dark:bg-gray-800 px-3 py-2 border-b border-border sticky top-0 z-20">
+                  <h4 className="font-medium text-sm">
+                    Highest Completion Events
+                  </h4>
+                </div>
+                <ul className="divide-y divide-border">
+                  {taskCompletionByEvent.map((item, index) => (
+                    <li
+                      key={index}
+                      className="px-3 py-3 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="font-medium truncate mb-1.5">
+                        {item.event}
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                          <div
+                            className="bg-yellow-500 h-2.5 rounded-full"
+                            style={{
+                              width: `${(item.completion / item.total) * 100}%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="ml-3 text-xs font-medium">
+                          {Math.round((item.completion / item.total) * 100)}%
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </CardContent>
         </Card>
         <Card className="transition-all hover:shadow-md">
@@ -822,6 +1075,106 @@ const AdminDashboardPage = () => {
             <p className="text-sm text-muted-foreground">
               {t("Average_Feedback")}
             </p>
+
+            {/* Event feedback breakdown */}
+            <div className="w-full mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center text-xs"
+                onClick={() =>
+                  document
+                    .getElementById("feedback-dropdown")
+                    .classList.toggle("hidden")
+                }
+              >
+                Event Feedback Breakdown
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+
+            <div
+              id="feedback-dropdown"
+              className="hidden mt-3 text-sm w-full max-h-64 overflow-y-auto rounded-md border shadow-sm"
+            >
+              <div className="bg-white dark:bg-gray-800 px-3 py-2 border-b border-border sticky top-0 z-20">
+                <h4 className="font-medium text-sm">Event Feedback Summary</h4>
+              </div>
+
+              <div className="px-3 py-2.5 bg-green-50/100 dark:bg-green-950/100 border-b border-border sticky top-[33px] z-10">
+                <span className="font-medium text-xs text-green-800 dark:text-green-300">
+                  Highest Rated Events
+                </span>
+              </div>
+
+              <ul className="divide-y divide-border">
+                {eventFeedback.slice(0, 3).map((item, index) => (
+                  <li
+                    key={index}
+                    className="px-3 py-3 hover:bg-muted/30 transition-colors"
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="truncate pr-2 font-medium">
+                        {item.event}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          item.score >= 4.5
+                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                            : item.score >= 4.0
+                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                            : item.score >= 3.0
+                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+                            : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                        }`}
+                      >
+                        {item.score.toFixed(1)} ★
+                      </span>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Based on {item.responses} responses
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="px-3 py-2.5 bg-red-50/90 dark:bg-red-950/70 border-y border-border sticky top-[33px] z-10">
+                <span className="font-medium text-xs text-red-800 dark:text-red-300">
+                  Needs Improvement
+                </span>
+              </div>
+
+              <ul className="divide-y divide-border">
+                {eventFeedback.slice(-2).map((item, index) => (
+                  <li
+                    key={index}
+                    className="px-3 py-3 hover:bg-muted/30 transition-colors"
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="truncate pr-2 font-medium">
+                        {item.event}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          item.score >= 4.5
+                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                            : item.score >= 4.0
+                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                            : item.score >= 3.0
+                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+                            : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                        }`}
+                      >
+                        {item.score.toFixed(1)} ★
+                      </span>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Based on {item.responses} responses
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -934,7 +1287,7 @@ const AdminDashboardPage = () => {
                 </div>
                 <div className="overflow-auto h-64 rounded-lg border dark:border-gray-700">
                   <table className="w-full border-collapse">
-                    <thead className="sticky top-0 z-20">
+                    <thead className="sticky top-0 z-20 bg-muted/95 backdrop-blur-lg">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                           {t("category")}
@@ -1012,7 +1365,7 @@ const AdminDashboardPage = () => {
                   </h3>
                   <div className="overflow-auto h-full rounded-lg border dark:border-gray-700">
                     <table className="w-full border-collapse">
-                      <thead className="sticky top-0 z-20">
+                      <thead className="sticky top-0 z-20 bg-muted/95 backdrop-blur-sm">
                         <tr>
                           <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted/95 backdrop-blur-sm">
                             {t("name")}
