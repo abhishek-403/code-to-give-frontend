@@ -173,7 +173,7 @@ const Header = () => {
       >
         
         {/* contact us button linking to /contact */}
-        <Link
+       {/* <Link
           to="/contact"
           className="hover:underline"
           aria-label="View Contact Details"
@@ -185,7 +185,7 @@ const Header = () => {
           >
             Contact Us
           </Button>
-        </Link>
+        </Link> */}
 
         <span className="text-gray-400" aria-hidden="true">
           |
@@ -283,9 +283,6 @@ const Header = () => {
           <Button
 
             className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded"
-
-<!--             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded dark:!border-neutral-50" -->
-
             variant="outline"
             size="sm"
           >
