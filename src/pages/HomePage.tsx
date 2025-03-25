@@ -180,7 +180,7 @@ const HomePage = () => {
 
 
   const [user, _] = useAuthState(auth);
-  const [user, loading] = useAuthState(auth);
+  // const [user, loading] = useAuthState(auth);
 
   const navigate = useNavigate();
   const tabRefs = {
@@ -467,7 +467,56 @@ const HomePage = () => {
                 {formatDateFromDate(ev.endDate)}
               </span>
             </p>
+            {/* <div className="flex w-full gap-0">
+                <Link to="/participant/register"
+                      className="hover:underline"
+                      aria-label="Make a Donation"
+                    >
+                      <Button
+                        className="bg-red-500  hover:bg-red-600 text-white py-2 px-4 rounded"
+                        variant="outline"
+                        size="sm"
+                      >
+                        Participant
+                      </Button>
+                    </Link>
+            <Link to="/spectator/register"
+                      className="hover:underline"
+                      aria-label="Make a Donation"
+                    >
+                      <Button
+                        className="bg-red-500  hover:bg-red-600 text-white py-2 px-4 rounded "
+                        variant="outline"
+                        size="sm"
+                      >
+                        Spectator
+                      </Button>
+                    </Link>
+            </div> */}
+            <div className="flex gap-2 w-full">
+              <Link to="/participant/register" className="w-1/2">
+                <Button
+                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
+                  variant="outline"
+                  size="sm"
+                >
+                  Participant
+                </Button>
+              </Link>
+              <Link to="/spectator/register" className="w-1/2">
+                <Button
+                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
+                  variant="outline"
+                  size="sm"
+                >
+                  Spectator
+                </Button>
+              </Link>
+            </div>
+
+          
             {!user ? (
+              
               <Button
                 className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500  dark:focus:ring-blue-400"
                 aria-label={`Apply to volunteer with ${ev.name}`}
@@ -489,7 +538,9 @@ const HomePage = () => {
                 >
                   Apply Now
                 </Button>
-              </Link>
+                </Link>
+                
+                
             )}
           </div>
         </CardContent>
