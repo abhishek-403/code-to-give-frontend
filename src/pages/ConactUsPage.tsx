@@ -122,7 +122,7 @@ const ContactUsPage: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4">Follow Us</h2>
         <div className="flex justify-center space-x-6">
           <a
-            href="https://facebook.com"
+            href="https://www.facebook.com/samarthanaminfo/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
@@ -131,7 +131,7 @@ const ContactUsPage: React.FC = () => {
             <Facebook size={32} />
           </a>
           <a
-            href="https://twitter.com"
+            href="https://x.com/SamarthanamTFTD?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Twitter"
@@ -140,7 +140,7 @@ const ContactUsPage: React.FC = () => {
             <Twitter size={32} />
           </a>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/samarthanamtrustforthedisabled/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
