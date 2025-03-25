@@ -660,7 +660,7 @@ const HomePage = () => {
                   {event.name}
                 </CardTitle>
                 {event.feedbackSubmitted && (
-                  <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600">
+                  <Badge className="ml-auto text-[10px] h-fit hover:bg-green-500 bg-green-600 text-center">
                     Feedback Done
                   </Badge>
                 )}
