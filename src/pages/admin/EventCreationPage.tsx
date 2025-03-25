@@ -518,7 +518,7 @@ const EventCreationPage = () => {
                         defaultValue={field.value || []}
                         placeholder="Select volunteering domains"
                         maxCount={3}
-                        className="w-full "
+                        className="w-full text-gray-500 dark:text-gray-400 dark:bg-gray"
                         id="volunteeringDomains"
                         aria-describedby="volunteeringDomains-error"
                       />
@@ -665,6 +665,7 @@ const EventCreationPage = () => {
                         ]}
                         onValueChange={field.onChange}
                         // defaultValue={field.value || []}
+                        
                         defaultValue={
                           Array.isArray(field.value)
                             ? field.value
@@ -674,7 +675,7 @@ const EventCreationPage = () => {
                         }
                         placeholder="Select availability"
                         maxCount={3}
-                        className="w-full"
+                        className="w-full text-gray-500 dark:text-gray-400 dark:bg-gray"
                         id="availability"
                         aria-describedby="availability-error"
                       />
