@@ -64,7 +64,7 @@ const Header = () => {
 
       {/* Desktop Menu */}
       <div className="hidden md:flex flex-wrap items-center gap-4 justify-end w-full">
-        <div className="flex items-center border rounded-lg p-1 h-8 mr-16">
+        {/* <div className="flex items-center border rounded-lg p-1 h-8 mr-16">
           <Input
             placeholder="Search..."
             className="border-none shadow-none focus-visible:ring-0 h-5 w-25"
@@ -72,7 +72,7 @@ const Header = () => {
           <Button variant="ghost" size="sm">
             <Search className="h-4 w-4" />
           </Button>
-        </div>
+        </div> */}
 
         {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -94,7 +94,7 @@ const Header = () => {
           </DropdownMenuContent>
         </DropdownMenu> */}
 
-        <span className="text-gray-400">|</span>
+        {/* <span className="text-gray-400">|</span> */}
 
         <Button variant="outline" size="sm" onClick={decreaseFontSize}>
           <AArrowDown className="h-4 w-4" />
@@ -225,7 +225,7 @@ const Header = () => {
             alignOffset={0}
           >
             <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-              <div
+              {/* <div
                 className="flex items-center border rounded-lg p-1 h-9 w-full"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -236,7 +236,7 @@ const Header = () => {
                   onKeyDown={(e) => e.stopPropagation()}
                 />
                 <Search className="h-4 w-4 mr-1" />
-              </div>
+              </div> */}
             </DropdownMenuItem>
 
             <DropdownMenuItem>
