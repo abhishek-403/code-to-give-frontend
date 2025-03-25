@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,7 @@ interface User {
 
 const UserProfilePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate(); //use navigate hook
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -129,7 +131,7 @@ const UserProfilePage: React.FC = () => {
       <div className="grid gap-6">
         <Card className="overflow-hidden">          
           <div className="px-6 p-6">
-            <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start md:items-end">
+            <div className="flex flex-col  md:flex-row gap-4 md:gap-8 items-start md:items-end">
               <Avatar className="w-24 h-24 border-4 border-white rounded-full shadow-md">
                 <AvatarImage src="https://github.com/shadcn.png" alt={`${user.name}'s profile`} />
                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
@@ -138,18 +140,41 @@ const UserProfilePage: React.FC = () => {
               <div className="flex-grow">
                 <h2 className="text-2xl font-bold">{user.name}</h2>
                 <p className="text-gray-500">{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
+
               </div>
-              
+              <div className='flex gap-2'>
+
+                <Button 
+                  // onClick={handleEdit}
+                  onClick={() => navigate("/", { state: { activeTab: "myApplications" } })}
+                  variant="outline"
+                  // className="ml-1"
+                  aria-label="show current events"
+                >
+                  Current Events
+                </Button>
+              <Button 
+                  // onClick={handleEdit}
+                  onClick={() => navigate("/", { state: { activeTab: "history" } })}
+                  variant="outline"
+                  // className="ml-1"
+                  aria-label="show user events history"
+                >
+                  Events history
+                </Button>
+
               {!isEditing && (
                 <Button 
                   onClick={handleEdit}
                   variant="outline"
-                  className="ml-auto"
+                  className="bg-gray-700 text-white hover:bg-black hover:text-white"
                   aria-label="Edit profile information"
                 >
                   Edit Profile
                 </Button>
               )}
+              </div>
+               
             </div>
           </div>
           
@@ -210,7 +235,7 @@ const UserProfilePage: React.FC = () => {
           </CardContent>
         </Card>
         
-        {user.role === 'volunteer' && (
+        {/* {user.role === 'volunteer' && (
           <Card>
             <CardHeader>
               <CardTitle>Volunteer Information</CardTitle>
@@ -250,7 +275,7 @@ const UserProfilePage: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
       </div>
     </main>
   );

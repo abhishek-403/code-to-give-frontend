@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
 import { EventStatus, TaskStatus } from "@/lib/constants/server-constants";
 import {
   useAddTaskToEventMutation,
@@ -44,6 +46,7 @@ import {
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
+import { useUpdateEventMutation } from "@/services/useUpdateEventMutation";
 
 export interface AdminEventsDataType {
   _id: string;
@@ -56,12 +59,172 @@ export interface AdminEventsDataType {
   applications: any[];
   volunteeers: any[];
 }
+
+const EventEditDialog = ({
+  event,
+  isOpen,
+  onOpenChange,
+  onSave,
+}: {
+  event: any;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (updatedDetails: any) => void;
+}) => {
+  const [editedEvent, setEditedEvent] = useState({
+    title: event?.title || "", // Use empty string as fallback
+    description: event?.description || "",
+    startDate: event?.startDate ? new Date(event.startDate) : new Date(),
+    endDate: event?.endDate ? new Date(event.endDate) : new Date(),
+    location: event?.location || "",
+  });
+
+  useEffect(() => {
+    if (isOpen && event) {
+      setEditedEvent({
+        title: event.title || "",
+        description: event.description || "",
+        startDate: event.startDate ? new Date(event.startDate) : new Date(),
+        endDate: event.endDate ? new Date(event.endDate) : new Date(),
+        location: event.location || "",
+      });
+    }
+  }, [isOpen, event]);
+
+  const handleSave = async () => {
+    // try {
+    //   await updateEvent(event._id, editedEvent);
+    //   onOpenChange(false); // Close dialog on successful update
+    //   // Optionally, you can add a toast or snackbar notification
+    // } catch (error) {
+    //   // Handle error (show error message to user)
+    //   console.error("Failed to update event", error);
+    // }
+    onSave({
+      title: editedEvent.title,
+      description: editedEvent.description,
+      startDate: editedEvent.startDate,
+      endDate: editedEvent.endDate,
+      location: editedEvent.location,
+    });
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[625px]">
+        <DialogHeader>
+          <DialogTitle>Edit Event Details</DialogTitle>
+        </DialogHeader>
+        <div className="overflow-y-auto max-h-[500px] pr-16 pt-5 pb-5">
+          <div className="space-y-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="title" className="text-right">
+                Event Title
+              </Label>
+              <Input
+                id="title"
+                value={editedEvent.title}
+                onChange={(e) =>
+                  setEditedEvent({ ...editedEvent, title: e.target.value })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                value={editedEvent.description}
+                onChange={(e) =>
+                  setEditedEvent({
+                    ...editedEvent,
+                    description: e.target.value,
+                  })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Start Date</Label>
+              <Calendar
+                mode="single"
+                selected={editedEvent.startDate}
+                onSelect={(date) =>
+                  setEditedEvent({
+                    ...editedEvent,
+                    startDate: date || new Date(),
+                  })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">End Date</Label>
+              <Calendar
+                mode="single"
+                selected={editedEvent.endDate}
+                onSelect={(date) =>
+                  setEditedEvent({
+                    ...editedEvent,
+                    endDate: date || new Date(),
+                  })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="location" className="text-right">
+                Location
+              </Label>
+              <Input
+                id="location"
+                value={editedEvent.location}
+                onChange={(e) =>
+                  setEditedEvent({ ...editedEvent, location: e.target.value })
+                }
+                className="col-span-3"
+              />
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" onClick={handleSave}>
+            Save Changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const EventManagementPage = () => {
   // Enhanced mock data for existing events - now with task completion status
 
   const [activeTab, setActiveTab] = useState<any>("active");
 
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [isEditEventOpen, setIsEditEventOpen] = useState(false);
+  const handleSaveEventChanges = (updatedEventDetails) => {
+    // Temporarily update the selectedEvent state
+    setSelectedEvent((prevEvent) => ({
+      ...prevEvent,
+      ...updatedEventDetails,
+      name: updatedEventDetails.title, // Explicitly update the name
+    }));
+
+    // Close the edit dialog
+    setIsEditEventOpen(false);
+  };
 
   const [taskFilter, setTaskFilter] = useState<any>("all");
 
@@ -628,6 +791,23 @@ const EventManagementPage = () => {
             Back to Events
           </Button>
 
+          {selectedEvent && (
+            <>
+              {/* Existing event details section */}
+              <div className="flex justify-end mb-4">
+                <Button onClick={() => setIsEditEventOpen(true)}>
+                  Edit Event Details
+                </Button>
+              </div>
+
+              <EventEditDialog
+                event={selectedEvent}
+                isOpen={isEditEventOpen}
+                onOpenChange={setIsEditEventOpen}
+                onSave={handleSaveEventChanges}
+              />
+            </>
+          )}
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
