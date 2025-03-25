@@ -182,7 +182,7 @@ const Header = () => {
           >{t("Contact_Us")}</Button>
         </Link>
 
-        <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
+        <span className="text-gray-400" aria-hidden="true">{t("|")}</span>
 
         {/* Font Size Controls */}
         <div
@@ -220,7 +220,7 @@ const Header = () => {
         </div>
 
 
-        <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
+        <span className="text-gray-400" aria-hidden="true">{t("|")}</span>
 
         {/* Language Selector */}
         <DropdownMenu>
@@ -261,14 +261,14 @@ const Header = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         
-        <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
+        <span className="text-gray-400" aria-hidden="true">{t("|")}</span>
 
         {/* Theme Switcher */}
         <div aria-label="Theme Switcher">
           <ThemeSwitcher />
         </div>
 
-        <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
+        <span className="text-gray-400" aria-hidden="true">{t("|")}</span>
 
         {/* Donation Button */}
         <Link
@@ -285,7 +285,7 @@ const Header = () => {
           >{t("Donate_Now")}</Button>
         </Link>
 
-        <span className="text-gray-400" aria-hidden="true">{t("_")}</span>
+        <span className="text-gray-400" aria-hidden="true">{t("|")}</span>
 
         {/* User Authentication Area */}
         <div
@@ -372,10 +372,10 @@ const Header = () => {
               <Globe className="h-4 w-4 mr-2" />{t("english")}</DropdownMenuItem>
 
             <DropdownMenuItem aria-label="Select Hindi Language">
-              <Globe className="h-4 w-4 mr-2" />{t("_")}</DropdownMenuItem>
+              <Globe className="h-4 w-4 mr-2" />{t("|")}</DropdownMenuItem>
 
             <DropdownMenuItem aria-label="Select Kannada Language">
-              <Globe className="h-4 w-4 mr-2" />{t("_")}</DropdownMenuItem>
+              <Globe className="h-4 w-4 mr-2" />{t("|")}</DropdownMenuItem>
 
             {/* Notifications and Theme Switcher */}
             <DropdownMenuItem aria-label="View Notifications">
