@@ -497,8 +497,8 @@ const HomePage = () => {
             <div className="flex gap-2 w-full">
               <Link to="/participant/register" className="w-1/2">
                 <Button
-                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
-                  variant="outline"
+                  className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                  variant="default"
                   size="sm"
                 >
                   Participant
@@ -506,8 +506,8 @@ const HomePage = () => {
               </Link>
               <Link to="/spectator/register" className="w-1/2">
                 <Button
-                  className="bg-red-500 hover:bg-red-600 hover:text-white text-white py-2 px-4 rounded w-full"
-                  variant="outline"
+                  className="w-full apply-button focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                  variant="default"
                   size="sm"
                 >
                   Spectator
