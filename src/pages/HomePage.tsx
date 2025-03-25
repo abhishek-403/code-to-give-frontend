@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import {
   Card,
   CardContent,
@@ -167,7 +168,20 @@ const HomePage = () => {
   // const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
 
   const [activeTab, setActiveTab] = useState("active");
+
+  const location = useLocation(); // Access navigation state
+ useEffect(() => {
+    // Check if navigation state contains an activeTab value
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
+
+
+
+  const [user, _] = useAuthState(auth);
   const [user, loading] = useAuthState(auth);
+
   const navigate = useNavigate();
   const tabRefs = {
     active: useRef<HTMLButtonElement>(null),
