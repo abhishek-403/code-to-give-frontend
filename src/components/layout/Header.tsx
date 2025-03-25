@@ -147,7 +147,7 @@ const Header = () => {
 
   return (
     <header
-      className="select-none bg-background dark:bg-[#282828] border-b p-4 pl-8 pr-8 flex items-center justify-between"
+      className="select-none bg-background dark:bg-[#282828] border-b p-3 pl-8 pr-8 flex items-center justify-between"
       aria-label="Main Navigation and Site Controls"
     >
       <Link
