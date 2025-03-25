@@ -18,10 +18,11 @@ interface User {
 
 const ChangeUserRole: React.FC = () => {
   const [users, setUsers] = useState<User[]>([
-    { _id: "1", displayName: "John Doe", email: "john.doe@example.com", role: "USER" },
-    { _id: "2", displayName: "Jane Smith", email: "jane.smith@example.com", role: "ADMIN" },
-    { _id: "3", displayName: "Alice Johnson", email: "alice.johnson@example.com", role: "VOLUNTEER" },
-    { _id: "4", displayName: "Bob Brown", email: "bob.brown@example.com", role: "WEBMASTER" },
+    { _id: "1", displayName: "Neha Gupta", email: "neha.gupta@example.com", role: "USER" },
+    { _id: "2", displayName: "Ayush Mehra", email: "ayush.mehra@example.com", role: "ADMIN" },
+    { _id: "3", displayName: "Divya Nair", email: "divya.nair@example.com", role: "VOLUNTEER" },
+    { _id: "4", displayName: "Vikram Joshi", email: "vikram.joshi@example.com", role: "WEBMASTER" },
+    { _id: "5", displayName: "Shreya Malhotra", email: "shreya.malhotra@example.com", role: "USER" }
   ]);
   const [search, setSearch] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
