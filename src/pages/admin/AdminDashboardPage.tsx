@@ -1322,7 +1322,7 @@ const AdminDashboardPage = () => {
           <Link to="/admin/events/manage">
             <Button variant="outline" className="flex items-center gap-2">
               <span className="hidden sm:inline">🔍</span>
-              {t("manage_Events")}
+              {t("manage_events")}
             </Button>
           </Link>
         </CardContent>
