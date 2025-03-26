@@ -85,11 +85,13 @@ npm start
 | 🔑 POST   | /api/auth/login        | User login                          |
 
 ## 🖼 Screenshots
-Include screenshots of the website here.
 
-![🏠 Home Page](path/to/homepage-screenshot.png)
-![📅 Event Management](path/to/event-management-screenshot.png)
-![🙌 Volunteer Dashboard](path/to/volunteer-dashboard-screenshot.png)
+![Login/Register Page](https://github.com/user-attachments/assets/96368193-41a2-4028-a4b0-422185d7792d)
+![Home Page](https://github.com/user-attachments/assets/8b80a7e6-8786-4498-af5e-431e1c2aa10c)
+![Contact Us](https://github.com/user-attachments/assets/85fb48b7-9ea1-4630-a5fa-5e82f77c35b7)
+![User Profile](https://github.com/user-attachments/assets/4e50dee4-a134-40e1-bc6f-af92e9093d0f)
+![Admin View](https://github.com/user-attachments/assets/73ef987d-e860-4fe5-bd49-38efc40d25a6)
+
 
 ## ⚡ React + TypeScript + Vite Setup
 This project uses React with TypeScript and Vite for a fast and modern development experience.
