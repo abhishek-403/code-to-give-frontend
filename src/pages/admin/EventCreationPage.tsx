@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -62,6 +63,8 @@ import {
   ArrowLeft,
   BookMarked,
   LayoutTemplate,
+  Mail,
+  Info,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -1108,37 +1111,97 @@ const EventCreationPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="  my-2 pt-2">
+          <Card className="my-2 pt-2 dark:text-white">
             <CardHeader>
               <CardTitle>{t("notify_users")}</CardTitle>
+              <CardDescription>
+                {t("search_and_notify_users_about_this_event")}
+              </CardDescription>
             </CardHeader>
-            <CardContent className=" backdrop-blur-xl flex justify-center items-center space-x-3">
+
+            {/* Add this new section for bulk notifications */}
+            <CardContent className="border-b pb-4 mb-2">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md mb-4">
+                <h3 className="font-medium text-blue-800 dark:text-blue-300 flex items-center mb-2">
+                  <Info size={18} className="mr-2" />
+                  {t("bulk_notification")}
+                </h3>
+                <p className="text-sm text-blue-700 dark:text-blue-400 mb-3">
+                  {t("send_notification_to_users_with_selected_interests")}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {form
+                    .watch("volunteeringDomains")
+                    ?.map((domainId: string, idx: number) => {
+                      // Find the domain label from the volDomains array
+                      const domain = volDomains?.find(
+                        (d: any) => d.value === domainId
+                      );
+                      return domain ? (
+                        <Badge
+                          key={idx}
+                          variant="secondary"
+                          className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
+                        >
+                          {domain.label}
+                        </Badge>
+                      ) : null;
+                    })}
+                  {(!form.watch("volunteeringDomains") ||
+                    form.watch("volunteeringDomains").length === 0) && (
+                    <span className="text-gray-500 dark:text-gray-400 text-sm italic">
+                      {t("no_domains_selected")}
+                    </span>
+                  )}
+                </div>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600 w-full sm:w-auto"
+                  onClick={() => toast.success(t("batch_email_sent"))}
+                  disabled={
+                    !form.watch("volunteeringDomains") ||
+                    form.watch("volunteeringDomains").length === 0
+                  }
+                >
+                  <Mail size={16} className="mr-2" />
+                  {t("notify_all_matching_users")}
+                </Button>
+              </div>
+            </CardContent>
+
+            {/* Existing search functionality */}
+            <CardContent className="backdrop-blur-xl flex justify-center items-center space-x-3 dark:text-white">
               <Input
                 type="text"
-                placeholder="Search by name "
+                placeholder={t("search_by_name_or_email")}
                 value={search}
                 autoComplete="off"
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-neutral-80"
+                className="w-full text-neutral-80 dark:text-white"
               />
-              <Button
-                // onClick={() => handleRoleChange(user._id, user.role)}
-                className="bg-gray-800 hover:bg-black text-white"
-              >
+              <Button className="bg-gray-800 hover:bg-black text-white dark:text-white">
                 {t("find")}
               </Button>
             </CardContent>
-            <CardContent className="overflow-auto scrollbar-hide max-h-[300px]">
+            <CardContent className="overflow-auto scrollbar-hide max-h-[300px] dark:text-white">
               <Table>
                 <TableHead>
-                  <TableRow>
-                    {/* <TableHeaderCell>{t("name")}</TableHeaderCell>
-                    <TableHeaderCell>{t("email")}</TableHeaderCell>
-                    <TableHeaderCell>{t("current_role")}</TableHeaderCell>
-                    <TableHeaderCell>{t("change_role")}</TableHeaderCell> */}
+                  <TableRow className="bg-gray-50 dark:bg-gray-800 dark:text-white">
+                    <TableCell className="font-medium dark:text-white">{t("name")}</TableCell>
+                    <TableCell className="font-medium dark:text-white">{t("email")}</TableCell>
+                    <TableCell className="font-medium dark:text-white">{t("role")}</TableCell>
+                    <TableCell className="font-medium dark:text-white">
+                      {t("volunteering_interests")}
+                    </TableCell>
+                    <TableCell className="font-medium dark:text-white">
+                      {t("actions")}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
-                <tbody className="w-full ">
+                <tbody className="w-full">
                   {userSearchLoading ? (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center">
@@ -1147,26 +1210,82 @@ const EventCreationPage = () => {
                     </TableRow>
                   ) : users && users.length > 0 ? (
                     users.map((user) => (
-                      <TableRow key={user._id}>
-                        <TableCell>{user.displayName}</TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>
-                          <span className="badge">{user.role}</span>
+                      <TableRow
+                        key={user._id}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
+                      >
+                        <TableCell className="font-medium dark:text-white">
+                          {user.displayName}
                         </TableCell>
+                        <TableCell className="font-medium dark:text-white">{user.email}</TableCell>
+                        <TableCell>
+                          <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            {user.role}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {user.volunteeringInterests &&
+                          user.volunteeringInterests.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {user.volunteeringInterests.map(
+                                (interestId, idx) => {
+                                  // Map interest IDs to human-readable labels
+                                  const interestMap = {
+                                    "67e1189688a5d4787af72a56": "Sports",
+                                    "67e1189688a5d4787af72a4f": "Education",
+                                    "67e1189688a5d4787af72a52":
+                                      "Rehabilitation",
+                                    "67e1189688a5d4787af72a54": "Environment",
+                                    "67e1189688a5d4787af72a55":
+                                      "Blood Donation",
+                                    "67e1189688a5d4787af72a53":
+                                      "Food distribution",
+                                    "67e1189688a5d4787af72a50":
+                                      "Sanitation Work",
+                                  };
 
+                                  const interestLabel =
+                                    interestMap[interestId] || interestId;
+
+                                  return (
+                                    <span
+                                      key={idx}
+                                      className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                                    >
+                                      {interestLabel}
+                                    </span>
+                                  );
+                                }
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-gray-500 dark:text-gray-400 text-sm italic dark:text-white">
+                              {t("not_yet_updated")}
+                            </span>
+                          )}
+                        </TableCell>
                         <TableCell>
                           <Button
                             type="button"
-                            onClick={() => toast.success("User notified!")}
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1 dark:text-white"
+                            onClick={() =>
+                              toast.success(t("email_sent_to_user"))
+                            }
                           >
-                            Email
+                            <Mail size={14} />
+                            {t("notify")}
                           </Button>
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center">
+                      <TableCell
+                        colSpan={5}
+                        className="text-center py-8 text-gray-500 dark:text-gray-400"
+                      >
                         {t("no_users_found_")}
                       </TableCell>
                     </TableRow>
