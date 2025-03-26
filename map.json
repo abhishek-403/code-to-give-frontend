@@ -1024,6 +1024,16 @@
     "hi": "सभी डेटा को CSV के रूप में निर्यात करें",
     "kn": "ಎಲ್ಲಾ ಡೇಟಾವನ್ನು CSV ಆಗಿ ರಫ್ತು ಮಾಡಿ"
   },
+  "export_data": {
+    "en": "Export data",
+    "hi": "सभी डेटा निर्यात करें",
+    "kn": "ಡೇಟಾ ರಫ್ತು"
+  },
+  "refresh_data": {
+    "en": "Refresh data",
+    "hi": "डेटा ताज़ा करें",
+    "kn": "ಡೇಟಾ ತಾಜಾ ಮಾಡು"
+  },
   "data_visualization": {
     "en": "Data visualization",
     "hi": "डेटा विज़ुअलाइज़ेशन",

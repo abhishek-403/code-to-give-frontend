@@ -808,7 +808,7 @@ const AdminDashboardPage = () => {
   return (
     <div className="p-4 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
-        <h1 className="text-3xl font-bold">{t("Admin_Dashboard")}</h1>
+        <h1 className="text-3xl font-bold">{t("admin_dashboard")}</h1>
         <div className="flex flex-wrap gap-2">
           <Link to="/admin/changeroles">
             {user.role === UserRole.ADMIN && (
