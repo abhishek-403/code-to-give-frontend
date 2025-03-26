@@ -1,10 +1,41 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin, Mail } from "lucide-react";
+import emailjs from 'emailjs-com';
 
 const ContactUsPage: React.FC = () => {
+  const form = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{success: boolean; message: string} | null>(null);
+
+  const sendEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const userId = import.meta.env.VITE_EMAILJS_USER_ID;
+
+    if (form.current) {
+      emailjs.sendForm(serviceId, templateId, form.current, userId)
+        .then((result) => {
+          console.log(result.text);
+          setSubmitStatus({success: true, message: 'Message sent successfully!'});
+          form.current?.reset();
+        })
+        .catch((error) => {
+          console.log(error.text);
+          setSubmitStatus({success: false, message: 'Failed to send message. Please try again.'});
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
+    }
+  };
+
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8 dark:bg-#282828 dark:text-white">
       {/* Page Header */}
@@ -61,7 +92,7 @@ const ContactUsPage: React.FC = () => {
         {/* Contact Form Section */}
         <div className="bg-gray-50 dark:bg-black p-6 rounded-lg shadow-md dark:shadow-white/10 border dark:border-white/20">
           <h2 className="text-2xl font-bold mb-4">Send Us a Message</h2>
-          <form className="space-y-4">
+          <form ref={form} onSubmit={sendEmail} className="space-y-4">
             {/* Name */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium dark:text-white">
@@ -70,8 +101,10 @@ const ContactUsPage: React.FC = () => {
               <Input
                 type="text"
                 id="name"
+                name="from_name"
                 placeholder="Enter your full name"
                 className="mt-1 dark:bg-black dark:border-white/30 dark:text-white dark:placeholder-gray-400"
+                required
               />
             </div>
 
@@ -83,7 +116,23 @@ const ContactUsPage: React.FC = () => {
               <Input
                 type="email"
                 id="email"
+                name="from_email"
                 placeholder="Enter your email address"
+                className="mt-1 dark:bg-black dark:border-white/30 dark:text-white dark:placeholder-gray-400"
+                required
+              />
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium dark:text-white">
+                Phone Number
+              </label>
+              <Input
+                type="tel"
+                id="phone"
+                name="phone_number"
+                placeholder="Enter your phone number"
                 className="mt-1 dark:bg-black dark:border-white/30 dark:text-white dark:placeholder-gray-400"
               />
             </div>
@@ -95,18 +144,28 @@ const ContactUsPage: React.FC = () => {
               </label>
               <Textarea
                 id="message"
+                name="message"
                 placeholder="Write your message here"
                 className="mt-1 dark:bg-black dark:border-white/30 dark:text-white dark:placeholder-gray-400"
+                required
               />
             </div>
 
             {/* Submit Button */}
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="w-full bg-red-500 hover:bg-red-600 dark:hover:bg-yellow-500 dark:text-black font-bold py-2 px-4 rounded"
             >
-              Send Message
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
+
+            {/* Status Message */}
+            {submitStatus && (
+              <div className={`p-3 rounded-md ${submitStatus.success ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'}`}>
+                {submitStatus.message}
+              </div>
+            )}
           </form>
         </div>
       </div>
@@ -174,7 +233,6 @@ const ContactUsPage: React.FC = () => {
           >
             <Linkedin size={32} />
           </a>
-          
         </div>
       </div>
     </div>
