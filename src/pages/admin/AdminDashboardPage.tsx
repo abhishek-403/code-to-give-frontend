@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,9 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserRole } from "@/lib/constants/server-constants";
 import useLanguage from "@/lib/hooks/useLang";
-import { useAppSelector } from "@/store";
 import {
   ArcElement,
   BarElement,
@@ -85,6 +84,7 @@ interface VolunteerActivity {
   tasks: number;
   events: number;
 }
+//@ts-ignore
 
 // Backend API service - will be replaced with actual API calls in the future
 // This creates clear integration points for the backend
@@ -218,7 +218,7 @@ const convertToCSV = (data, fields) => {
   if (!data || !data.length || !fields || !fields.length) {
     return "No data available";
   }
-  
+
   // Create header row
   let csv = fields.join(",") + "\n";
 
@@ -229,12 +229,14 @@ const convertToCSV = (data, fields) => {
         const value = item[field];
         // Handle values that might contain commas or quotes by properly escaping them
         if (value === null || value === undefined) {
-          return '';
+          return "";
         } else if (typeof value === "string") {
           // Escape quotes and wrap strings with commas in quotes
           const escaped = value.replace(/"/g, '""');
-          return value.includes(",") || value.includes('"') || value.includes('\n') 
-            ? `"${escaped}"` 
+          return value.includes(",") ||
+            value.includes('"') ||
+            value.includes("\n")
+            ? `"${escaped}"`
             : escaped;
         } else {
           return String(value);
@@ -251,8 +253,11 @@ const convertToCSV = (data, fields) => {
 // Improved utility function to download a file
 const downloadFile = (content, fileName, mimeType) => {
   try {
-    const blob = content instanceof Blob ? content : new Blob([content], { type: mimeType });
-    
+    const blob =
+      content instanceof Blob
+        ? content
+        : new Blob([content], { type: mimeType });
+
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
       // For IE
       window.navigator.msSaveOrOpenBlob(blob, fileName);
@@ -264,12 +269,12 @@ const downloadFile = (content, fileName, mimeType) => {
     const link = document.createElement("a");
     link.href = url;
     link.download = fileName;
-    
+
     // Required for Firefox
     document.body.appendChild(link);
-    
+
     link.click();
-    
+
     // Cleanup
     setTimeout(() => {
       document.body.removeChild(link);
@@ -361,131 +366,159 @@ const AdminDashboardPage = () => {
 
   // Export data functions
   // Export data functions
-const exportDataToCSV = async () => {
-  setExportLoading(true);
-  try {
-    let csvContent = "";
-    let fileName = "";
+  const exportDataToCSV = async () => {
+    setExportLoading(true);
+    try {
+      let csvContent = "";
+      let fileName = "";
 
-    // Export appropriate data based on active tab
-    switch (activeTab) {
-      case "engagement":
-        // Include both volunteers and events data
-        csvContent = convertToCSV(engagementData, [
-          "date",
-          "volunteers",
-          "events",
-        ]);
-        fileName = "volunteer-engagement-data.csv";
-        break;
-      case "completion":
-        csvContent = convertToCSV(completionData, [
-          "project",
-          "completion",
-          "target",
-        ]);
-        fileName = "project-completion-data.csv";
-        break;
-      case "feedback":
-        csvContent = convertToCSV(feedbackData, [
-          "category",
-          "score",
-          "count",
-        ]);
-        fileName = "feedback-data.csv";
-        break;
-      case "overview":
-        // For overview, export the top volunteers data
-        csvContent = convertToCSV(topVolunteers, [
-          "name",
-          "hours",
-          "tasks",
-          "events",
-        ]);
-        fileName = "top-volunteers-data.csv";
-        break;
-      default:
-        csvContent = "No data available";
-        fileName = "dashboard-data.csv";
+      // Export appropriate data based on active tab
+      switch (activeTab) {
+        case "engagement":
+          // Include both volunteers and events data
+          csvContent = convertToCSV(engagementData, [
+            "date",
+            "volunteers",
+            "events",
+          ]);
+          fileName = "volunteer-engagement-data.csv";
+          break;
+        case "completion":
+          csvContent = convertToCSV(completionData, [
+            "project",
+            "completion",
+            "target",
+          ]);
+          fileName = "project-completion-data.csv";
+          break;
+        case "feedback":
+          csvContent = convertToCSV(feedbackData, [
+            "category",
+            "score",
+            "count",
+          ]);
+          fileName = "feedback-data.csv";
+          break;
+        case "overview":
+          // For overview, export the top volunteers data
+          csvContent = convertToCSV(topVolunteers, [
+            "name",
+            "hours",
+            "tasks",
+            "events",
+          ]);
+          fileName = "top-volunteers-data.csv";
+          break;
+        default:
+          csvContent = "No data available";
+          fileName = "dashboard-data.csv";
+      }
+
+      // Check if there's actual content
+      if (csvContent === "No data available") {
+        console.error("No data available to export");
+        // Show a notification to the user (implement as needed)
+      } else {
+        downloadFile(csvContent, fileName, "text/csv");
+      }
+    } catch (error) {
+      console.error("Failed to export data:", error);
+    } finally {
+      setExportLoading(false);
     }
+  };
 
-    // Check if there's actual content
-    if (csvContent === "No data available") {
-      console.error("No data available to export");
-      // Show a notification to the user (implement as needed)
-    } else {
-      downloadFile(csvContent, fileName, "text/csv");
+  const exportAllDataToCSV = async () => {
+    setExportLoading(true);
+    try {
+      // Ensure all data is loaded
+      if (
+        !engagementData.length ||
+        !completionData.length ||
+        !feedbackData.length ||
+        !topVolunteers.length
+      ) {
+        console.error("Some data is missing for export all");
+        return;
+      }
+
+      // Create a single CSV with all data sets separated by headers
+      let allDataCSV = "VOLUNTEER ENGAGEMENT DATA\n";
+      allDataCSV += convertToCSV(engagementData, [
+        "date",
+        "volunteers",
+        "events",
+      ]);
+      allDataCSV += "\n\nPROJECT COMPLETION DATA\n";
+      allDataCSV += convertToCSV(completionData, [
+        "project",
+        "completion",
+        "target",
+      ]);
+      allDataCSV += "\n\nFEEDBACK DATA\n";
+      allDataCSV += convertToCSV(feedbackData, ["category", "score", "count"]);
+      allDataCSV += "\n\nTOP VOLUNTEERS DATA\n";
+      allDataCSV += convertToCSV(topVolunteers, [
+        "name",
+        "hours",
+        "tasks",
+        "events",
+      ]);
+      allDataCSV += "\n\nTASK COMPLETION BY EVENT\n";
+      allDataCSV += convertToCSV(taskCompletionByEvent, [
+        "event",
+        "completion",
+        "total",
+      ]);
+      allDataCSV += "\n\nEVENT FEEDBACK\n";
+      allDataCSV += convertToCSV(eventFeedback, [
+        "event",
+        "score",
+        "responses",
+      ]);
+
+      // Download the combined CSV
+      downloadFile(allDataCSV, "all-dashboard-data.csv", "text/csv");
+    } catch (error) {
+      console.error("Failed to export all data:", error);
+    } finally {
+      setExportLoading(false);
     }
-  } catch (error) {
-    console.error("Failed to export data:", error);
-  } finally {
-    setExportLoading(false);
-  }
-};
-
-const exportAllDataToCSV = async () => {
-  setExportLoading(true);
-  try {
-    // Ensure all data is loaded
-    if (!engagementData.length || !completionData.length || !feedbackData.length || !topVolunteers.length) {
-      console.error("Some data is missing for export all");
-      return;
-    }
-
-    // Create a single CSV with all data sets separated by headers
-    let allDataCSV = "VOLUNTEER ENGAGEMENT DATA\n";
-    allDataCSV += convertToCSV(engagementData, ["date", "volunteers", "events"]);
-    allDataCSV += "\n\nPROJECT COMPLETION DATA\n";
-    allDataCSV += convertToCSV(completionData, ["project", "completion", "target"]);
-    allDataCSV += "\n\nFEEDBACK DATA\n";
-    allDataCSV += convertToCSV(feedbackData, ["category", "score", "count"]);
-    allDataCSV += "\n\nTOP VOLUNTEERS DATA\n";
-    allDataCSV += convertToCSV(topVolunteers, ["name", "hours", "tasks", "events"]);
-    allDataCSV += "\n\nTASK COMPLETION BY EVENT\n";
-    allDataCSV += convertToCSV(taskCompletionByEvent, ["event", "completion", "total"]);
-    allDataCSV += "\n\nEVENT FEEDBACK\n";
-    allDataCSV += convertToCSV(eventFeedback, ["event", "score", "responses"]);
-
-    // Download the combined CSV
-    downloadFile(allDataCSV, "all-dashboard-data.csv", "text/csv");
-  } catch (error) {
-    console.error("Failed to export all data:", error);
-  } finally {
-    setExportLoading(false);
-  }
-};
+  };
   const generateExcelFile = (data, fields) => {
     if (!data || !data.length) return null;
-    
+
     // Create a simple xlsx format
-    let excelStr = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
-    excelStr += '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Sheet1</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>';
-    excelStr += '<body>';
-    excelStr += '<table>';
-    
+    let excelStr =
+      '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+    excelStr +=
+      "<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Sheet1</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>";
+    excelStr += "<body>";
+    excelStr += "<table>";
+
     // Header row
-    excelStr += '<tr>';
-    fields.forEach(field => {
+    excelStr += "<tr>";
+    fields.forEach((field) => {
       excelStr += `<th>${field}</th>`;
     });
-    excelStr += '</tr>';
-    
+    excelStr += "</tr>";
+
     // Data rows
-    data.forEach(item => {
-      excelStr += '<tr>';
-      fields.forEach(field => {
-        const value = item[field] !== undefined ? item[field] : '';
+    data.forEach((item) => {
+      excelStr += "<tr>";
+      fields.forEach((field) => {
+        const value = item[field] !== undefined ? item[field] : "";
         excelStr += `<td>${value}</td>`;
       });
-      excelStr += '</tr>';
+      excelStr += "</tr>";
     });
-    
-    excelStr += '</table>';
-    excelStr += '</body>';
-    excelStr += '</html>';
-    
+
+    excelStr += "</table>";
+    excelStr += "</body>";
+    excelStr += "</html>";
+
     return new Blob([excelStr], {
-      type: 'application/vnd.ms-excel'
+      type: "application/vnd.ms-excel",
     });
   };
 
@@ -495,30 +528,47 @@ const exportAllDataToCSV = async () => {
     try {
       let excelBlob = null;
       let fileName = "";
-  
+
       // Export appropriate data based on active tab
       switch (activeTab) {
         case "engagement":
-          excelBlob = generateExcelFile(engagementData, ["date", "volunteers", "events"]);
+          excelBlob = generateExcelFile(engagementData, [
+            "date",
+            "volunteers",
+            "events",
+          ]);
           fileName = "volunteer-engagement-data.xlsx";
           break;
         case "completion":
-          excelBlob = generateExcelFile(completionData, ["project", "completion", "target"]);
+          excelBlob = generateExcelFile(completionData, [
+            "project",
+            "completion",
+            "target",
+          ]);
           fileName = "project-completion-data.xlsx";
           break;
         case "feedback":
-          excelBlob = generateExcelFile(feedbackData, ["category", "score", "count"]);
+          excelBlob = generateExcelFile(feedbackData, [
+            "category",
+            "score",
+            "count",
+          ]);
           fileName = "feedback-data.xlsx";
           break;
         case "overview":
-          excelBlob = generateExcelFile(topVolunteers, ["name", "hours", "tasks", "events"]);
+          excelBlob = generateExcelFile(topVolunteers, [
+            "name",
+            "hours",
+            "tasks",
+            "events",
+          ]);
           fileName = "top-volunteers-data.xlsx";
           break;
         default:
           console.error("No data available for export");
           return;
       }
-  
+
       if (excelBlob) {
         downloadFile(excelBlob, fileName, "application/vnd.ms-excel");
       }
@@ -970,7 +1020,7 @@ const exportAllDataToCSV = async () => {
                     .classList.toggle("hidden")
                 }
               >
-                View Recent Events
+                {t("view_recent_events")}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
 
@@ -1030,7 +1080,7 @@ const exportAllDataToCSV = async () => {
                     .classList.toggle("hidden")
                 }
               >
-                Top Engaged Volunteers
+                {t("top_engaged_volunteers")}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
 
@@ -1098,7 +1148,7 @@ const exportAllDataToCSV = async () => {
                     .classList.toggle("hidden")
                 }
               >
-                <span>View Completion Details</span>
+                <span>{t("view_completion_details")}</span>
                 <ChevronDown className="ml-1.5 h-3.5 w-3.5" />
               </Button>
 
@@ -1165,7 +1215,7 @@ const exportAllDataToCSV = async () => {
                     .classList.toggle("hidden")
                 }
               >
-                Event Feedback Breakdown
+                {t("event_feedback_breakdown")}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </div>

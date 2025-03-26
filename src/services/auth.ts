@@ -32,8 +32,8 @@ export const useSignUpWithGoogleMutation = () => {
       }
       return user;
     },
-    onSuccess: (user) => {
-      toast.success(`Welcome, ${user.displayName}! 🎉`);
+    onSuccess: (_) => {
+      toast.success(`Welcome 🎉`);
     },
     onError: (error) => {
       console.log(error);
