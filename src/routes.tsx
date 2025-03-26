@@ -1,4 +1,3 @@
-
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, Outlet, Route, Routes } from "react-router";
 import Layout from "./components/layout/Layout";
@@ -61,9 +60,16 @@ const AdminRoutes = () => {
 };
 
 export default function AppRoutes() {
-  
   return (
     <Routes>
+      <Route
+        path="/donate"
+        element={
+          <Layout>
+            <DonatePage />
+          </Layout>
+        }
+      />
       <Route
         path="/"
         element={
@@ -136,14 +142,6 @@ export default function AppRoutes() {
             }
           />
         </Route>
-        <Route
-          path="/donate"
-          element={
-            <Layout>
-              <DonatePage />
-            </Layout>
-          }
-        />
         <Route
           path="/contactus"
           element={
