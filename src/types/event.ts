@@ -1,4 +1,9 @@
-import { AuthProviders, EventStatus, TaskStatus, UserRole } from "@/lib/constants/server-constants";
+import {
+  AuthProviders,
+  EventStatus,
+  TaskStatus,
+  UserRole,
+} from "@/lib/constants/server-constants";
 import { Types } from "mongoose";
 
 // User Types
@@ -44,10 +49,10 @@ export interface Task {
   _id: Types.ObjectId;
   name: string;
   description?: string;
-  eventId: Types.ObjectId;
   assignedTo: Types.ObjectId;
   assignedBy: Types.ObjectId;
   status: TaskStatus;
+  eventId: Types.ObjectId;
   startDate?: Date;
   endDate?: Date;
   priority?: "low" | "medium" | "high";

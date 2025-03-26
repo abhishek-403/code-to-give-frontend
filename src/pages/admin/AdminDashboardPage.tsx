@@ -1005,7 +1005,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("10")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Active_Events")}
+              {t("active_events")}
             </p>
 
             {/* Expandable section for recent events */}
@@ -1065,7 +1065,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("92_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Volunteer_Engagement")}
+              {t("volunteer_engagement")}
             </p>
 
             {/* Top engaged volunteers */}
@@ -1133,7 +1133,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("78_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Task_Completion")}
+              {t("task_completion")}
             </p>
 
             {/* Events with highest completion rates */}
@@ -1200,7 +1200,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("4.3")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Average_Feedback")}
+              {t("average_feedback")}
             </p>
 
             {/* Event feedback breakdown */}
@@ -1310,7 +1310,7 @@ const AdminDashboardPage = () => {
       <Card className="transition-all hover:shadow-md">
         <CardHeader>
           <CardTitle className="text-xl">{t("event_management")}</CardTitle>
-          <CardDescription>{t("create_and_Manage_Events_")}</CardDescription>
+          <CardDescription>{t("create_and_manage_events_")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
           <Link to="/admin/events/create">
@@ -1332,7 +1332,7 @@ const AdminDashboardPage = () => {
       <Card className="transition-all hover:shadow-md">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <CardTitle className="text-xl">{t("Data_Visualization")}</CardTitle>
+            <CardTitle className="text-xl">{t("data_visualization")}</CardTitle>
             <CardDescription>
               {t("metrics_on_engagement_task_completion_rates_and_feedback_")}
             </CardDescription>
@@ -1370,9 +1370,7 @@ const AdminDashboardPage = () => {
               </div>
               <div className="mt-4 text-sm text-muted-foreground">
                 <p>
-                  <span className="font-medium">Note:</span> Events data is
-                  scaled (×15) for better visualization alongside volunteer
-                  numbers.
+                  <span className="font-medium">{t("note")}:</span> {t("data_visualization_note")}
                 </p>
               </div>
             </TabsContent>

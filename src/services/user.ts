@@ -51,7 +51,7 @@ export const useVolunteerEventTasks = (
   eventId: string | undefined,
   isEnabled: boolean
 ) => {
-  return useQuery({
+  return useQuery<any,any,any>({
     queryKey: ["volunteerEventTasks", eventId],
     queryFn: async function fetchData(): Promise<Task[]> {
       const response: ApiResponseFormat = await axiosClient.get(

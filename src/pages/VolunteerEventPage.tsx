@@ -75,11 +75,11 @@ const VolunteerEventPage: React.FC = () => {
   } = useVolunteerEventTasks(eventId, !!user);
   const { mutate: updateTaskStatus, isPending } =
     useUpdateVolunteerEventTasksStatus();
-  const [event, _] = useState<Event>(dummyEvent);
+  // const [event, _] = useState<Event>(dummyEvent);
   const [tasks, setTasks] = useState<Task[] | undefined>(dummyTasks);
   const [taskFilter, setTaskFilter] = useState<TaskStatus | "all">("all");
   useEffect(() => {
-    setTasks(tsk);
+    setTasks(tsk?.task ?? []);
   }, [tsk]);
   const { t } = useLanguage();
 
@@ -143,6 +143,7 @@ const VolunteerEventPage: React.FC = () => {
         {t("_")}
       </div>
     );
+  console.log(event);
 
   return (
     <div className="container mx-auto p-6">
@@ -152,8 +153,8 @@ const VolunteerEventPage: React.FC = () => {
           <span>{t("back_to_events")}</span>
         </Button>
       </Link>
-      <h1 className="text-2xl font-bold mb-4">{event.name}</h1>
-      <p className="text-gray-700 mb-4">{event.description}</p>
+      <h1 className="text-2xl font-bold mb-4">{tsk.event.name}</h1>
+      <p className="text-gray-700 mb-4">{tsk.event.description}</p>
       {/* Progress Section */}
       <Card className="mb-4">
         <CardHeader>

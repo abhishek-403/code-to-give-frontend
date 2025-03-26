@@ -99,6 +99,7 @@
     "hi": "समाप्ति तिथि",
     "kn": "ಅಂತಿಮ ದಿನಾಂಕ"
   },
+ 
   "volunteering_domains": {
     "en": "Volunteering Domains",
     "hi": "स्वयंसेवा डोमेन",
@@ -324,10 +325,20 @@
     "hi": "परिवर्तनों को सुरक्षित करें",
     "kn": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ"
   },
+  "data_visualization_note": {
+    "en": "Events data is scaled (×15) for better visualization alongside volunteer numbers",
+    "hi": "इवेंट डेटा को बेहतर दृश्यता के लिए स्वयंसेवकों की संख्या के साथ (×15) स्केल किया गया है।",
+    "kn": "ಈವೆಂಟ್ ಡೇಟಾವನ್ನು ಸ್ವಯಂಸೇವಕರ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಉತ್ತಮ ದೃಶ್ಯೀಕರಣಕ್ಕಾಗಿ (×15) ಗಾತ್ರದಲ್ಲಿ ಸ್ಕೇಲ್ ಮಾಡಲಾಗಿದೆ."
+  },
   "_": {
     "en": " ",
     "hi": " ",
     "kn": " "
+  },
+  "note": {
+    "en": "Note",
+    "hi": "नोट",
+    "kn": "ಗಮನಿಸಿ"
   },
   "task_completion": {
     "en": "Task Completion",
@@ -1493,6 +1504,11 @@
     "en": "Samarthanam. All rights reserved.",
     "hi": "समर्थनम। सर्वाधिकार सुरक्षित।",
     "kn": "ಸಮರ್ಥನಂ. ಎಲ್ಲ ಹಕ್ಕುಗಳು ಕಾಯ್ದಿರಿಸಲ್ಪಟ್ಟಿವೆ."
+  },
+  "copy_right": {
+    "en": "Copyright",
+    "hi": "कॉपीराइट",
+    "kn": "ಕಾಪಿ ರೈಟ್"
   },
   "when_are_you_available_": {
     "en": "When are you available?",
