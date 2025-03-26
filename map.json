@@ -574,6 +574,26 @@
     "hi": "समीक्षाधीन कोई इवेंट नहीं।",
     "kn": "ಪರಿಶೀಲನೆಯಲ್ಲಿ ಯಾವುದೇ ಈವೆಂಟ್‌ಗಳು ಇಲ್ಲ."
   },
+  "view_recent_events": {
+    "en": "View Recent Events",
+    "kn": "ಇತ್ತೀಚಿನ ಈವೆಂಟ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+    "hi": "हाल की घटनाएँ देखें"
+  },
+  "top_engaged_volunteers": {
+    "en": "Top Engaged Volunteers",
+    "kn": "ಅತ್ಯಂತ ತೊಡಗಿಸಿಕೊಂಡ ಸ್ವಯಂಸೇವಕರು",
+    "hi": "शीर्ष संलग्न स्वयंसेवक"
+  },
+  "view_completion_details": {
+    "en": "View Completion Details",
+    "kn": "ಪೂರ್ಣಗೊಂಡ ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+    "hi": "समाप्ति विवरण देखें"
+  },
+  "event_feedback_breakdown": {
+    "en": "Event Feedback Breakdown",
+    "kn": "ಈವೆಂಟ್ ಪ್ರತಿಕ್ರಿಯೆಯ ವಿಶ್ಲೇಷಣೆ",
+    "hi": "इवेंट फीडबैक विश्लेषण"
+  },
   "no_past_events_": {
     "en": "No past events.",
     "hi": "कोई पिछला इवेंट नहीं।",

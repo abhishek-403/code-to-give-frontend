@@ -1255,15 +1255,15 @@ const EventManagementPage = () => {
                           <div className="flex justify-between items-start">
                             <div>
                               <p className="font-medium text-gray-900 dark:text-gray-100">
-                                {feedback.title || "Feedback"}
+                                Experience : {feedback.experience || "Loved it!"}
                               </p>
                               <p className="text-gray-600 dark:text-gray-300 mt-2">
-                                {feedback.content}
+                                Learning : {feedback.learnings ?? "Great"}
                               </p>
                             </div>
                             {feedback.rating && (
                               <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
+                                {[...Array(feedback.rating)].map((_, i) => (
                                   <svg
                                     key={i}
                                     className={`w-5 h-5 ${
@@ -1293,7 +1293,8 @@ const EventManagementPage = () => {
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                               </svg>
-                              {feedback.user?.displayName || "Anonymous"}
+                              {feedback.respondentId?.displayName ||
+                                "Anonymous"}
                             </div>
                             {feedback.date && (
                               <div className="flex items-center ml-4">
@@ -2212,7 +2213,7 @@ const EventManagementPage = () => {
                   const prevIndex =
                     (currentIndex - 1 + tabTriggers.length) %
                     tabTriggers.length;
-                  (tabTriggers[prevIndex] as HTMLElement).focus(); 
+                  (tabTriggers[prevIndex] as HTMLElement).focus();
                 }
               }}
             >

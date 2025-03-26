@@ -39,40 +39,40 @@ Ensure you have the following installed:
 ### 📥 Clone the Repositories
 #### Frontend
 ```sh
-git clone https://github.com/yourusername/smarthanam-frontend.git
-cd smarthanam-frontend
+git clone https://github.com/abhishek-403/code-to-give-frontend
+cd code-to-give-frontend
 ```
 #### Backend
 ```sh
-git clone https://github.com/yourusername/smarthanam-backend.git
-cd smarthanam-backend
+git clone https://github.com/abhishek-403/code-to-give-backend
+cd code-to-give-backend
 ```
 
 ### 📦 Install Dependencies
 #### Backend
 ```sh
-cd smarthanam-backend
+cd code-to-give-backend
 npm install
 ```
 #### Frontend
 ```sh
-cd smarthanam-frontend
+cd code-to-give-frontend
 npm install
 ```
 
 ### ⚙️ Configure Environment Variables
 Create a `.env` file in both `backend` and `frontend` directories and configure required environment variables.
 
-### ▶️ Run the Application
+### ▶️ Run the Application in development mode
 #### Backend
 ```sh
-cd smarthanam-backend
+cd code-to-give-backend
 npm run dev
 ```
 #### Frontend
 ```sh
-cd smarthanam-frontend
-npm start
+cd code-to-give-frontend
+npm run dev
 ```
 
 ## 📡 API Endpoints

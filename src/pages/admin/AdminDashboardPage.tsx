@@ -263,7 +263,7 @@ const AdminDashboardPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [exportLoading, setExportLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("engagement");
-  const [recentEvents, _] = useState<any>([]);
+  const [recentEvents, setRecentEvents] = useState<any>([]);
   const [taskCompletionByEvent, setTaskCompletionByEvent] = useState([
     { event: "Annual Inclusive Sports Day", completion: 95, total: 100 },
     { event: "Blind Cricket Tournament", completion: 88, total: 100 },
@@ -308,24 +308,31 @@ const AdminDashboardPage = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [engagement, completion, feedback, volunteers] =
-        await Promise.all([
-          DashboardService.getEngagementData(),
-          DashboardService.getCompletionData(),
-          DashboardService.getFeedbackData(),
-          DashboardService.getTopVolunteers(),
-          DashboardService.getRecentEvents(),
-          DashboardService.getTaskCompletionByEvent(),
-          DashboardService.getEventFeedback(),
-        ]);
+      const [
+        engagement,
+        completion,
+        feedback,
+        volunteers,
+        recent,
+        taskEvents,
+        eventFeedbackData,
+      ] = await Promise.all([
+        DashboardService.getEngagementData(),
+        DashboardService.getCompletionData(),
+        DashboardService.getFeedbackData(),
+        DashboardService.getTopVolunteers(),
+        DashboardService.getRecentEvents(),
+        DashboardService.getTaskCompletionByEvent(),
+        DashboardService.getEventFeedback(),
+      ]);
 
       setEngagementData(engagement);
       setCompletionData(completion);
       setFeedbackData(feedback);
       setTopVolunteers(volunteers);
-      // setRecentEvents(recent);
-      // setTaskCompletionByEvent(taskEvents);
-      // setEventFeedback(eventFeedbackData);
+      setRecentEvents(recent);
+      setTaskCompletionByEvent(taskEvents);
+      setEventFeedback(eventFeedbackData);
       setLoading(false);
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
@@ -482,71 +489,71 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  // const engagementOptions = {
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: "top",
-  //       labels: {
-  //         boxWidth: 12,
-  //         usePointStyle: true,
-  //         padding: 20,
-  //       },
-  //     },
-  //     title: {
-  //       display: true,
-  //       text: "Volunteer Engagement Over Time",
-  //       font: {
-  //         size: 16,
-  //         weight: "bold",
-  //       },
-  //       padding: {
-  //         top: 10,
-  //         bottom: 20,
-  //       },
-  //     },
-  //     tooltip: {
-  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
-  //       bodyFont: {
-  //         size: 14,
-  //       },
-  //       titleFont: {
-  //         size: 16,
-  //       },
-  //       padding: 10,
-  //       cornerRadius: 6,
-  //       displayColors: true,
-  //     },
-  //   },
-  //   scales: {
-  //     y: {
-  //       beginAtZero: true,
-  //       title: {
-  //         display: true,
-  //         text: "Number of Volunteers",
-  //         font: {
-  //           weight: "bold",
-  //         },
-  //       },
-  //       grid: {
-  //         color: "rgba(160, 160, 160, 0.15)",
-  //       },
-  //     },
-  //     x: {
-  //       title: {
-  //         display: true,
-  //         text: "Month",
-  //         font: {
-  //           weight: "bold",
-  //         },
-  //       },
-  //       grid: {
-  //         display: false,
-  //       },
-  //     },
-  //   },
-  // };
+  const engagementOptions: any = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 20,
+        },
+      },
+      title: {
+        display: true,
+        text: "Volunteer Engagement Over Time",
+        font: {
+          size: 16,
+          weight: "bold",
+        },
+        padding: {
+          top: 10,
+          bottom: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        bodyFont: {
+          size: 14,
+        },
+        titleFont: {
+          size: 16,
+        },
+        padding: 10,
+        cornerRadius: 6,
+        displayColors: true,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Number of Volunteers",
+          font: {
+            weight: "bold",
+          },
+        },
+        grid: {
+          color: "rgba(160, 160, 160, 0.15)",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Month",
+          font: {
+            weight: "bold",
+          },
+        },
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
 
   // Completion chart configuration with improved styling
   const completionChartData = {
@@ -569,79 +576,79 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  // const completionOptions = {
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: "top",
-  //       labels: {
-  //         boxWidth: 12,
-  //         usePointStyle: true,
-  //         padding: 20,
-  //       },
-  //     },
-  //     title: {
-  //       display: true,
-  //       text: "Task Completion by Project",
-  //       font: {
-  //         size: 16,
-  //         weight: "bold",
-  //       },
-  //       padding: {
-  //         top: 10,
-  //         bottom: 20,
-  //       },
-  //     },
-  //     tooltip: {
-  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
-  //       bodyFont: {
-  //         size: 14,
-  //       },
-  //       titleFont: {
-  //         size: 16,
-  //       },
-  //       padding: 10,
-  //       cornerRadius: 6,
-  //       displayColors: true,
-  //       callbacks: {
-  //         label: function (context: any) {
-  //           const label = context.dataset.label || "";
-  //           const value = context.parsed.y || 0;
-  //           return `${label}: ${value} tasks`;
-  //         },
-  //       },
-  //     },
-  //   },
-  //   scales: {
-  //     y: {
-  //       beginAtZero: true,
-  //       title: {
-  //         display: true,
-  //         text: "Tasks",
-  //         font: {
-  //           weight: "bold",
-  //         },
-  //       },
-  //       grid: {
-  //         color: "rgba(160, 160, 160, 0.15)",
-  //       },
-  //     },
-  //     x: {
-  //       ticks: {
-  //         maxRotation: 0,
-  //         minRotation: 0,
-  //         autoSkip: true,
-  //         font: {
-  //           size: 11,
-  //         },
-  //       },
-  //       grid: {
-  //         display: false,
-  //       },
-  //     },
-  //   },
-  // };
+  const completionOptions: any = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 20,
+        },
+      },
+      title: {
+        display: true,
+        text: "Task Completion by Project",
+        font: {
+          size: 16,
+          weight: "bold",
+        },
+        padding: {
+          top: 10,
+          bottom: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        bodyFont: {
+          size: 14,
+        },
+        titleFont: {
+          size: 16,
+        },
+        padding: 10,
+        cornerRadius: 6,
+        displayColors: true,
+        callbacks: {
+          label: function (context: any) {
+            const label = context.dataset.label || "";
+            const value = context.parsed.y || 0;
+            return `${label}: ${value} tasks`;
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Tasks",
+          font: {
+            weight: "bold",
+          },
+        },
+        grid: {
+          color: "rgba(160, 160, 160, 0.15)",
+        },
+      },
+      x: {
+        ticks: {
+          maxRotation: 0,
+          minRotation: 0,
+          autoSkip: true,
+          font: {
+            size: 11,
+          },
+        },
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
 
   // Feedback chart configuration with improved styling
   const feedbackChartData = {
@@ -670,47 +677,47 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  // const feedbackOptions = {
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: "right",
-  //       labels: {
-  //         boxWidth: 12,
-  //         usePointStyle: true,
-  //         padding: 10,
-  //         font: {
-  //           size: 12,
-  //         },
-  //       },
-  //     },
-  //     title: {
-  //       display: true,
-  //       text: "Average Feedback Scores",
-  //       font: {
-  //         size: 16,
-  //         weight: "bold",
-  //       },
-  //       padding: {
-  //         top: 10,
-  //         bottom: 10,
-  //       },
-  //     },
-  //     tooltip: {
-  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
-  //       callbacks: {
-  //         label: function (context: any) {
-  //           const label = context.label || "";
-  //           const value = context.raw || 0;
-  //           const count =
-  //             feedbackData.find((item) => item.category === label)?.count || 0;
-  //           return [`Score: ${value.toFixed(1)}/5`, `Responses: ${count}`];
-  //         },
-  //       },
-  //     },
-  //   },
-  // };
+  const feedbackOptions:any = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 10,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: "Average Feedback Scores",
+        font: {
+          size: 16,
+          weight: "bold",
+        },
+        padding: {
+          top: 10,
+          bottom: 10,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        callbacks: {
+          label: function (context: any) {
+            const label = context.label || "";
+            const value = context.raw || 0;
+            const count =
+              feedbackData.find((item) => item.category === label)?.count || 0;
+            return [`Score: ${value.toFixed(1)}/5`, `Responses: ${count}`];
+          },
+        },
+      },
+    },
+  };
 
   // Volunteer radar chart configuration with improved styling
   const volunteerRadarData = {
@@ -743,58 +750,58 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  // const radarOptions = {
-  //   scales: {
-  //     r: {
-  //       angleLines: {
-  //         display: true,
-  //         color: "rgba(160, 160, 160, 0.2)",
-  //       },
-  //       suggestedMin: 0,
-  //       suggestedMax: 100,
-  //       pointLabels: {
-  //         font: {
-  //           size: 12,
-  //           weight: "bold",
-  //         },
-  //       },
-  //       ticks: {
-  //         stepSize: 20,
-  //         backdropColor: "transparent",
-  //         z: 100,
-  //         font: {
-  //           size: 10,
-  //         },
-  //       },
-  //     },
-  //   },
-  //   plugins: {
-  //     legend: {
-  //       position: "top",
-  //       labels: {
-  //         boxWidth: 12,
-  //         usePointStyle: true,
-  //         padding: 20,
-  //       },
-  //     },
-  //     tooltip: {
-  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
-  //       bodyFont: {
-  //         size: 14,
-  //       },
-  //       titleFont: {
-  //         size: 16,
-  //       },
-  //       padding: 10,
-  //       displayColors: true,
-  //     },
-  //   },
-  //   elements: {
-  //     line: {
-  //       tension: 0.1,
-  //     },
-  //   },
-  // };
+  const radarOptions: any = {
+    scales: {
+      r: {
+        angleLines: {
+          display: true,
+          color: "rgba(160, 160, 160, 0.2)",
+        },
+        suggestedMin: 0,
+        suggestedMax: 100,
+        pointLabels: {
+          font: {
+            size: 12,
+            weight: "bold",
+          },
+        },
+        ticks: {
+          stepSize: 20,
+          backdropColor: "transparent",
+          z: 100,
+          font: {
+            size: 10,
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 12,
+          usePointStyle: true,
+          padding: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        bodyFont: {
+          size: 14,
+        },
+        titleFont: {
+          size: 16,
+        },
+        padding: 10,
+        displayColors: true,
+      },
+    },
+    elements: {
+      line: {
+        tension: 0.1,
+      },
+    },
+  };
 
   const { t } = useLanguage();
   const user = useAppSelector((u) => u.user);
@@ -880,7 +887,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("10")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Active_Events")}
+              {t("active_events")}
             </p>
 
             {/* Expandable section for recent events */}
@@ -895,7 +902,7 @@ const AdminDashboardPage = () => {
                     ?.classList.toggle("hidden")
                 }
               >
-                View Recent Events
+                {t("view_recent_events")}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
 
@@ -940,7 +947,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("92_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Volunteer_Engagement")}
+              {t("volunteer_engagement")}
             </p>
 
             {/* Top engaged volunteers */}
@@ -955,7 +962,7 @@ const AdminDashboardPage = () => {
                     .classList.toggle("hidden")
                 }
               >
-                Top Engaged Volunteers
+                {t("top_engaged_volunteers")}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
 
@@ -1008,7 +1015,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("78_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Task_Completion")}
+              {t("task_completion")}
             </p>
 
             {/* Events with highest completion rates */}
@@ -1023,7 +1030,7 @@ const AdminDashboardPage = () => {
                     .classList.toggle("hidden")
                 }
               >
-                <span>View Completion Details</span>
+                <span>{t("view_completion_details")}</span>
                 <ChevronDown className="ml-1.5 h-3.5 w-3.5" />
               </Button>
 
@@ -1075,7 +1082,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("4.3")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("Average_Feedback")}
+              {t("average_feedback")}
             </p>
 
             {/* Event feedback breakdown */}
@@ -1090,7 +1097,7 @@ const AdminDashboardPage = () => {
                     .classList.toggle("hidden")
                 }
               >
-                Event Feedback Breakdown
+                {t("event_feedback_breakdown")}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -1185,7 +1192,7 @@ const AdminDashboardPage = () => {
       <Card className="transition-all hover:shadow-md">
         <CardHeader>
           <CardTitle className="text-xl">{t("event_management")}</CardTitle>
-          <CardDescription>{t("create_and_Manage_Events_")}</CardDescription>
+          <CardDescription>{t("create_and_manage_events_")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
           <Link to="/admin/events/create">
@@ -1197,7 +1204,7 @@ const AdminDashboardPage = () => {
           <Link to="/admin/events/manage">
             <Button variant="outline" className="flex items-center gap-2">
               <span className="hidden sm:inline">🔍</span>
-              {t("manage_Events")}
+              {t("manage_events")}
             </Button>
           </Link>
         </CardContent>
@@ -1207,7 +1214,7 @@ const AdminDashboardPage = () => {
       <Card className="transition-all hover:shadow-md">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <CardTitle className="text-xl">{t("Data_Visualization")}</CardTitle>
+            <CardTitle className="text-xl">{t("data_visualization")}</CardTitle>
             <CardDescription>
               {t("metrics_on_engagement_task_completion_rates_and_feedback_")}
             </CardDescription>
@@ -1239,7 +1246,7 @@ const AdminDashboardPage = () => {
             <TabsContent value="engagement" className="mt-0">
               <div className="h-80">
                 <Line
-                  // options={engagementOptions}
+                  options={engagementOptions}
                   data={volunteerEngagementChartData}
                 />
               </div>
@@ -1254,10 +1261,7 @@ const AdminDashboardPage = () => {
 
             <TabsContent value="completion" className="mt-0">
               <div className="h-80">
-                <Bar
-                  //  options={completionOptions}
-                  data={completionChartData}
-                />
+                <Bar options={completionOptions} data={completionChartData} />
               </div>
             </TabsContent>
 
@@ -1266,28 +1270,7 @@ const AdminDashboardPage = () => {
                 <div className="h-64">
                   <Doughnut
                     data={feedbackChartData}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          position: "right",
-                          labels: {
-                            boxWidth: 12,
-                            usePointStyle: true,
-                            padding: 20,
-                          },
-                        },
-                        title: {
-                          display: true,
-                          text: "Feedback Distribution",
-                          font: {
-                            size: 16,
-                            weight: "bold",
-                          },
-                        },
-                      },
-                    }}
+                    options={feedbackOptions}
                   />
                 </div>
                 <div className="overflow-auto h-64 rounded-lg border dark:border-gray-700">
@@ -1335,34 +1318,7 @@ const AdminDashboardPage = () => {
             <TabsContent value="overview" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="h-64">
-                  <Radar
-                    data={volunteerRadarData}
-                    options={{
-                      scales: {
-                        r: {
-                          angleLines: {
-                            display: true,
-                          },
-                          suggestedMin: 0,
-                          suggestedMax: 100,
-                          ticks: {
-                            backdropColor: "transparent",
-                            z: 100,
-                          },
-                        },
-                      },
-                      plugins: {
-                        legend: {
-                          position: "top",
-                          labels: {
-                            boxWidth: 12,
-                            usePointStyle: true,
-                            padding: 20,
-                          },
-                        },
-                      },
-                    }}
-                  />
+                  <Radar data={volunteerRadarData} options={radarOptions} />
                 </div>
                 <div className="flex flex-col h-64">
                   <h3 className="font-medium mb-3">
