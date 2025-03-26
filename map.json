@@ -1490,6 +1490,21 @@
     "hi": "प्रतिक्रिया सबमिट करें",
     "kn": "ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸಲ್ಲಿಸಿ"
   },
+  "events_recommended_based_on_your_interests": {
+    "en": "Events recommended based on your interests",
+    "hi": "आपकी रुचियों पर आधारित इवेंट्स की सिफारिश",
+    "kn": "ನಿಮ್ಮ ಆಸಕ್ತಿಗಳನ್ನು ಆಧರಿಸಿದ ಈವೆಂಟ್‌ಗಳ ಶಿಫಾರಸು"
+  },
+"recommended_events": {
+    "en": "Recommended Events",
+    "hi": "सिफारिशित इवेंट्स",
+    "kn": "ಶಿಫಾರಸು ಮಾಡಲಾದ ಈವೆಂಟ್‌ಗಳು"
+},
+"no_recommended_events_found": {
+    "en": "No recommended events found",
+    "hi": "कोई सिफारिशित इवेंट्स नहीं मिले",
+    "kn": "ಯಾವುದೇ ಶಿಫಾರಸು ಮಾಡಲಾದ ಈವೆಂಟ್‌ಗಳಿಲ್ಲ"
+},
   "uk": {
     "en": "UK",
     "hi": "यूके",
