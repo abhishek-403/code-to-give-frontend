@@ -1673,7 +1673,7 @@ const EventManagementPage = () => {
                                     <p className="font-medium">
                                       {volunteer.displayName}
                                     </p>
-                                    <p className="text-sm text-gray-500 dark: text-white">
+                                    <p className="text-sm text-gray-500 darktext-white">
                                       {volunteer.email}
                                     </p>
                                   </div>

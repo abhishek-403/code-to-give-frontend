@@ -263,7 +263,7 @@ const AdminDashboardPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [exportLoading, setExportLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("engagement");
-  const [recentEvents, setRecentEvents] = useState([]);
+  const [recentEvents, _] = useState<any>([]);
   const [taskCompletionByEvent, setTaskCompletionByEvent] = useState([
     { event: "Annual Inclusive Sports Day", completion: 95, total: 100 },
     { event: "Blind Cricket Tournament", completion: 88, total: 100 },
@@ -308,7 +308,7 @@ const AdminDashboardPage = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [engagement, completion, feedback, volunteers, recent] =
+      const [engagement, completion, feedback, volunteers] =
         await Promise.all([
           DashboardService.getEngagementData(),
           DashboardService.getCompletionData(),
@@ -323,9 +323,9 @@ const AdminDashboardPage = () => {
       setCompletionData(completion);
       setFeedbackData(feedback);
       setTopVolunteers(volunteers);
-      setRecentEvents(recent);
-      setTaskCompletionByEvent(taskEvents);
-      setEventFeedback(eventFeedbackData);
+      // setRecentEvents(recent);
+      // setTaskCompletionByEvent(taskEvents);
+      // setEventFeedback(eventFeedbackData);
       setLoading(false);
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
@@ -452,7 +452,7 @@ const AdminDashboardPage = () => {
     }
   };
 
-  const getScoreColor = (score) => {
+  const getScoreColor = (score: any) => {
     if (score >= 4.5) return "text-green-600 dark:text-green-400";
     if (score >= 4.0) return "text-blue-600 dark:text-blue-400";
     if (score >= 3.0) return "text-yellow-600 dark:text-yellow-400";
@@ -482,71 +482,71 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const engagementOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          boxWidth: 12,
-          usePointStyle: true,
-          padding: 20,
-        },
-      },
-      title: {
-        display: true,
-        text: "Volunteer Engagement Over Time",
-        font: {
-          size: 16,
-          weight: "bold",
-        },
-        padding: {
-          top: 10,
-          bottom: 20,
-        },
-      },
-      tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        bodyFont: {
-          size: 14,
-        },
-        titleFont: {
-          size: 16,
-        },
-        padding: 10,
-        cornerRadius: 6,
-        displayColors: true,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: "Number of Volunteers",
-          font: {
-            weight: "bold",
-          },
-        },
-        grid: {
-          color: "rgba(160, 160, 160, 0.15)",
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: "Month",
-          font: {
-            weight: "bold",
-          },
-        },
-        grid: {
-          display: false,
-        },
-      },
-    },
-  };
+  // const engagementOptions = {
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: "top",
+  //       labels: {
+  //         boxWidth: 12,
+  //         usePointStyle: true,
+  //         padding: 20,
+  //       },
+  //     },
+  //     title: {
+  //       display: true,
+  //       text: "Volunteer Engagement Over Time",
+  //       font: {
+  //         size: 16,
+  //         weight: "bold",
+  //       },
+  //       padding: {
+  //         top: 10,
+  //         bottom: 20,
+  //       },
+  //     },
+  //     tooltip: {
+  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
+  //       bodyFont: {
+  //         size: 14,
+  //       },
+  //       titleFont: {
+  //         size: 16,
+  //       },
+  //       padding: 10,
+  //       cornerRadius: 6,
+  //       displayColors: true,
+  //     },
+  //   },
+  //   scales: {
+  //     y: {
+  //       beginAtZero: true,
+  //       title: {
+  //         display: true,
+  //         text: "Number of Volunteers",
+  //         font: {
+  //           weight: "bold",
+  //         },
+  //       },
+  //       grid: {
+  //         color: "rgba(160, 160, 160, 0.15)",
+  //       },
+  //     },
+  //     x: {
+  //       title: {
+  //         display: true,
+  //         text: "Month",
+  //         font: {
+  //           weight: "bold",
+  //         },
+  //       },
+  //       grid: {
+  //         display: false,
+  //       },
+  //     },
+  //   },
+  // };
 
   // Completion chart configuration with improved styling
   const completionChartData = {
@@ -569,79 +569,79 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const completionOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          boxWidth: 12,
-          usePointStyle: true,
-          padding: 20,
-        },
-      },
-      title: {
-        display: true,
-        text: "Task Completion by Project",
-        font: {
-          size: 16,
-          weight: "bold",
-        },
-        padding: {
-          top: 10,
-          bottom: 20,
-        },
-      },
-      tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        bodyFont: {
-          size: 14,
-        },
-        titleFont: {
-          size: 16,
-        },
-        padding: 10,
-        cornerRadius: 6,
-        displayColors: true,
-        callbacks: {
-          label: function (context) {
-            const label = context.dataset.label || "";
-            const value = context.parsed.y || 0;
-            return `${label}: ${value} tasks`;
-          },
-        },
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: "Tasks",
-          font: {
-            weight: "bold",
-          },
-        },
-        grid: {
-          color: "rgba(160, 160, 160, 0.15)",
-        },
-      },
-      x: {
-        ticks: {
-          maxRotation: 0,
-          minRotation: 0,
-          autoSkip: true,
-          font: {
-            size: 11,
-          },
-        },
-        grid: {
-          display: false,
-        },
-      },
-    },
-  };
+  // const completionOptions = {
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: "top",
+  //       labels: {
+  //         boxWidth: 12,
+  //         usePointStyle: true,
+  //         padding: 20,
+  //       },
+  //     },
+  //     title: {
+  //       display: true,
+  //       text: "Task Completion by Project",
+  //       font: {
+  //         size: 16,
+  //         weight: "bold",
+  //       },
+  //       padding: {
+  //         top: 10,
+  //         bottom: 20,
+  //       },
+  //     },
+  //     tooltip: {
+  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
+  //       bodyFont: {
+  //         size: 14,
+  //       },
+  //       titleFont: {
+  //         size: 16,
+  //       },
+  //       padding: 10,
+  //       cornerRadius: 6,
+  //       displayColors: true,
+  //       callbacks: {
+  //         label: function (context: any) {
+  //           const label = context.dataset.label || "";
+  //           const value = context.parsed.y || 0;
+  //           return `${label}: ${value} tasks`;
+  //         },
+  //       },
+  //     },
+  //   },
+  //   scales: {
+  //     y: {
+  //       beginAtZero: true,
+  //       title: {
+  //         display: true,
+  //         text: "Tasks",
+  //         font: {
+  //           weight: "bold",
+  //         },
+  //       },
+  //       grid: {
+  //         color: "rgba(160, 160, 160, 0.15)",
+  //       },
+  //     },
+  //     x: {
+  //       ticks: {
+  //         maxRotation: 0,
+  //         minRotation: 0,
+  //         autoSkip: true,
+  //         font: {
+  //           size: 11,
+  //         },
+  //       },
+  //       grid: {
+  //         display: false,
+  //       },
+  //     },
+  //   },
+  // };
 
   // Feedback chart configuration with improved styling
   const feedbackChartData = {
@@ -670,47 +670,47 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const feedbackOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "right",
-        labels: {
-          boxWidth: 12,
-          usePointStyle: true,
-          padding: 10,
-          font: {
-            size: 12,
-          },
-        },
-      },
-      title: {
-        display: true,
-        text: "Average Feedback Scores",
-        font: {
-          size: 16,
-          weight: "bold",
-        },
-        padding: {
-          top: 10,
-          bottom: 10,
-        },
-      },
-      tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        callbacks: {
-          label: function (context) {
-            const label = context.label || "";
-            const value = context.raw || 0;
-            const count =
-              feedbackData.find((item) => item.category === label)?.count || 0;
-            return [`Score: ${value.toFixed(1)}/5`, `Responses: ${count}`];
-          },
-        },
-      },
-    },
-  };
+  // const feedbackOptions = {
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: "right",
+  //       labels: {
+  //         boxWidth: 12,
+  //         usePointStyle: true,
+  //         padding: 10,
+  //         font: {
+  //           size: 12,
+  //         },
+  //       },
+  //     },
+  //     title: {
+  //       display: true,
+  //       text: "Average Feedback Scores",
+  //       font: {
+  //         size: 16,
+  //         weight: "bold",
+  //       },
+  //       padding: {
+  //         top: 10,
+  //         bottom: 10,
+  //       },
+  //     },
+  //     tooltip: {
+  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
+  //       callbacks: {
+  //         label: function (context: any) {
+  //           const label = context.label || "";
+  //           const value = context.raw || 0;
+  //           const count =
+  //             feedbackData.find((item) => item.category === label)?.count || 0;
+  //           return [`Score: ${value.toFixed(1)}/5`, `Responses: ${count}`];
+  //         },
+  //       },
+  //     },
+  //   },
+  // };
 
   // Volunteer radar chart configuration with improved styling
   const volunteerRadarData = {
@@ -743,76 +743,78 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const radarOptions = {
-    scales: {
-      r: {
-        angleLines: {
-          display: true,
-          color: "rgba(160, 160, 160, 0.2)",
-        },
-        suggestedMin: 0,
-        suggestedMax: 100,
-        pointLabels: {
-          font: {
-            size: 12,
-            weight: "bold",
-          },
-        },
-        ticks: {
-          stepSize: 20,
-          backdropColor: "transparent",
-          z: 100,
-          font: {
-            size: 10,
-          },
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          boxWidth: 12,
-          usePointStyle: true,
-          padding: 20,
-        },
-      },
-      tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        bodyFont: {
-          size: 14,
-        },
-        titleFont: {
-          size: 16,
-        },
-        padding: 10,
-        displayColors: true,
-      },
-    },
-    elements: {
-      line: {
-        tension: 0.1,
-      },
-    },
-  };
+  // const radarOptions = {
+  //   scales: {
+  //     r: {
+  //       angleLines: {
+  //         display: true,
+  //         color: "rgba(160, 160, 160, 0.2)",
+  //       },
+  //       suggestedMin: 0,
+  //       suggestedMax: 100,
+  //       pointLabels: {
+  //         font: {
+  //           size: 12,
+  //           weight: "bold",
+  //         },
+  //       },
+  //       ticks: {
+  //         stepSize: 20,
+  //         backdropColor: "transparent",
+  //         z: 100,
+  //         font: {
+  //           size: 10,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   plugins: {
+  //     legend: {
+  //       position: "top",
+  //       labels: {
+  //         boxWidth: 12,
+  //         usePointStyle: true,
+  //         padding: 20,
+  //       },
+  //     },
+  //     tooltip: {
+  //       backgroundColor: "rgba(0, 0, 0, 0.8)",
+  //       bodyFont: {
+  //         size: 14,
+  //       },
+  //       titleFont: {
+  //         size: 16,
+  //       },
+  //       padding: 10,
+  //       displayColors: true,
+  //     },
+  //   },
+  //   elements: {
+  //     line: {
+  //       tension: 0.1,
+  //     },
+  //   },
+  // };
 
   const { t } = useLanguage();
-
+  const user = useAppSelector((u) => u.user);
   return (
     <div className="p-4 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
         <h1 className="text-3xl font-bold">{t("Admin_Dashboard")}</h1>
         <div className="flex flex-wrap gap-2">
           <Link to="/admin/changeroles">
-            <Button
-              className="flex items-center"
-              variant="outline"
-              aria-label={t("manage_roles")}
-            >
-              <span className="sr-only md:not-sr-only">
-                {t("manage_roles")}
-              </span>
-            </Button>
+            {user.role === UserRole.USER && (
+              <Button
+                className="flex items-center"
+                variant="outline"
+                aria-label={t("manage_roles")}
+              >
+                <span className="sr-only md:not-sr-only">
+                  {t("manage_roles")}
+                </span>
+              </Button>
+            )}
           </Link>
 
           <DropdownMenu>
@@ -890,7 +892,7 @@ const AdminDashboardPage = () => {
                 onClick={() =>
                   document
                     .getElementById("recent-events-dropdown")
-                    .classList.toggle("hidden")
+                    ?.classList.toggle("hidden")
                 }
               >
                 View Recent Events
@@ -905,7 +907,7 @@ const AdminDashboardPage = () => {
                   <h4 className="font-medium text-sm">Recent Active Events</h4>
                 </div>
                 <ul className="divide-y divide-border">
-                  {recentEvents.map((event) => (
+                  {recentEvents.map((event: any) => (
                     <li
                       key={event.id}
                       className="px-3 py-3 hover:bg-muted/30 transition-colors"
@@ -949,7 +951,7 @@ const AdminDashboardPage = () => {
                 className="w-full flex items-center justify-center text-xs"
                 onClick={() =>
                   document
-                    .getElementById("top-volunteers-dropdown")
+                    .getElementById("top-volunteers-dropdown")!
                     .classList.toggle("hidden")
                 }
               >
@@ -1017,7 +1019,7 @@ const AdminDashboardPage = () => {
                 className="w-full flex items-center justify-center text-xs mt-4 bg-muted/20 hover:bg-muted/40 transition-colors"
                 onClick={() =>
                   document
-                    .getElementById("task-completion-dropdown")
+                    .getElementById("task-completion-dropdown")!
                     .classList.toggle("hidden")
                 }
               >
@@ -1084,7 +1086,7 @@ const AdminDashboardPage = () => {
                 className="w-full flex items-center justify-center text-xs"
                 onClick={() =>
                   document
-                    .getElementById("feedback-dropdown")
+                    .getElementById("feedback-dropdown")!
                     .classList.toggle("hidden")
                 }
               >
@@ -1237,7 +1239,7 @@ const AdminDashboardPage = () => {
             <TabsContent value="engagement" className="mt-0">
               <div className="h-80">
                 <Line
-                  options={engagementOptions}
+                  // options={engagementOptions}
                   data={volunteerEngagementChartData}
                 />
               </div>
@@ -1252,7 +1254,10 @@ const AdminDashboardPage = () => {
 
             <TabsContent value="completion" className="mt-0">
               <div className="h-80">
-                <Bar options={completionOptions} data={completionChartData} />
+                <Bar
+                  //  options={completionOptions}
+                  data={completionChartData}
+                />
               </div>
             </TabsContent>
 
