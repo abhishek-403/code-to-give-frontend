@@ -214,7 +214,11 @@ class DashboardService {
 }
 
 // Utility function to convert data to CSV format
-const convertToCSV = (data: any[], fields: string[]): string => {
+const convertToCSV = (data, fields) => {
+  if (!data || !data.length || !fields || !fields.length) {
+    return "No data available";
+  }
+  
   // Create header row
   let csv = fields.join(",") + "\n";
 
@@ -223,10 +227,18 @@ const convertToCSV = (data: any[], fields: string[]): string => {
     const row = fields
       .map((field) => {
         const value = item[field];
-        // Handle values that might contain commas by wrapping in quotes
-        return typeof value === "string" && value.includes(",")
-          ? `"${value}"`
-          : String(value);
+        // Handle values that might contain commas or quotes by properly escaping them
+        if (value === null || value === undefined) {
+          return '';
+        } else if (typeof value === "string") {
+          // Escape quotes and wrap strings with commas in quotes
+          const escaped = value.replace(/"/g, '""');
+          return value.includes(",") || value.includes('"') || value.includes('\n') 
+            ? `"${escaped}"` 
+            : escaped;
+        } else {
+          return String(value);
+        }
       })
       .join(",");
     csv += row + "\n";
@@ -236,22 +248,36 @@ const convertToCSV = (data: any[], fields: string[]): string => {
 };
 
 // Utility function to download a file
-const downloadFile = (
-  content: string | Blob,
-  fileName: string,
-  mimeType: string
-): void => {
-  const blob =
-    content instanceof Blob ? content : new Blob([content], { type: mimeType });
+// Improved utility function to download a file
+const downloadFile = (content, fileName, mimeType) => {
+  try {
+    const blob = content instanceof Blob ? content : new Blob([content], { type: mimeType });
+    
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      // For IE
+      window.navigator.msSaveOrOpenBlob(blob, fileName);
+      return;
+    }
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+    // For modern browsers
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    
+    // Required for Firefox
+    document.body.appendChild(link);
+    
+    link.click();
+    
+    // Cleanup
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 100);
+  } catch (error) {
+    console.error("Error downloading file:", error);
+  }
 };
 
 const AdminDashboardPage = () => {
@@ -263,7 +289,7 @@ const AdminDashboardPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [exportLoading, setExportLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("engagement");
-  const [recentEvents, setRecentEvents] = useState<any>([]);
+  const [recentEvents, setRecentEvents] = useState([]);
   const [taskCompletionByEvent, setTaskCompletionByEvent] = useState([
     { event: "Annual Inclusive Sports Day", completion: 95, total: 100 },
     { event: "Blind Cricket Tournament", completion: 88, total: 100 },
@@ -308,23 +334,16 @@ const AdminDashboardPage = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [
-        engagement,
-        completion,
-        feedback,
-        volunteers,
-        recent,
-        taskEvents,
-        eventFeedbackData,
-      ] = await Promise.all([
-        DashboardService.getEngagementData(),
-        DashboardService.getCompletionData(),
-        DashboardService.getFeedbackData(),
-        DashboardService.getTopVolunteers(),
-        DashboardService.getRecentEvents(),
-        DashboardService.getTaskCompletionByEvent(),
-        DashboardService.getEventFeedback(),
-      ]);
+      const [engagement, completion, feedback, volunteers, recent] =
+        await Promise.all([
+          DashboardService.getEngagementData(),
+          DashboardService.getCompletionData(),
+          DashboardService.getFeedbackData(),
+          DashboardService.getTopVolunteers(),
+          DashboardService.getRecentEvents(),
+          DashboardService.getTaskCompletionByEvent(),
+          DashboardService.getEventFeedback(),
+        ]);
 
       setEngagementData(engagement);
       setCompletionData(completion);
@@ -341,117 +360,168 @@ const AdminDashboardPage = () => {
   };
 
   // Export data functions
-  const exportDataToCSV = async () => {
-    setExportLoading(true);
-    try {
-      let csvContent = "";
-      let fileName = "";
+  // Export data functions
+const exportDataToCSV = async () => {
+  setExportLoading(true);
+  try {
+    let csvContent = "";
+    let fileName = "";
 
-      // Export appropriate data based on active tab
-      switch (activeTab) {
-        case "engagement":
-          csvContent = convertToCSV(engagementData, [
-            "date",
-            "volunteers",
-            "events",
-          ]);
-          fileName = "volunteer-engagement-data.csv";
-          break;
-        case "completion":
-          csvContent = convertToCSV(completionData, [
-            "project",
-            "completion",
-            "target",
-          ]);
-          fileName = "project-completion-data.csv";
-          break;
-        case "feedback":
-          csvContent = convertToCSV(feedbackData, [
-            "category",
-            "score",
-            "count",
-          ]);
-          fileName = "feedback-data.csv";
-          break;
-        case "overview":
-          csvContent = convertToCSV(topVolunteers, [
-            "name",
-            "hours",
-            "tasks",
-            "events",
-          ]);
-          fileName = "top-volunteers-data.csv";
-          break;
-        default:
-          csvContent = "No data available";
-          fileName = "dashboard-data.csv";
-      }
+    // Export appropriate data based on active tab
+    switch (activeTab) {
+      case "engagement":
+        // Include both volunteers and events data
+        csvContent = convertToCSV(engagementData, [
+          "date",
+          "volunteers",
+          "events",
+        ]);
+        fileName = "volunteer-engagement-data.csv";
+        break;
+      case "completion":
+        csvContent = convertToCSV(completionData, [
+          "project",
+          "completion",
+          "target",
+        ]);
+        fileName = "project-completion-data.csv";
+        break;
+      case "feedback":
+        csvContent = convertToCSV(feedbackData, [
+          "category",
+          "score",
+          "count",
+        ]);
+        fileName = "feedback-data.csv";
+        break;
+      case "overview":
+        // For overview, export the top volunteers data
+        csvContent = convertToCSV(topVolunteers, [
+          "name",
+          "hours",
+          "tasks",
+          "events",
+        ]);
+        fileName = "top-volunteers-data.csv";
+        break;
+      default:
+        csvContent = "No data available";
+        fileName = "dashboard-data.csv";
+    }
 
+    // Check if there's actual content
+    if (csvContent === "No data available") {
+      console.error("No data available to export");
+      // Show a notification to the user (implement as needed)
+    } else {
       downloadFile(csvContent, fileName, "text/csv");
-    } catch (error) {
-      console.error("Failed to export data:", error);
-    } finally {
-      setExportLoading(false);
     }
-  };
+  } catch (error) {
+    console.error("Failed to export data:", error);
+  } finally {
+    setExportLoading(false);
+  }
+};
 
-  const exportAllDataToCSV = async () => {
-    setExportLoading(true);
-    try {
-      // Create a zip file with all data sets
-      // For now, we'll just download each dataset separately
-
-      // Engagement data
-      const engagementCSV = convertToCSV(engagementData, [
-        "date",
-        "volunteers",
-        "events",
-      ]);
-      downloadFile(engagementCSV, "volunteer-engagement-data.csv", "text/csv");
-
-      // Completion data
-      const completionCSV = convertToCSV(completionData, [
-        "project",
-        "completion",
-        "target",
-      ]);
-      downloadFile(completionCSV, "project-completion-data.csv", "text/csv");
-
-      // Feedback data
-      const feedbackCSV = convertToCSV(feedbackData, [
-        "category",
-        "score",
-        "count",
-      ]);
-      downloadFile(feedbackCSV, "feedback-data.csv", "text/csv");
-
-      // Top volunteers data
-      const volunteersCSV = convertToCSV(topVolunteers, [
-        "name",
-        "hours",
-        "tasks",
-        "events",
-      ]);
-      downloadFile(volunteersCSV, "top-volunteers-data.csv", "text/csv");
-    } catch (error) {
-      console.error("Failed to export all data:", error);
-    } finally {
-      setExportLoading(false);
+const exportAllDataToCSV = async () => {
+  setExportLoading(true);
+  try {
+    // Ensure all data is loaded
+    if (!engagementData.length || !completionData.length || !feedbackData.length || !topVolunteers.length) {
+      console.error("Some data is missing for export all");
+      return;
     }
+
+    // Create a single CSV with all data sets separated by headers
+    let allDataCSV = "VOLUNTEER ENGAGEMENT DATA\n";
+    allDataCSV += convertToCSV(engagementData, ["date", "volunteers", "events"]);
+    allDataCSV += "\n\nPROJECT COMPLETION DATA\n";
+    allDataCSV += convertToCSV(completionData, ["project", "completion", "target"]);
+    allDataCSV += "\n\nFEEDBACK DATA\n";
+    allDataCSV += convertToCSV(feedbackData, ["category", "score", "count"]);
+    allDataCSV += "\n\nTOP VOLUNTEERS DATA\n";
+    allDataCSV += convertToCSV(topVolunteers, ["name", "hours", "tasks", "events"]);
+    allDataCSV += "\n\nTASK COMPLETION BY EVENT\n";
+    allDataCSV += convertToCSV(taskCompletionByEvent, ["event", "completion", "total"]);
+    allDataCSV += "\n\nEVENT FEEDBACK\n";
+    allDataCSV += convertToCSV(eventFeedback, ["event", "score", "responses"]);
+
+    // Download the combined CSV
+    downloadFile(allDataCSV, "all-dashboard-data.csv", "text/csv");
+  } catch (error) {
+    console.error("Failed to export all data:", error);
+  } finally {
+    setExportLoading(false);
+  }
+};
+  const generateExcelFile = (data, fields) => {
+    if (!data || !data.length) return null;
+    
+    // Create a simple xlsx format
+    let excelStr = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+    excelStr += '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Sheet1</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>';
+    excelStr += '<body>';
+    excelStr += '<table>';
+    
+    // Header row
+    excelStr += '<tr>';
+    fields.forEach(field => {
+      excelStr += `<th>${field}</th>`;
+    });
+    excelStr += '</tr>';
+    
+    // Data rows
+    data.forEach(item => {
+      excelStr += '<tr>';
+      fields.forEach(field => {
+        const value = item[field] !== undefined ? item[field] : '';
+        excelStr += `<td>${value}</td>`;
+      });
+      excelStr += '</tr>';
+    });
+    
+    excelStr += '</table>';
+    excelStr += '</body>';
+    excelStr += '</html>';
+    
+    return new Blob([excelStr], {
+      type: 'application/vnd.ms-excel'
+    });
   };
 
   // When backend is implemented, these would call the appropriate API endpoints
   const exportToExcel = async () => {
     setExportLoading(true);
     try {
-      // In real implementation, this would call the backend API to generate Excel file
-      // For demonstration, we're just showing the integration point
-      const blob = await DashboardService.exportToExcel(activeTab);
-      downloadFile(
-        blob,
-        `${activeTab}-data.xlsx`,
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      );
+      let excelBlob = null;
+      let fileName = "";
+  
+      // Export appropriate data based on active tab
+      switch (activeTab) {
+        case "engagement":
+          excelBlob = generateExcelFile(engagementData, ["date", "volunteers", "events"]);
+          fileName = "volunteer-engagement-data.xlsx";
+          break;
+        case "completion":
+          excelBlob = generateExcelFile(completionData, ["project", "completion", "target"]);
+          fileName = "project-completion-data.xlsx";
+          break;
+        case "feedback":
+          excelBlob = generateExcelFile(feedbackData, ["category", "score", "count"]);
+          fileName = "feedback-data.xlsx";
+          break;
+        case "overview":
+          excelBlob = generateExcelFile(topVolunteers, ["name", "hours", "tasks", "events"]);
+          fileName = "top-volunteers-data.xlsx";
+          break;
+        default:
+          console.error("No data available for export");
+          return;
+      }
+  
+      if (excelBlob) {
+        downloadFile(excelBlob, fileName, "application/vnd.ms-excel");
+      }
     } catch (error) {
       console.error("Failed to export Excel data:", error);
     } finally {
@@ -459,7 +529,7 @@ const AdminDashboardPage = () => {
     }
   };
 
-  const getScoreColor = (score: any) => {
+  const getScoreColor = (score) => {
     if (score >= 4.5) return "text-green-600 dark:text-green-400";
     if (score >= 4.0) return "text-blue-600 dark:text-blue-400";
     if (score >= 3.0) return "text-yellow-600 dark:text-yellow-400";
@@ -489,7 +559,7 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const engagementOptions: any = {
+  const engagementOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -576,7 +646,7 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const completionOptions: any = {
+  const completionOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -612,7 +682,7 @@ const AdminDashboardPage = () => {
         cornerRadius: 6,
         displayColors: true,
         callbacks: {
-          label: function (context: any) {
+          label: function (context) {
             const label = context.dataset.label || "";
             const value = context.parsed.y || 0;
             return `${label}: ${value} tasks`;
@@ -677,7 +747,7 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const feedbackOptions:any = {
+  const feedbackOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -707,7 +777,7 @@ const AdminDashboardPage = () => {
       tooltip: {
         backgroundColor: "rgba(0, 0, 0, 0.8)",
         callbacks: {
-          label: function (context: any) {
+          label: function (context) {
             const label = context.label || "";
             const value = context.raw || 0;
             const count =
@@ -750,7 +820,7 @@ const AdminDashboardPage = () => {
     ],
   };
 
-  const radarOptions: any = {
+  const radarOptions = {
     scales: {
       r: {
         angleLines: {
@@ -804,24 +874,22 @@ const AdminDashboardPage = () => {
   };
 
   const { t } = useLanguage();
-  const user = useAppSelector((u) => u.user);
+
   return (
     <div className="p-4 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
         <h1 className="text-3xl font-bold">{t("Admin_Dashboard")}</h1>
         <div className="flex flex-wrap gap-2">
           <Link to="/admin/changeroles">
-            {user.role === UserRole.ADMIN && (
-              <Button
-                className="flex items-center"
-                variant="outline"
-                aria-label={t("manage_roles")}
-              >
-                <span className="sr-only md:not-sr-only">
-                  {t("manage_roles")}
-                </span>
-              </Button>
-            )}
+            <Button
+              className="flex items-center"
+              variant="outline"
+              aria-label={t("manage_roles")}
+            >
+              <span className="sr-only md:not-sr-only">
+                {t("manage_roles")}
+              </span>
+            </Button>
           </Link>
 
           <DropdownMenu>
@@ -887,7 +955,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("10")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("active_events")}
+              {t("Active_Events")}
             </p>
 
             {/* Expandable section for recent events */}
@@ -899,10 +967,10 @@ const AdminDashboardPage = () => {
                 onClick={() =>
                   document
                     .getElementById("recent-events-dropdown")
-                    ?.classList.toggle("hidden")
+                    .classList.toggle("hidden")
                 }
               >
-                {t("view_recent_events")}
+                View Recent Events
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
 
@@ -914,7 +982,7 @@ const AdminDashboardPage = () => {
                   <h4 className="font-medium text-sm">Recent Active Events</h4>
                 </div>
                 <ul className="divide-y divide-border">
-                  {recentEvents.map((event: any) => (
+                  {recentEvents.map((event) => (
                     <li
                       key={event.id}
                       className="px-3 py-3 hover:bg-muted/30 transition-colors"
@@ -947,7 +1015,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("92_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("volunteer_engagement")}
+              {t("Volunteer_Engagement")}
             </p>
 
             {/* Top engaged volunteers */}
@@ -958,11 +1026,11 @@ const AdminDashboardPage = () => {
                 className="w-full flex items-center justify-center text-xs"
                 onClick={() =>
                   document
-                    .getElementById("top-volunteers-dropdown")!
+                    .getElementById("top-volunteers-dropdown")
                     .classList.toggle("hidden")
                 }
               >
-                {t("top_engaged_volunteers")}
+                Top Engaged Volunteers
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
 
@@ -1015,7 +1083,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("78_")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("task_completion")}
+              {t("Task_Completion")}
             </p>
 
             {/* Events with highest completion rates */}
@@ -1026,11 +1094,11 @@ const AdminDashboardPage = () => {
                 className="w-full flex items-center justify-center text-xs mt-4 bg-muted/20 hover:bg-muted/40 transition-colors"
                 onClick={() =>
                   document
-                    .getElementById("task-completion-dropdown")!
+                    .getElementById("task-completion-dropdown")
                     .classList.toggle("hidden")
                 }
               >
-                <span>{t("view_completion_details")}</span>
+                <span>View Completion Details</span>
                 <ChevronDown className="ml-1.5 h-3.5 w-3.5" />
               </Button>
 
@@ -1082,7 +1150,7 @@ const AdminDashboardPage = () => {
             </div>
             <h3 className="text-3xl font-bold">{t("4.3")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("average_feedback")}
+              {t("Average_Feedback")}
             </p>
 
             {/* Event feedback breakdown */}
@@ -1093,11 +1161,11 @@ const AdminDashboardPage = () => {
                 className="w-full flex items-center justify-center text-xs"
                 onClick={() =>
                   document
-                    .getElementById("feedback-dropdown")!
+                    .getElementById("feedback-dropdown")
                     .classList.toggle("hidden")
                 }
               >
-                {t("event_feedback_breakdown")}
+                Event Feedback Breakdown
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -1192,7 +1260,7 @@ const AdminDashboardPage = () => {
       <Card className="transition-all hover:shadow-md">
         <CardHeader>
           <CardTitle className="text-xl">{t("event_management")}</CardTitle>
-          <CardDescription>{t("create_and_manage_events_")}</CardDescription>
+          <CardDescription>{t("create_and_Manage_Events_")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
           <Link to="/admin/events/create">
@@ -1204,7 +1272,7 @@ const AdminDashboardPage = () => {
           <Link to="/admin/events/manage">
             <Button variant="outline" className="flex items-center gap-2">
               <span className="hidden sm:inline">🔍</span>
-              {t("manage_events")}
+              {t("manage_Events")}
             </Button>
           </Link>
         </CardContent>
@@ -1214,7 +1282,7 @@ const AdminDashboardPage = () => {
       <Card className="transition-all hover:shadow-md">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <CardTitle className="text-xl">{t("data_visualization")}</CardTitle>
+            <CardTitle className="text-xl">{t("Data_Visualization")}</CardTitle>
             <CardDescription>
               {t("metrics_on_engagement_task_completion_rates_and_feedback_")}
             </CardDescription>
@@ -1270,7 +1338,28 @@ const AdminDashboardPage = () => {
                 <div className="h-64">
                   <Doughnut
                     data={feedbackChartData}
-                    options={feedbackOptions}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          position: "right",
+                          labels: {
+                            boxWidth: 12,
+                            usePointStyle: true,
+                            padding: 20,
+                          },
+                        },
+                        title: {
+                          display: true,
+                          text: "Feedback Distribution",
+                          font: {
+                            size: 16,
+                            weight: "bold",
+                          },
+                        },
+                      },
+                    }}
                   />
                 </div>
                 <div className="overflow-auto h-64 rounded-lg border dark:border-gray-700">
@@ -1318,7 +1407,34 @@ const AdminDashboardPage = () => {
             <TabsContent value="overview" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="h-64">
-                  <Radar data={volunteerRadarData} options={radarOptions} />
+                  <Radar
+                    data={volunteerRadarData}
+                    options={{
+                      scales: {
+                        r: {
+                          angleLines: {
+                            display: true,
+                          },
+                          suggestedMin: 0,
+                          suggestedMax: 100,
+                          ticks: {
+                            backdropColor: "transparent",
+                            z: 100,
+                          },
+                        },
+                      },
+                      plugins: {
+                        legend: {
+                          position: "top",
+                          labels: {
+                            boxWidth: 12,
+                            usePointStyle: true,
+                            padding: 20,
+                          },
+                        },
+                      },
+                    }}
+                  />
                 </div>
                 <div className="flex flex-col h-64">
                   <h3 className="font-medium mb-3">
