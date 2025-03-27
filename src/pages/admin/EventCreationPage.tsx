@@ -1242,6 +1242,8 @@ const EventCreationPage = () => {
                                       "Food distribution",
                                     "67e1189688a5d4787af72a50":
                                       "Sanitation Work",
+                                      "67e1907fbc7ab9b754577031":
+                                        "Healthcare",
                                   };
 
                                   const interestLabel =

@@ -1505,6 +1505,51 @@
     "hi": "कोई सिफारिशित इवेंट्स नहीं मिले",
     "kn": "ಯಾವುದೇ ಶಿಫಾರಸು ಮಾಡಲಾದ ಈವೆಂಟ್‌ಗಳಿಲ್ಲ"
 },
+"event_calendar": {
+    "en": "Event Calendar",
+    "hi": "इवेंट कैलेंडर",
+    "kn": "ಈವೆಂಟ್ ಕ್ಯಾಲೆಂಡರ್"
+},
+  "previous_month": {
+    "en": "Previous Month",
+    "hi": "पिछला महीना",
+    "kn": "ಹಿಂದಿನ ತಿಂಗಳು"
+  },
+  "next_month": {
+    "en": "Next Month",
+    "hi": "अगला महीना",
+    "kn": "ಮುಂದಿನ ತಿಂಗಳು"
+  },
+  "domains": {
+  "en": "Domains",
+  "hi": "डोमेन",
+  "kn": "ಡೊಮೇನ್ಗಳು"
+  },
+  "health": {
+    "en": "Health",
+    "hi": "स्वास्थ्य",
+    "kn": "ಆರೋಗ್ಯ"
+  },
+  "environment": {
+    "en": "Environment",
+    "hi": "पर्यावरण",
+    "kn": "ಪರಿಸರ"
+  },
+  "arts_culture": {
+    "en": "Arts & Culture",
+    "hi": "कला और संस्कृति",
+    "kn": "ಕಲೆ ಮತ್ತು ಸಂಸ್ಕೃತಿ"
+  },
+  "community": {
+    "en": "Community",
+    "hi": "समुदाय",
+    "kn": "ಸಮುದಾಯ"
+  },
+  "technology": {
+    "en": "Technology",
+    "hi": "प्रौद्योगिकी",
+    "kn": "ತಂತ್ರಜ್ಞಾನ"
+  },
   "uk": {
     "en": "UK",
     "hi": "यूके",

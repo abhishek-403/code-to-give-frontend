@@ -42,6 +42,8 @@ import { Link, useNavigate } from "react-router-dom";
 import useLanguage from "@/lib/hooks/useLang";
 import { useAppSelector } from "@/store";
 
+import EventCalendarComponent from "@/components/EventCalendarComponent";
+
 interface EventType {
   _id: string;
   name: string;
@@ -1045,6 +1047,15 @@ const HomePage = () => {
                     </Button>
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeTab === "active" && events.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                  {t("event_calendar")}
+                </h2>
+                <EventCalendarComponent events={events} />
               </div>
             )}
           </div>
