@@ -51,7 +51,7 @@ interface EventType {
   description?: string;
   location: string;
   availability: [Availabitity];
-  template: { fields?: { label: string }[] };
+  template: { fields?: { label: string }[] }[];
 }
 
 const EventRegistrationVolunteerPage = () => {
@@ -89,9 +89,9 @@ const EventRegistrationVolunteerPage = () => {
 
   useEffect(() => {
     if (eventData) {
-      if (eventData.template?.fields) {
+      if (eventData.template[0]?.fields) {
         const updatedTemplateResponses: Record<string, string> = ({} = {});
-        eventData.template.fields.forEach((field) => {
+        eventData.template[0].fields.forEach((field) => {
           updatedTemplateResponses[field.label] = "";
         });
         setValue("templateResponses", updatedTemplateResponses);
@@ -610,11 +610,13 @@ const EventRegistrationVolunteerPage = () => {
             </div>
           </div>
         </fieldset>
-        {eventData.template?.fields && (
+        {eventData.template && (
           <fieldset className="space-y-4 border border-gray-200 rounded p-4">
-            <legend className="text-xl font-semibold px-2">{t("required_fields")}</legend>
+            <legend className="text-xl font-semibold px-2">
+              {t("required_fields")}
+            </legend>
 
-            {eventData.template?.fields?.map((field: any) => (
+            {eventData.template[0].fields?.map((field: any) => (
               <div key={field._id} className="space-y-2">
                 <Label htmlFor={field._id}>{field.label}</Label>
                 <Controller

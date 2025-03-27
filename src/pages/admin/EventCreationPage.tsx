@@ -65,6 +65,10 @@ import {
   LayoutTemplate,
   Mail,
   Info,
+  Linkedin,
+  Share2,
+  Twitter,
+  Facebook,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -265,6 +269,111 @@ const EventCreationPage = () => {
   useEffect(() => {
     refetch();
   }, [debouncedSearchQuery, refetch, user]);
+  
+  const handleSocialShare = (platform: string) => {
+    // Get form values to use in the share content
+    const eventName = form.getValues("name");
+    const eventDesc = form.getValues("description");
+    const eventLocation = form.getValues("location");
+    const startDate = form.getValues("startDate") 
+      ? format(form.getValues("startDate"), "PPP")
+      : "";
+    
+    // Create share text based on available event details
+    const shareText = `Join us for ${eventName}${eventDesc ? `: ${eventDesc.substring(0, 100)}${eventDesc.length > 100 ? '...' : ''}` : ''}. Taking place on ${startDate}${eventLocation ? ` at ${eventLocation}` : ''}.`;
+    
+    // Encode the text for URL
+    const encodedText = encodeURIComponent(shareText);
+    
+    // Define share URLs for different platforms
+    const shareUrls: Record<string, string> = {
+      // Facebook requires both a URL and a quote parameter for prefilled content
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodedText}`,
+      
+      // Twitter works well with just the text parameter
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
+      
+      // LinkedIn requires specific formatting with explicit URL, title and summary parameters
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(eventName)}&summary=${encodeURIComponent(shareText)}`
+    };
+    
+    // Open share dialog in a new window
+    if (shareUrls[platform]) {
+      window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+    }
+  };
+  
+  // Add this component inside your EventCreationPage component, before the return statement
+  const SocialMediaSharingSection = () => {
+    const eventDetails = {
+      name: form.watch("name"),
+      description: form.watch("description"),
+      location: form.watch("location"),
+      startDate: form.watch("startDate"),
+    };
+    
+    // Check if we have enough event details to enable sharing
+    const canShare = !!(eventDetails.name && eventDetails.startDate);
+    
+    return (
+      <div className="border-t pt-4">
+        <h3 className="font-medium text-gray-800 dark:text-gray-300 flex items-center mb-2">
+          <Share2 size={18} className="mr-2" />
+          {t("share_on_social_media")}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          {t("share_this_event_on_your_social_media_platforms")}
+        </p>
+        
+        <div className="flex space-x-3">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="bg-sky-500 hover:bg-sky-600 text-white flex items-center space-x-2"
+            onClick={() => handleSocialShare('twitter')}
+            disabled={!canShare}
+            title={canShare ? "" : t("fill_in_event_name_and_date_first")}
+          >
+            <Twitter size={16} />
+            <span>{t("twitter")}</span>
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2"
+            onClick={() => handleSocialShare('facebook')}
+            disabled={!canShare}
+            title={canShare ? "" : t("fill_in_event_name_and_date_first")}
+          >
+            <Facebook size={16} />
+            <span>{t("facebook")}</span>
+          </Button>
+          
+          
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="bg-blue-700 hover:bg-blue-800 text-white flex items-center space-x-2"
+            onClick={() => handleSocialShare('linkedin')}
+            disabled={!canShare}
+            title={canShare ? "" : t("fill_in_event_name_and_date_first")}
+          >
+            <Linkedin size={16} />
+            <span>{t("linkedin")}</span>
+          </Button>
+        </div>
+        
+        {!canShare && (
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 italic">
+            {t("please_fill_in_the_event_name_and_date_to_enable_sharing")}
+          </p>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
@@ -1170,6 +1279,8 @@ const EventCreationPage = () => {
                   {t("notify_all_matching_users")}
                 </Button>
               </div>
+
+              <SocialMediaSharingSection />
             </CardContent>
 
             {/* Existing search functionality */}
@@ -1228,7 +1339,7 @@ const EventCreationPage = () => {
                           user.volunteeringInterests.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
                               {user.volunteeringInterests.map(
-                                (interestId, idx) => {
+                                (interestId : any, idx : any) => {
                                   // Map interest IDs to human-readable labels
                                   const interestMap = {
                                     "67e1189688a5d4787af72a56": "Sports",
