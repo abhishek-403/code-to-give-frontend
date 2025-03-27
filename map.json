@@ -19,6 +19,16 @@
     "hi": "ईमेल",
     "kn": "ಇಮೇಲ್"
   },
+  "donations_this_month": {
+    "en": "Donations This Month",
+    "hi": "इस माह दान",
+    "kn": "ಈ ತಿಂಗಳ ದೇಣಿಗೆಗಳು"
+  },
+  "view_top_donors": {
+    "en": "View Top Donors",
+    "hi": "शीर्ष दाताओं को देखें",
+    "kn": "ಉನ್ನತ ದಾನಿಗಳನ್ನು ವೀಕ್ಷಿಸಿ"
+  },
   "password": {
     "en": "Password",
     "hi": "पासवर्ड",
