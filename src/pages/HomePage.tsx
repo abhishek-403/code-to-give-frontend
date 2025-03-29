@@ -42,6 +42,8 @@ import { Link, useNavigate } from "react-router-dom";
 import useLanguage from "@/lib/hooks/useLang";
 import { useAppSelector } from "@/store";
 
+import EventCalendarComponent from "@/components/EventCalendarComponent";
+
 interface EventType {
   _id: string;
   name: string;
@@ -980,6 +982,82 @@ const HomePage = () => {
                   </Button>
                 </div>
               ))}
+            {activeTab === "active" && events.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                  {t("recommended_events")}
+                </h2>
+
+                {/* Use the correct user structure to find matches */}
+                {events.filter((event) =>
+                  // Check if user has volunteeringInterests
+                  (u as any)?.volunteeringInterests?.some(
+                    (interestId: string) =>
+                      // Check if any event domain matches the user's interests by ID
+                      event.volunteeringDomains.some(
+                        (domain) =>
+                          // If domain has an _id property, compare directly
+                          (domain._id &&
+                            domain._id.toString() === interestId) ||
+                          // If domain is an object with id or value property
+                          (domain.id && domain.id.toString() === interestId) ||
+                          (domain.value &&
+                            domain.value.toString() === interestId)
+                      )
+                  )
+                ).length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 overflow-y-auto lg:grid-cols-3 gap-6">
+                    {events
+                      .filter((event) =>
+                        (u as any)?.volunteeringInterests?.some(
+                          (interestId: string) =>
+                            event.volunteeringDomains.some(
+                              (domain) =>
+                                (domain._id &&
+                                  domain._id.toString() === interestId) ||
+                                (domain.id &&
+                                  domain.id.toString() === interestId) ||
+                                (domain.value &&
+                                  domain.value.toString() === interestId)
+                            )
+                        )
+                      )
+                      .map((eachEvent: EventType) => (
+                        <EventCard
+                          key={`recommended-${eachEvent._id}`}
+                          ev={eachEvent}
+                        />
+                      ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <Info
+                      className="h-8 w-8 text-gray-500 dark:text-gray-400 mx-auto mb-2"
+                      aria-hidden="true"
+                    />
+                    <p className="text-gray-700 dark:text-gray-300 mb-3">
+                      {t("no_recommended_events_found")}
+                    </p>
+                    <Button
+                      variant="outline"
+                      onClick={() => navigate("/profile")}
+                      className="focus:ring-2 focus:ring-blue-500"
+                    >
+                      {t("update_interests")}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "active" && events.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                  {t("event_calendar")}
+                </h2>
+                <EventCalendarComponent events={events} />
+              </div>
+            )}
           </div>
 
           <div

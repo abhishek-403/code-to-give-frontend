@@ -9,9 +9,10 @@ import useLanguage from "@/lib/hooks/useLang";
 import { useUpdateUserProfileMutation } from "@/services/user";
 import { RootState, useAppSelector } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { z } from "zod"; // For validation
 
 // Define interests/volunteering domains
@@ -38,7 +39,7 @@ const userProfileSchema = z.object({
 const UserProfilePage: React.FC = () => {
   const u = useAppSelector((state: RootState) => state.user);
   const VOLUNTEERING_DOMAINS = useAppSelector(
-    //@ts-ignore
+    //@ts-expect-error
     (state: RootState) => state.eventDetails.voluneeringDomain
   );
   const { t } = useLanguage();
@@ -79,6 +80,10 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <main className="container mx-auto max-w-4xl py-8 px-4">
+      <Link to="/" className="mb-4 text-gray-800 dark:text-gray-200 border-gray-800 dark:border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+          <Button variant="outline" className="mb-4">
+            <ArrowLeft size={16} />{t("back_to_home")}</Button>
+        </Link>
       <h1 className="text-3xl font-bold mb-8">{t("user_profile")}</h1>
 
       <Card className="overflow-hidden">

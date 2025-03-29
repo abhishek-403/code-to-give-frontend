@@ -45,6 +45,7 @@ import { format } from "date-fns";
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowRightLeft,
   CheckCircle2,
   ChevronDown,
   Circle,
@@ -1982,7 +1983,7 @@ const EventManagementPage = () => {
                                   )}
 
                                   {/* Always show reassign button for assigned tasks */}
-                                  {/* {task.assignedTo !== null && (
+                                  {task.assignedTo !== null && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
@@ -1998,7 +1999,7 @@ const EventManagementPage = () => {
                                     <ArrowRightLeft className="h-3 w-3 mr-1" />
                                     Reassign
                                   </Button>
-                                )} */}
+                                )}
                                 </div>
                               </div>
 
@@ -2127,10 +2128,10 @@ const EventManagementPage = () => {
                           </SelectItem>
                           {selectedEvent?.volunteers.map((volunteer: any) => (
                             <SelectItem
-                              key={volunteer.id}
-                              value={volunteer.id.toString()}
+                              key={volunteer._id}
+                              value={volunteer._id.toString()}
                             >
-                              {volunteer.name}
+                              {volunteer.displayName}
                             </SelectItem>
                           ))}
                         </SelectContent>

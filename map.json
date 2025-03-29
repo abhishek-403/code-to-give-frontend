@@ -19,6 +19,16 @@
     "hi": "ईमेल",
     "kn": "ಇಮೇಲ್"
   },
+  "donations_this_month": {
+    "en": "Donations This Month",
+    "hi": "इस माह दान",
+    "kn": "ಈ ತಿಂಗಳ ದೇಣಿಗೆಗಳು"
+  },
+  "view_top_donors": {
+    "en": "View Top Donors",
+    "hi": "शीर्ष दाताओं को देखें",
+    "kn": "ಉನ್ನತ ದಾನಿಗಳನ್ನು ವೀಕ್ಷಿಸಿ"
+  },
   "password": {
     "en": "Password",
     "hi": "पासवर्ड",
@@ -1489,6 +1499,66 @@
     "en": "Submit feedback",
     "hi": "प्रतिक्रिया सबमिट करें",
     "kn": "ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸಲ್ಲಿಸಿ"
+  },
+  "events_recommended_based_on_your_interests": {
+    "en": "Events recommended based on your interests",
+    "hi": "आपकी रुचियों पर आधारित इवेंट्स की सिफारिश",
+    "kn": "ನಿಮ್ಮ ಆಸಕ್ತಿಗಳನ್ನು ಆಧರಿಸಿದ ಈವೆಂಟ್‌ಗಳ ಶಿಫಾರಸು"
+  },
+"recommended_events": {
+    "en": "Recommended Events",
+    "hi": "सिफारिशित इवेंट्स",
+    "kn": "ಶಿಫಾರಸು ಮಾಡಲಾದ ಈವೆಂಟ್‌ಗಳು"
+},
+"no_recommended_events_found": {
+    "en": "No recommended events found",
+    "hi": "कोई सिफारिशित इवेंट्स नहीं मिले",
+    "kn": "ಯಾವುದೇ ಶಿಫಾರಸು ಮಾಡಲಾದ ಈವೆಂಟ್‌ಗಳಿಲ್ಲ"
+},
+"event_calendar": {
+    "en": "Event Calendar",
+    "hi": "इवेंट कैलेंडर",
+    "kn": "ಈವೆಂಟ್ ಕ್ಯಾಲೆಂಡರ್"
+},
+  "previous_month": {
+    "en": "Previous Month",
+    "hi": "पिछला महीना",
+    "kn": "ಹಿಂದಿನ ತಿಂಗಳು"
+  },
+  "next_month": {
+    "en": "Next Month",
+    "hi": "अगला महीना",
+    "kn": "ಮುಂದಿನ ತಿಂಗಳು"
+  },
+  "domains": {
+  "en": "Domains",
+  "hi": "डोमेन",
+  "kn": "ಡೊಮೇನ್ಗಳು"
+  },
+  "health": {
+    "en": "Health",
+    "hi": "स्वास्थ्य",
+    "kn": "ಆರೋಗ್ಯ"
+  },
+  "environment": {
+    "en": "Environment",
+    "hi": "पर्यावरण",
+    "kn": "ಪರಿಸರ"
+  },
+  "arts_culture": {
+    "en": "Arts & Culture",
+    "hi": "कला और संस्कृति",
+    "kn": "ಕಲೆ ಮತ್ತು ಸಂಸ್ಕೃತಿ"
+  },
+  "community": {
+    "en": "Community",
+    "hi": "समुदाय",
+    "kn": "ಸಮುದಾಯ"
+  },
+  "technology": {
+    "en": "Technology",
+    "hi": "प्रौद्योगिकी",
+    "kn": "ತಂತ್ರಜ್ಞಾನ"
   },
   "uk": {
     "en": "UK",

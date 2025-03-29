@@ -39,6 +39,8 @@ import {
   FileText,
   RefreshCw,
   Star,
+  CreditCard,
+  Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Bar, Doughnut, Line, Radar } from "react-chartjs-2";
@@ -64,6 +66,13 @@ interface EngagementData {
   date: string;
   volunteers: number;
   events: number;
+}
+
+interface DonationData {
+  month: string;
+  amount: number;
+  count: number;
+  category: string;
 }
 
 interface CompletionData {
@@ -146,6 +155,59 @@ class DashboardService {
       { name: "Arjun Nair", hours: 33, tasks: 10, events: 4 },
       { name: "Ishaan Chatterjee", hours: 31, tasks: 9, events: 3 },
       { name: "Kavya Joshi", hours: 27, tasks: 7, events: 2 },
+    ]);
+  }
+
+  static async getDonationData(): Promise<DonationData[]> {
+    // Dummy data for donations
+    return Promise.resolve([
+      { month: "Jan", amount: 5800, count: 42, category: "Individual" },
+      { month: "Feb", amount: 6200, count: 51, category: "Individual" },
+      { month: "Mar", amount: 7500, count: 63, category: "Individual" },
+      { month: "Apr", amount: 8100, count: 59, category: "Individual" },
+      { month: "May", amount: 7200, count: 48, category: "Individual" },
+      { month: "Jun", amount: 9400, count: 67, category: "Individual" },
+      { month: "Jan", amount: 12000, count: 5, category: "Corporate" },
+      { month: "Feb", amount: 10000, count: 4, category: "Corporate" },
+      { month: "Mar", amount: 15000, count: 6, category: "Corporate" },
+      { month: "Apr", amount: 12500, count: 5, category: "Corporate" },
+      { month: "May", amount: 18000, count: 7, category: "Corporate" },
+      { month: "Jun", amount: 16000, count: 6, category: "Corporate" },
+      { month: "Jan", amount: 3200, count: 8, category: "Grants" },
+      { month: "Feb", amount: 4000, count: 10, category: "Grants" },
+      { month: "Mar", amount: 3800, count: 9, category: "Grants" },
+      { month: "Apr", amount: 5000, count: 12, category: "Grants" },
+      { month: "May", amount: 4500, count: 11, category: "Grants" },
+      { month: "Jun", amount: 6500, count: 15, category: "Grants" },
+    ]);
+  }
+
+  static async getTopDonors(): Promise<any[]> {
+    // Dummy data for top donors
+    return Promise.resolve([
+      { name: "ABC Corporation", amount: 25000, type: "Corporate", events: 3 },
+      {
+        name: "Reddy Foundation",
+        amount: 18000,
+        type: "Foundation",
+        events: 2,
+      },
+      { name: "Priya Mehta", amount: 12000, type: "Individual", events: 5 },
+      { name: "XYZ Enterprises", amount: 10000, type: "Corporate", events: 2 },
+      {
+        name: "Sharma Family Trust",
+        amount: 8500,
+        type: "Foundation",
+        events: 1,
+      },
+      { name: "Vikram Joshi", amount: 7500, type: "Individual", events: 4 },
+      {
+        name: "Tech Innovators Ltd",
+        amount: 7000,
+        type: "Corporate",
+        events: 2,
+      },
+      { name: "Arjun Nair", amount: 6000, type: "Individual", events: 3 },
     ]);
   }
 
@@ -309,6 +371,9 @@ const AdminDashboardPage = () => {
     { event: "Community Cleanup Day", score: 3.2, responses: 28 },
     { event: "Virtual Fundraiser", score: 3.0, responses: 25 },
   ]);
+  // Add these state variables to the component
+  const [donationData, setDonationData] = useState<DonationData[]>([]);
+  const [topDonors, setTopDonors] = useState<any[]>([]);
 
   useEffect(() => {
     loadData();
@@ -339,16 +404,27 @@ const AdminDashboardPage = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [engagement, completion, feedback, volunteers, recent] =
-        await Promise.all([
-          DashboardService.getEngagementData(),
-          DashboardService.getCompletionData(),
-          DashboardService.getFeedbackData(),
-          DashboardService.getTopVolunteers(),
-          DashboardService.getRecentEvents(),
-          DashboardService.getTaskCompletionByEvent(),
-          DashboardService.getEventFeedback(),
-        ]);
+      const [
+        engagement,
+        completion,
+        feedback,
+        volunteers,
+        recent,
+        taskEvents,
+        eventFeedbackData,
+        donations,
+        donors,
+      ] = await Promise.all([
+        DashboardService.getEngagementData(),
+        DashboardService.getCompletionData(),
+        DashboardService.getFeedbackData(),
+        DashboardService.getTopVolunteers(),
+        DashboardService.getRecentEvents(),
+        DashboardService.getTaskCompletionByEvent(),
+        DashboardService.getEventFeedback(),
+        DashboardService.getDonationData(),
+        DashboardService.getTopDonors(),
+      ]);
 
       setEngagementData(engagement);
       setCompletionData(completion);
@@ -357,6 +433,8 @@ const AdminDashboardPage = () => {
       setRecentEvents(recent);
       setTaskCompletionByEvent(taskEvents);
       setEventFeedback(eventFeedbackData);
+      setDonationData(donations);
+      setTopDonors(donors);
       setLoading(false);
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
@@ -409,6 +487,48 @@ const AdminDashboardPage = () => {
           ]);
           fileName = "top-volunteers-data.csv";
           break;
+        case "donations": {
+          const monthlyDonationData = [
+            ...new Set(donationData.map((item) => item.month)),
+          ].map((month) => {
+            const monthData = donationData.filter(
+              (item) => item.month === month
+            );
+            const individual =
+              monthData.find((item) => item.category === "Individual")
+                ?.amount || 0;
+            const corporate =
+              monthData.find((item) => item.category === "Corporate")?.amount ||
+              0;
+            const grants =
+              monthData.find((item) => item.category === "Grants")?.amount || 0;
+            const total = individual + corporate + grants;
+            const totalDonors = monthData.reduce(
+              (sum, item) => sum + item.count,
+              0
+            );
+
+            return {
+              month,
+              individual,
+              corporate,
+              grants,
+              total,
+              donors: totalDonors,
+            };
+          });
+
+          csvContent = convertToCSV(monthlyDonationData, [
+            "month",
+            "individual",
+            "corporate",
+            "grants",
+            "total",
+            "donors",
+          ]);
+          fileName = "donation-data.csv";
+          break;
+        }
         default:
           csvContent = "No data available";
           fileName = "dashboard-data.csv";
@@ -475,6 +595,22 @@ const AdminDashboardPage = () => {
         "event",
         "score",
         "responses",
+      ]);
+      // Add this to the exportAllDataToCSV function, right after the event feedback section
+      allDataCSV += "\n\nDONATION DATA BY MONTH AND CATEGORY\n";
+      allDataCSV += convertToCSV(donationData, [
+        "month",
+        "amount",
+        "count",
+        "category",
+      ]);
+
+      allDataCSV += "\n\nTOP DONORS\n";
+      allDataCSV += convertToCSV(topDonors, [
+        "name",
+        "amount",
+        "type",
+        "events",
       ]);
 
       // Download the combined CSV
@@ -564,6 +700,48 @@ const AdminDashboardPage = () => {
           ]);
           fileName = "top-volunteers-data.xlsx";
           break;
+        case "donations": {
+          const monthlyDonations = [
+            ...new Set(donationData.map((item) => item.month)),
+          ].map((month) => {
+            const monthData = donationData.filter(
+              (item) => item.month === month
+            );
+            const individual =
+              monthData.find((item) => item.category === "Individual")
+                ?.amount || 0;
+            const corporate =
+              monthData.find((item) => item.category === "Corporate")?.amount ||
+              0;
+            const grants =
+              monthData.find((item) => item.category === "Grants")?.amount || 0;
+            const total = individual + corporate + grants;
+            const totalDonors = monthData.reduce(
+              (sum, item) => sum + item.count,
+              0
+            );
+
+            return {
+              month,
+              individual,
+              corporate,
+              grants,
+              total,
+              donors: totalDonors,
+            };
+          });
+
+          excelBlob = generateExcelFile(monthlyDonations, [
+            "month",
+            "individual",
+            "corporate",
+            "grants",
+            "total",
+            "donors",
+          ]);
+          fileName = "donation-data.xlsx";
+          break;
+        }
         default:
           console.error("No data available for export");
           return;
@@ -994,8 +1172,8 @@ const AdminDashboardPage = () => {
       </div>
 
       {/* Quick Stats Summary with improved accessibility */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="transition-all hover:shadow-md">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <Card className="transition-all hover:shadow-md">
           <CardContent className="flex flex-col items-center justify-center p-6">
             <div className="rounded-full bg-blue-100 dark:bg-blue-900 p-3 mb-3">
               <CalendarDays
@@ -1304,6 +1482,75 @@ const AdminDashboardPage = () => {
             </div>
           </CardContent>
         </Card>
+        {/* Add this card to the quick stats grid */}
+        {/* Top donors card with dropdown functionality */}
+        <Card className="transition-all hover:shadow-md">
+          <CardContent className="flex flex-col items-center justify-center p-6">
+            <div className="rounded-full bg-indigo-100 dark:bg-indigo-900 p-3 mb-3">
+              <CreditCard
+                className="h-8 w-8 text-indigo-600 dark:text-indigo-300"
+                aria-hidden="true"
+              />
+            </div>
+            <h3 className="text-3xl font-bold">{t("₹78.5K")}</h3>
+            <p className="text-sm text-muted-foreground">
+              {t("donations_this_month")}
+            </p>
+
+            {/* Top donors dropdown */}
+            <div className="w-full mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center text-xs"
+                onClick={() =>
+                  document
+                    .getElementById("top-donors-dropdown")
+                    .classList.toggle("hidden")
+                }
+              >
+                {t("view_top_donors")}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+
+              <div
+                id="top-donors-dropdown"
+                className="hidden mt-3 text-sm w-full max-h-48 overflow-y-auto rounded-md border shadow-sm"
+              >
+                <div className="bg-white dark:bg-gray-800 px-3 py-2 border-b border-border sticky top-0 z-20">
+                  <h4 className="font-medium text-sm">Top Donors</h4>
+                </div>
+                <ul className="divide-y divide-border">
+                  {topDonors.slice(0, 5).map((donor, index) => (
+                    <li
+                      key={index}
+                      className="px-3 py-3 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-medium truncate">
+                          {donor.name}
+                        </span>
+                        <span className="text-indigo-600 dark:text-indigo-400 font-medium">
+                          ₹{(donor.amount / 1000).toFixed(1)}K
+                        </span>
+                      </div>
+                      <div className="flex items-center text-xs text-muted-foreground">
+                        <span className="px-1.5 py-0.5 rounded-full bg-muted/50">
+                          {donor.type}
+                        </span>
+                        <span className="mx-1.5">•</span>
+                        <span className="flex items-center">
+                          <CalendarDays className="h-3 w-3 mr-1" />{" "}
+                          {donor.events} events
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Event Management Card */}
@@ -1370,7 +1617,8 @@ const AdminDashboardPage = () => {
               </div>
               <div className="mt-4 text-sm text-muted-foreground">
                 <p>
-                  <span className="font-medium">{t("note")}:</span> {t("data_visualization_note")}
+                  <span className="font-medium">{t("note")}:</span>{" "}
+                  {t("data_visualization_note")}
                 </p>
               </div>
             </TabsContent>

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -62,6 +63,12 @@ import {
   ArrowLeft,
   BookMarked,
   LayoutTemplate,
+  Mail,
+  Info,
+  Linkedin,
+  Share2,
+  Twitter,
+  Facebook,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -262,6 +269,111 @@ const EventCreationPage = () => {
   useEffect(() => {
     refetch();
   }, [debouncedSearchQuery, refetch, user]);
+  
+  const handleSocialShare = (platform: string) => {
+    // Get form values to use in the share content
+    const eventName = form.getValues("name");
+    const eventDesc = form.getValues("description");
+    const eventLocation = form.getValues("location");
+    const startDate = form.getValues("startDate") 
+      ? format(form.getValues("startDate"), "PPP")
+      : "";
+    
+    // Create share text based on available event details
+    const shareText = `Join us for ${eventName}${eventDesc ? `: ${eventDesc.substring(0, 100)}${eventDesc.length > 100 ? '...' : ''}` : ''}. Taking place on ${startDate}${eventLocation ? ` at ${eventLocation}` : ''}.`;
+    
+    // Encode the text for URL
+    const encodedText = encodeURIComponent(shareText);
+    
+    // Define share URLs for different platforms
+    const shareUrls: Record<string, string> = {
+      // Facebook requires both a URL and a quote parameter for prefilled content
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodedText}`,
+      
+      // Twitter works well with just the text parameter
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}`,
+      
+      // LinkedIn requires specific formatting with explicit URL, title and summary parameters
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(eventName)}&summary=${encodeURIComponent(shareText)}`
+    };
+    
+    // Open share dialog in a new window
+    if (shareUrls[platform]) {
+      window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+    }
+  };
+  
+  // Add this component inside your EventCreationPage component, before the return statement
+  const SocialMediaSharingSection = () => {
+    const eventDetails = {
+      name: form.watch("name"),
+      description: form.watch("description"),
+      location: form.watch("location"),
+      startDate: form.watch("startDate"),
+    };
+    
+    // Check if we have enough event details to enable sharing
+    const canShare = !!(eventDetails.name && eventDetails.startDate);
+    
+    return (
+      <div className="border-t pt-4">
+        <h3 className="font-medium text-gray-800 dark:text-gray-300 flex items-center mb-2">
+          <Share2 size={18} className="mr-2" />
+          {t("share_on_social_media")}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          {t("share_this_event_on_your_social_media_platforms")}
+        </p>
+        
+        <div className="flex space-x-3">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="bg-sky-500 hover:bg-sky-600 text-white flex items-center space-x-2"
+            onClick={() => handleSocialShare('twitter')}
+            disabled={!canShare}
+            title={canShare ? "" : t("fill_in_event_name_and_date_first")}
+          >
+            <Twitter size={16} />
+            <span>{t("twitter")}</span>
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2"
+            onClick={() => handleSocialShare('facebook')}
+            disabled={!canShare}
+            title={canShare ? "" : t("fill_in_event_name_and_date_first")}
+          >
+            <Facebook size={16} />
+            <span>{t("facebook")}</span>
+          </Button>
+          
+          
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="bg-blue-700 hover:bg-blue-800 text-white flex items-center space-x-2"
+            onClick={() => handleSocialShare('linkedin')}
+            disabled={!canShare}
+            title={canShare ? "" : t("fill_in_event_name_and_date_first")}
+          >
+            <Linkedin size={16} />
+            <span>{t("linkedin")}</span>
+          </Button>
+        </div>
+        
+        {!canShare && (
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 italic">
+            {t("please_fill_in_the_event_name_and_date_to_enable_sharing")}
+          </p>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
@@ -1108,37 +1220,99 @@ const EventCreationPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="  my-2 pt-2">
+          <Card className="my-2 pt-2 dark:text-white">
             <CardHeader>
               <CardTitle>{t("notify_users")}</CardTitle>
+              <CardDescription>
+                {t("search_and_notify_users_about_this_event")}
+              </CardDescription>
             </CardHeader>
-            <CardContent className=" backdrop-blur-xl flex justify-center items-center space-x-3">
+
+            {/* Add this new section for bulk notifications */}
+            <CardContent className="border-b pb-4 mb-2">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md mb-4">
+                <h3 className="font-medium text-blue-800 dark:text-blue-300 flex items-center mb-2">
+                  <Info size={18} className="mr-2" />
+                  {t("bulk_notification")}
+                </h3>
+                <p className="text-sm text-blue-700 dark:text-blue-400 mb-3">
+                  {t("send_notification_to_users_with_selected_interests")}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {form
+                    .watch("volunteeringDomains")
+                    ?.map((domainId: string, idx: number) => {
+                      // Find the domain label from the volDomains array
+                      const domain = volDomains?.find(
+                        (d: any) => d.value === domainId
+                      );
+                      return domain ? (
+                        <Badge
+                          key={idx}
+                          variant="secondary"
+                          className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
+                        >
+                          {domain.label}
+                        </Badge>
+                      ) : null;
+                    })}
+                  {(!form.watch("volunteeringDomains") ||
+                    form.watch("volunteeringDomains").length === 0) && (
+                    <span className="text-gray-500 dark:text-gray-400 text-sm italic">
+                      {t("no_domains_selected")}
+                    </span>
+                  )}
+                </div>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-600 w-full sm:w-auto"
+                  onClick={() => toast.success(t("batch_email_sent"))}
+                  disabled={
+                    !form.watch("volunteeringDomains") ||
+                    form.watch("volunteeringDomains").length === 0
+                  }
+                >
+                  <Mail size={16} className="mr-2" />
+                  {t("notify_all_matching_users")}
+                </Button>
+              </div>
+
+              <SocialMediaSharingSection />
+            </CardContent>
+
+            {/* Existing search functionality */}
+            <CardContent className="backdrop-blur-xl flex justify-center items-center space-x-3 dark:text-white">
               <Input
                 type="text"
-                placeholder="Search by name "
+                placeholder={t("search_by_name_or_email")}
                 value={search}
                 autoComplete="off"
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-neutral-80"
+                className="w-full text-neutral-80 dark:text-white"
               />
-              <Button
-                // onClick={() => handleRoleChange(user._id, user.role)}
-                className="bg-gray-800 hover:bg-black text-white"
-              >
+              <Button className="bg-gray-800 hover:bg-black text-white dark:text-white">
                 {t("find")}
               </Button>
             </CardContent>
-            <CardContent className="overflow-auto scrollbar-hide max-h-[300px]">
+            <CardContent className="overflow-auto scrollbar-hide max-h-[300px] dark:text-white">
               <Table>
                 <TableHead>
-                  <TableRow>
-                    {/* <TableHeaderCell>{t("name")}</TableHeaderCell>
-                    <TableHeaderCell>{t("email")}</TableHeaderCell>
-                    <TableHeaderCell>{t("current_role")}</TableHeaderCell>
-                    <TableHeaderCell>{t("change_role")}</TableHeaderCell> */}
+                  <TableRow className="bg-gray-50 dark:bg-gray-800 dark:text-white">
+                    <TableCell className="font-medium dark:text-white">{t("name")}</TableCell>
+                    <TableCell className="font-medium dark:text-white">{t("email")}</TableCell>
+                    <TableCell className="font-medium dark:text-white">{t("role")}</TableCell>
+                    <TableCell className="font-medium dark:text-white">
+                      {t("volunteering_interests")}
+                    </TableCell>
+                    <TableCell className="font-medium dark:text-white">
+                      {t("actions")}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
-                <tbody className="w-full ">
+                <tbody className="w-full">
                   {userSearchLoading ? (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center">
@@ -1147,26 +1321,84 @@ const EventCreationPage = () => {
                     </TableRow>
                   ) : users && users.length > 0 ? (
                     users.map((user) => (
-                      <TableRow key={user._id}>
-                        <TableCell>{user.displayName}</TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>
-                          <span className="badge">{user.role}</span>
+                      <TableRow
+                        key={user._id}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
+                      >
+                        <TableCell className="font-medium dark:text-white">
+                          {user.displayName}
                         </TableCell>
+                        <TableCell className="font-medium dark:text-white">{user.email}</TableCell>
+                        <TableCell>
+                          <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            {user.role}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {user.volunteeringInterests &&
+                          user.volunteeringInterests.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {user.volunteeringInterests.map(
+                                (interestId : any, idx : any) => {
+                                  // Map interest IDs to human-readable labels
+                                  const interestMap = {
+                                    "67e1189688a5d4787af72a56": "Sports",
+                                    "67e1189688a5d4787af72a4f": "Education",
+                                    "67e1189688a5d4787af72a52":
+                                      "Rehabilitation",
+                                    "67e1189688a5d4787af72a54": "Environment",
+                                    "67e1189688a5d4787af72a55":
+                                      "Blood Donation",
+                                    "67e1189688a5d4787af72a53":
+                                      "Food distribution",
+                                    "67e1189688a5d4787af72a50":
+                                      "Sanitation Work",
+                                      "67e1907fbc7ab9b754577031":
+                                        "Healthcare",
+                                  };
 
+                                  const interestLabel =
+                                    interestMap[interestId] || interestId;
+
+                                  return (
+                                    <span
+                                      key={idx}
+                                      className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                                    >
+                                      {interestLabel}
+                                    </span>
+                                  );
+                                }
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-gray-500 dark:text-gray-400 text-sm italic dark:text-white">
+                              {t("not_yet_updated")}
+                            </span>
+                          )}
+                        </TableCell>
                         <TableCell>
                           <Button
                             type="button"
-                            onClick={() => toast.success("User notified!")}
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1 dark:text-white"
+                            onClick={() =>
+                              toast.success(t("email_sent_to_user"))
+                            }
                           >
-                            Email
+                            <Mail size={14} />
+                            {t("notify")}
                           </Button>
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center">
+                      <TableCell
+                        colSpan={5}
+                        className="text-center py-8 text-gray-500 dark:text-gray-400"
+                      >
                         {t("no_users_found_")}
                       </TableCell>
                     </TableRow>
