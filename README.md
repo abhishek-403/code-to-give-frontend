@@ -3,21 +3,30 @@
   <img src="https://github.com/user-attachments/assets/e63818ed-cef2-47d8-9845-443f650d3067" alt="Logo" style="width:200px"/>
 </div>
 
-
 ## 🏢 Introduction
 Samarthanam Trust for Disabled is dedicated to empowering individuals with disabilities through various initiatives. This project is a web-based application built using the **MERN stack**, designed to streamline event management and volunteer coordination while addressing critical accessibility and management challenges.
+
+## 🚀 Live   
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Beyond_Sight-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://beyondsight.vercel.app/)
 
 ## Team 17 - Beyond Sight 👥👥
 - Abhishek Sharma
 - Ayush Tandon
 - Garvit Singh
-- Kirti kumari
+- Kirti Kumari
 - Komal Meena
 - Prajwal Tiwari
-  
+
 ## Mentors 🤵
-- Sankaran Subramanian 
-- Kirthan G
+- **Sankaran Subramanian**  [LinkedIn](https://www.linkedin.com/in/sankaransubramanian/)
+
+- **Kirthan G**   [LinkedIn](https://www.linkedin.com/in/kirthan-m-g-95330a91/)
+
+## Round 1 Presentation
+[![Watch Round 1 Presentation](https://img.shields.io/badge/Watch-Round_1_Presentation-FF0000?style=for-the-badge&logo=youtube)](https://youtu.be/_4XSa1-E96s?si=O81UrMng1o5ZiiR8)
+
+## Round 2 Presentation  
+[![Watch Round 2 Presentation](https://img.shields.io/badge/Watch-Round_2_Presentation-FF0000?style=for-the-badge&logo=youtube)](https://youtu.be/RuUWWiDcb0k)
 
 ## ✨ Features
 
@@ -109,11 +118,13 @@ npm run dev
 
 ![Login/Register Page](https://github.com/user-attachments/assets/96368193-41a2-4028-a4b0-422185d7792d)
 ![Screenshot 2025-03-26 225033](https://github.com/user-attachments/assets/1abd7994-8956-440f-852c-c77535d3b7a7)
-![Screenshot 2025-03-26 160848](https://github.com/user-attachments/assets/89af439c-f72b-41ea-817e-23f32652e008)
+![Screenshot 2025-03-29 124138](https://github.com/user-attachments/assets/f6450df5-f90c-403e-8a87-545515a6f241)
 ![Screenshot 2025-03-26 230503](https://github.com/user-attachments/assets/40659bc5-dc7d-4fb0-993b-91f60b5975d2)
 ![Screenshot 2025-03-26 225100](https://github.com/user-attachments/assets/d979e587-22da-4989-aabb-2450747231d5)
 ![Screenshot 2025-03-26 225456](https://github.com/user-attachments/assets/7574ee50-f58b-45ef-a0c3-93df50007bd8)
 ![Screenshot 2025-03-26 225205](https://github.com/user-attachments/assets/f15e4eb9-6b0b-474a-88a8-654a450eda14)
+![image](https://github.com/user-attachments/assets/1a490024-ec7b-44fa-b105-a6daaacaf1e5)
+![image](https://github.com/user-attachments/assets/0132c1ed-205e-4229-9cb6-77fef79da135)
 ![Screenshot 2025-03-26 230355](https://github.com/user-attachments/assets/8aa98f27-a84a-4293-b786-39c46112af9f)
 ![Screenshot 2025-03-26 160458](https://github.com/user-attachments/assets/aea5e56d-cbb0-4167-a998-3db0af90eff1)
 ![Screenshot 2025-03-26 225348](https://github.com/user-attachments/assets/46fa7550-22b7-41df-9cd6-400b91ea1670)
