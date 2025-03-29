@@ -28,6 +28,13 @@ Samarthanam Trust for Disabled is dedicated to empowering individuals with disab
 ## Round 2 Presentation  
 [![Watch Round 2 Presentation](https://img.shields.io/badge/Watch-Round_2_Presentation-FF0000?style=for-the-badge&logo=youtube)](https://youtu.be/RuUWWiDcb0k)
 
+## Celebrating Our Success: Team 17 Advances to Round 2!
+<img src="https://github.com/user-attachments/assets/0af02e3c-cfed-41c9-b68d-40a13e3b3627" 
+     alt="Team Celebration" 
+     width="300" 
+     height="200" 
+     style="border: 1px solid #ddd; border-radius: 8px;" />
+
 ## ✨ Features
 
 ### ♿ Inclusive by Design
@@ -57,7 +64,6 @@ Samarthanam Trust for Disabled is dedicated to empowering individuals with disab
 - **Database:** MongoDB
 - **Authentication:** Firebase
 - **Deployment:** Vercel
-
 
 ## 🚀 Installation & Setup
 ### 📌 Prerequisites
